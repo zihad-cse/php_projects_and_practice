@@ -13,7 +13,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <title>Sign in</title>
+    <title>Sign Up</title>
 </head>
 
 <body class="bg-dark">
@@ -21,35 +21,73 @@
     <div class="container card bg-light vh-100">
         <div class="row">
             <div class="col-12 text-center p-3">
-                <h2>Log in</h2>
+                <h2>Sign Up</h2>
             </div>
         </div>
         <form class="mx-5">
             <div class="row py-3">
-                <div class="col-6">
+                <div class="col-4">
+                    <div>
+                        <label for="firstName">First Name</label>
+                        <input name="firstname" type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div>
+                        <label for="lastName">Last Name</label>
+                        <input name="lastname" type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="col-4">
                     <div>
                         <label for="userName">Username</label>
                         <input name="username" type="text" class="form-control">
                     </div>
                 </div>
+            </div>
+            <div class="row py-3">
                 <div class="col-6">
                     <div>
                         <label for="password">Password</label>
                         <input name="password" type="password" class="form-control">
                     </div>
                 </div>
+                <div class="col-6">
+                    <div>
+                        <label for="passwordRepeat">Repeat Password</label>
+                        <input name="passwordrepeat" type="password" class="form-control">
+                    </div>
+                </div>
             </div>
             <div class="row py-3">
-                <div class="col">
+                <div class="col-6">
                     <div>
-                        <input value="Sign in" type="submit" class="btn btn-success">
+                        <label for="dob">Date of Birth</label>
+                        <input name="dateofbirth" type="date" class="form-control">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-check">
+                        <input name="gender" type="radio" class="form-check-input">
+                        <label class="form-check-label" for="gender">Male</label>
+                    </div>
+                    <div class="form-check">
+                        <input name="gender" type="radio" class="form-check-input">
+                        <label class="form-check-label" for="gender">Female</label>
                     </div>
                 </div>
             </div>
             <div class="row py-3">
                 <div class="col">
                     <div>
-                        <a href="signup.php" class="btn btn-info">Sign Up</a>
+                        <input value="Sign Up" type="submit" class="btn btn-success">
+                    </div>
+                </div>
+            </div>
+            <div class="row py-3">
+                <div class="col">
+                    <div>
+                        <a href="login.php" class="btn btn-info">Log In</a>
                     </div>
                 </div>
             </div>
