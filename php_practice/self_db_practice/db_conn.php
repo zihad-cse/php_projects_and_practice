@@ -1,13 +1,13 @@
 <?php 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-include 'db_const.php';
+include 'config.php';
 
 class Database{
-    public $host = DB_SERVER;
-    public $user = DB_USER;
-    public $pass = DB_PASS;
-    public $dbname = DB_TABLE;
+    public $host = 'localhost';
+    public $user = 'huda';
+    public $pass = 'huda123';
+    public $dbname = 'php_practice';
 
     public $link;
     public $error;
@@ -37,16 +37,9 @@ class Database{
             return false;
         }
     }
-
-    public function create($query){
-        $createRow = $this->link->query($query) or die($this->link->error);
-        if($createRow){
-            header("Location: read.php?msg=".urlencode('Data Inserted'));
-        } else {
-            die("Error: (".$this->link->errno." )". $this->link->error);
-        }
-    }
 }
-$db = new Database();
-$query = "SELECT * FROM customers";
-$read = $db->select($query);
+
+$dbStatus = new Database();
+
+echo $dbStatus->error;
+echo $dbStatus->status;
