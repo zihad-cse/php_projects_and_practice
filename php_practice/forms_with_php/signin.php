@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-include 'form_html_script.php';
+include '../forms_with_php/php/login_script.php';
 ?>
 
 <head>
@@ -31,16 +31,17 @@ include 'form_html_script.php';
                                     elit. Vero,
                                     laboriosam. Dolores veritatis vel quisquam vero.</p>
                             </div>
-                            <form action="" method="post" class="">
+                            <form id="signin-form" action="" method="post" class="">
                                 <div class="mb-3">
+                                    <div><?php echo $errorMessage;?></div>
                                     <label for="emailInput" class="form-label">Email Address</label>
                                     <input type="email" name="email" class="form-control" id="emailInput" placeholder="example@example.com">
-                                    <div class="mb-3 text-danger"><?php echo $erremail; ?></div>
+                                    <div id="emailError" class="mb-3 text-danger"></div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="signInPass" class="form-label">Password</label>
-                                    <input type="password" name="password1" class="form-control" id="signInPass" placeholder="Password">
-                                    <div class="mb-3 text-danger"><?php echo $errpass . '<br>' . $errpasslen; ?></div>
+                                    <input type="password" name="password" class="form-control" id="signInPass" placeholder="Password">
+                                    <div id="passError" class="mb-3 text-danger"></div>
                                 </div>
                                 <div class="d-flex justify-content-between mb-5">
                                     <div class="form-check">
@@ -83,6 +84,7 @@ include 'form_html_script.php';
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="../forms_with_php/javascript/sign_in_validation.js"></script>
 </body>
 
 </html>

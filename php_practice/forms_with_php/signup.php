@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-include '../forms_with_php/php/form_html_script.php';
+include '../forms_with_php/php/registration_script.php';
 ?>
 
 <head>
