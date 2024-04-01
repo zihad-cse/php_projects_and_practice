@@ -1,33 +1,15 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <?php
-include 'form_html_script.php';
+include '../forms_with_php/php/form_html_script.php';
 ?>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="form.css">
+    <link rel="stylesheet" href="../forms_with_php/css/form.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        function togglePasswordVisibility(inputId) {
-            var passwordInput = document.getElementById(inputId);
-            var toggleButton = document.getElementById("toggle" + inputId + "Button");
-
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                toggleButton.innerHTML = '<i class="fas fa-eye"></i>';
-            } else {
-                passwordInput.type = "password";
-                toggleButton.innerHTML = '<i class="fas fa-eye-slash"></i>';
-            }
-        }
-    </script>
     <title>Sign Up</title>
 </head>
 
@@ -46,11 +28,12 @@ include 'form_html_script.php';
                                     elit. Vero,
                                     laboriosam. Dolores veritatis vel quisquam vero.</p>
                             </div>
-                            <form action="" method="post" class="">
+                            <form id="signup-form" action="" method="post" class="">
                                 <div class="mb-3">
                                     <label for="emailInput" class="form-label">Email Address</label>
                                     <input type="email" name="email" class="form-control" id="emailInput" placeholder="example@example.com">
-                                    <div class="mb-3 text-danger"><?php echo $erremail; ?></div>
+                                    <p class="text-danger" id="emailError"></p><br>
+                                    <?php echo $errorMessage ?>
                                 </div>
                                 <div class="mb-3">
                                     <label for="signInPass" class="form-label">Password</label>
@@ -60,7 +43,6 @@ include 'form_html_script.php';
                                             <i class="fas fa-eye-slash"></i>
                                         </button>
                                     </div>
-                                    <div class="mb-3 text-danger"><?php echo $errpass; ?></div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="signInPass" class="form-label">Repeat Password</label>
@@ -70,16 +52,18 @@ include 'form_html_script.php';
                                             <i class="fas fa-eye-slash"></i>
                                         </button>
                                     </div>
+                                    <span class="text-danger py-2" id="passWordError"></span><br>
                                     <div class="mb-3 text-secondary">Password must be between 6-32 characters</div>
-                                    <div class="mb-3 text-danger"><?php echo $errpassrepeat . '</br>' . $errpasslen; ?></div>
                                 </div>
 
-                                <div class="d-flex justify-content-between mb-5">
+                                <div class="d-flex justify-content-between mb-3">
                                     <div class="form-check mt-3">
                                         <input type="checkbox" name="tAndCCheck" class="form-check-input" id="tosCheck">
                                         <label for="tosCheck" class="form-label">I have read the <a href="#">Terms and Conditions</a></label>
-                                        <div class="mb-3 text-danger"><?php echo $errtos; ?></div>
                                     </div>
+                                </div>
+                                <div>
+                                    <p class="text-danger" id="tosCheckError"></p>
                                 </div>
                                 <div class="mt-lg-5 mt-md-5 mt-sm-3 mt-3 row justify-content-center">
                                     <button type="submit" class=" col-11 btn p-3 btn-primary">
@@ -112,6 +96,12 @@ include 'form_html_script.php';
             </div>
         </div>
     </div>
+    <script src="../forms_with_php/javascript/form_validation.js"></script>
+    <script src="../forms_with_php/javascript/password_visibility.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>

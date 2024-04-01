@@ -1,21 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php 
+<?php
 include 'form_html_script.php';
 ?>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="signin.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="../forms_with_php/css/signin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-        crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <title>Sign In</title>
 </head>
 
@@ -24,9 +18,7 @@ include 'form_html_script.php';
         <div class="container card" id="form-card">
             <div class="row" id="signincontent">
                 <div class="col-lg-6 d-md-none d-sm-none d-none d-lg-block d-md-block">
-                    <img class="img-fluid"
-                        src="https://preview.colorlib.com/theme/bootstrap/login-form-07/images/undraw_remotely_2j6y.svg"
-                        alt="">
+                    <img class="img-fluid" src="https://preview.colorlib.com/theme/bootstrap/login-form-07/images/undraw_remotely_2j6y.svg" alt="">
                 </div>
                 <div class="col-lg-6 col-md-12 col-sm-12">
                     <div class="row m-lg-5 m-md-0 m-sm-0 m-0">
@@ -42,14 +34,13 @@ include 'form_html_script.php';
                             <form action="" method="post" class="">
                                 <div class="mb-3">
                                     <label for="emailInput" class="form-label">Email Address</label>
-                                    <input type="email" name="email" class="form-control" id="emailInput"
-                                        placeholder="example@example.com">
+                                    <input type="email" name="email" class="form-control" id="emailInput" placeholder="example@example.com">
                                     <div class="mb-3 text-danger"><?php echo $erremail; ?></div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="signInPass" class="form-label">Password</label>
                                     <input type="password" name="password1" class="form-control" id="signInPass" placeholder="Password">
-                                    <div class="mb-3 text-danger"><?php echo $errpass .'<br>'. $errpasslen; ?></div>
+                                    <div class="mb-3 text-danger"><?php echo $errpass . '<br>' . $errpasslen; ?></div>
                                 </div>
                                 <div class="d-flex justify-content-between mb-5">
                                     <div class="form-check">
@@ -88,6 +79,10 @@ include 'form_html_script.php';
             </div>
         </div>
     </div>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>
