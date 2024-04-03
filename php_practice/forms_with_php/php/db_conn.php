@@ -1,34 +1,13 @@
 <?php
 
-//This sets up a class that would create a database connection. Within the class SQL queries can be executed as well.
+$dsn = 'mysql:host=localhost;dbname=user_info';
+$username = 'huda';
+$password = 'huda123';
 
-class DatabaseConnection
-{
-    private $dbHost;
-    private $dbUser;
-    private $dbPass;
-    private $dbName;
-    public $dbLink;
+try {
+    $pdo = new PDO($dsn, $username, $password);
 
-    public function __construct($host, $user, $pass, $database)
-    {
-        $this->dbHost = $host;
-        $this->dbUser = $user;
-        $this->dbPass = $pass;
-        $this->dbName = $database;
-
-        $this->dbLink = new mysqli($this->dbHost, $this->dbUser, $this->dbPass, $this->dbName);
-
-        if ($this->dbLink->connect_error) {
-            die('Connection Failed: ' . $this->dbLink->connect_error);
-        }
-    }
-    public function query($sql)
-    {
-        return $this->dbLink->query($sql);
-    }
-    public function close()
-    {
-        return $this->dbLink->close();
-    }
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    echo 'Database Connection Failed'. $e->getMessage();
 }

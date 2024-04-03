@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-include '../forms_with_php/php/registration_script.php';
+include "../php/registration_script.php";
 ?>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="../forms_with_php/css/form.css">
+    <link rel="stylesheet" href="../css/form.css">
     <link rel="stylesheet" href="../Bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <title>Sign Up</title>
@@ -76,9 +76,9 @@ include '../forms_with_php/php/registration_script.php';
                                 <p>-Or Signup with-</p>
                             </div>
                             <div>
-                                <a class="pe-2" href="#"><img src="img/icons8-google-48.png" alt="Google"></a>
-                                <a class="px-2" href="#"><img src="img/icons8-facebook-48.png" alt="Facebook"></a>
-                                <a class="px-2" href="#"><img src="img/icons8-twitter-48.png" alt="Twitter"></a>
+                                <a class="pe-2" href="#"><img src="../img/icons8-google-48.png" alt="Google"></a>
+                                <a class="px-2" href="#"><img src="../img/icons8-facebook-48.png" alt="Facebook"></a>
+                                <a class="px-2" href="#"><img src="../img/icons8-twitter-48.png" alt="Twitter"></a>
                             </div>
                             <div class="d-flex justify-content-between mt-4">
                                 <div>
@@ -92,14 +92,14 @@ include '../forms_with_php/php/registration_script.php';
                     </div>
                 </div>
                 <div class="col-lg-6 d-md-none d-sm-none d-none d-lg-block d-md-block">
-                    <img class="img-fluid m-5" src="img/undraw_join_re_w1lh.svg" alt="">
+                    <img class="img-fluid m-5" src="../img/undraw_join_re_w1lh.svg" alt="">
                 </div>
             </div>
         </div>
     </div>
-    <script src="../forms_with_php/javascript/form_validation.js"></script>
-    <script src="../forms_with_php/javascript/password_visibility.js"></script>
-    <script src="../Bootstrap/js/bootstrap.min.js"></script>
+    <script src="../javascript/form_validation.js"></script>
+    <script src="../javascript/password_visibility.js"></script>
+    <script src=""></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

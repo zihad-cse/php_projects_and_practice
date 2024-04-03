@@ -4,51 +4,39 @@ ini_set('display_errors', 1);
 
 include 'db_conn.php';
 
-// Sets up database connection
-
-$host = 'localhost';
-$user = 'huda';
-$pass = 'huda123';
-$database = 'user_info';
-
-$db = new DatabaseConnection($host, $user, $pass, $database);
-
 $email = $password1 = $password2 = $toscheck = $finalpassword = $errorMessage = '';
 
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-
-
+if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $email = filter_var($_POST["email"], FILTER_SANITIZE_EMAIL);
+    $password1 = $_POST['password1'];
+    $password2 = $_POST['password2'];
 
-    // Checks if the same email was used in the database.
-
-    $sql = "SELECT COUNT(*) AS count FROM user_info WHERE user_email = ?"; //In here. COUNT(*) means how many rows that match the condition, and AS count means an alias by the name of "count" has been set.
-    $stmt = $db->dbLink->prepare($sql);
-    $stmt->bind_param('s', $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
-
-    if ($row['count'] > 0) { // Error message if there are any existing rows with the email in it.
-        $errorMessage = '<p class="text-danger">Email already exists. Please choose a different email.</p>';
+    if($password1 !== $password2){
+        $errorMessage = "<p class='text-danger'>Passwords do not match.</p>";
     } else {
+        $finalpassword = password_hash($password1, PASSWORD_DEFAULT);
+        
+        try{
+            $stmt = $pdo->prepare("SELECT COUNT(*) AS count FROM user_info WHERE user_email = :email");
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Code continues after checking if the email exists.
+            if ($row['count'] > 0) {
+                $errorMessage = '<p class="text-danger">Email already exists. Please choose a different email.</p>';
+            } else {
+                $sql = 'INSERT INTO user_info (user_email, user_password) VALUES (:email, :pass)';
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+                $stmt->bindParam(':pass', $finalpassword, PDO::PARAM_STR);
 
-        if ($_POST['password1'] == $_POST['password2']) {
-            $finalpassword = $_POST['password1'];
+                if($stmt->execute()){
+                    header('Location: signin_success.html');
+                    exit();
+                }
+            }
+        } catch (PDOException $e){
+            echo 'Error: '. $e->getMessage();
         }
-        $toscheck = $_POST["tAndCCheck"];
-
-        $sql = 'INSERT INTO user_info (user_email, user_password) VALUES (?, ?)';
-        $stmt = $db->dbLink->prepare($sql);
-        $stmt->bind_param('ss', $email, $finalpassword);  // Inserts the value into the Table.
-
-        if ($stmt->execute()) {
-            header('Location: signin_success.html');    // If code execution is complete, Redirects to a different page and exits the script
-            exit();
-        }
-        $stmt->close();
     }
-    $db->close();   // Closes the Database.
 }
