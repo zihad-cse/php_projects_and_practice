@@ -1,3 +1,4 @@
+
 function togglePasswordVisibility(inputId) {
     var passwordInput = document.getElementById(inputId);
     var toggleButton = document.getElementById("toggle" + inputId + "Button");

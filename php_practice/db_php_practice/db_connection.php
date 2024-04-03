@@ -1,16 +1,32 @@
 <?php 
-$server = 'localhost';
+// $server = 'localhost';
+// $username = 'huda';
+// $password = 'huda123';
+// $database = 'php_practice';
+
+// //connects db
+
+// $link = new mysqli($server, $username, $password, $database);
+
+// //if connect failed, error message.
+
+// if($link->connect_error){
+//     die('Connection Failed, '. $link->connect_error);
+// }
+?>
+
+<?php
+$dsn = 'mysql:host=localhost;dbname=php_practice';  // 'mysql:host=hostname;dbname=databasename';
 $username = 'huda';
 $password = 'huda123';
-$database = 'php_practice';
 
-//connects db
+try {
+    $pdo = new PDO($dsn, $username, $password); // Sets up a connection
 
-$link = new mysqli($server, $username, $password, $database);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  // Sets up error handling
 
-//if connect failed, error message.
-
-if($link->connect_error){
-    die('Connection Failed, '. $link->connect_error);
+} catch (PDOException $e) {
+    echo 'Connection Failed'. $e->getMessage(); // Sets up error Message
 }
+
 ?>

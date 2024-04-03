@@ -1,3 +1,4 @@
+
 document.getElementById('signup-form').addEventListener('submit', function(event) {
     event.preventDefault();     // Makes sure it doesn't reload after form submission even if the form is empty.
 
