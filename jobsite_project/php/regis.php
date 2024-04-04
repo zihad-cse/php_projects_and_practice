@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 
 include 'db_connection.php';
 
-$fname = $email = $phn = $pass1 = $pass2 = $hashedpass = $gender = $dob = $errmsg = '';
+$fname = $email = $phn = $pass1 = $pass2 = $hashedpass = $gender = $dob = $errmsg = $phnerrmsg =  '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $gender = $_POST['gender'];
     $dob = $_POST['dob'];
 
-    $membersince = date('d-m-y');
+    $membersince = date('Y-m-d'); 
     
     if ($pass1 !== $pass2) {
         $errmsg = "<p class='text-danger'>Passwords do not match </p>";
@@ -24,13 +24,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     try {
-        $stmt = $pdo->prepare("SELECT COUNT(*) AS count FROM users WHERE email_add = :email");
+
+        $stmt = $pdo->prepare("SELECT COUNT(*) AS email_count FROM users WHERE email_add = :email");
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $email_row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($row['count'] > 0) {
+        $stmt = $pdo->prepare("SELECT COUNT(*) AS phn_count FROM users WHERE phn_number = :phn");
+        $stmt->bindParam(':phn', $phn, PDO::PARAM_INT);
+        $stmt->execute();
+        $phn_row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($email_row['email_count'] > 0) {
             $errmsg = '<p class="text-danger">Email already exists. Please choose a different email.</p>';
+        } elseif ($phn_row['phn_count'] > 0) {
+            $phnerrmsg = '<p class="text-danger">Phone number already exists. Please choose a different phone number.</p>';
         } else {
             $sql = 'INSERT INTO users (email_add, user_name, phn_number, gender, dob, user_password, member_since) VALUES (:email, :fname, :phn, :gender, :dob, :hashedpass, :membersince)';
             $stmt = $pdo->prepare($sql);

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-    include '../php/regis.php';
+include '../php/regis.php';
 ?>
 
 <head>
@@ -16,12 +16,12 @@
 <body class="bg-dark">
     <nav class="navbar bg-light sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="landing_page.html">
                 Logo
             </a>
             <div class="btn-group">
                 <div class="btn btn-outline-dark disabled">Already have an account?</div>
-                <a href="#" class="btn btn-primary">Sign In</a>
+                <a href="login_page.php" class="btn btn-primary">Sign In</a>
             </div>
         </div>
     </nav>
@@ -37,15 +37,14 @@
 
                             <label for="email" class="mt-3 form-label">Valid E-mail</label>
                             <input id="email" name="email" type="email" class="form-control my-2">
-                            <p id="emailError" class="text-danger"></p>
+                            <p id="emailError" class="text-danger"> <?php echo $errmsg; ?></p>
 
                             <label for="phn">Valid Phone Number</label>
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="addon">+880</span>
-                                <input id="phn" name="phn" type="text" class="form-control" aria-label="phn"
-                                    aria-describedby="addon">
+                                <input id="phn" name="phn" type="text" class="form-control" aria-label="phn" aria-describedby="addon">
                             </div>
-                            <p id="phnError" class="text-danger"></p>
+                            <p id="phnError" class="text-danger"><?php echo $phnerrmsg; ?></p>
 
                             <label for="pass1">Enter a Password</label>
                             <input id="pass1" name="pass1" type="password" class="form-control my-2">
