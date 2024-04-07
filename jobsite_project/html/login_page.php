@@ -25,13 +25,13 @@ include '../php/login.php';
             </div>
         </div>
     </nav>
-    <section id="registration-form">
+    <section id="login-form">
         <div class="container">
             <div class="card mt-5">
                 <div class="card-header">
                     <h2 class="text-center">Login</h2>
                 </div>
-                <form id="registration" action="" method="post">
+                <form id="login" action="" method="post">
                     <div id="cardBody" class="card-body row" style="padding: 0px 100px;">
                         <div class="col-4"></div>
                         <div class="col-4">
@@ -40,9 +40,10 @@ include '../php/login.php';
                                 <span class="input-group-text" id="addon">+880</span>
                                 <input id="phn" name="phn" type="text" class="form-control" aria-label="phn" aria-describedby="addon">
                             </div>
+                            <div id="phnError" class="text-danger"></div>
                             <label class="form-label" for="password">Password</label>
-                            <input name="pass" class="mb-3 form-control" type="password">
-                            <div><?php echo $errmsg?></div>
+                            <input id="pass" name="pass" class="mb-3 form-control" type="password">
+                            <div id="passError" class="text-danger"><?php echo $errmsg?></div>
                         </div>
                         <div class="col-4"></div>
                     </div>
@@ -53,7 +54,7 @@ include '../php/login.php';
             </div>
         </div>
     </section>
-    <script></script>
+    <script src="../js/login_validation.js"></script>
 </body>
 
 </html>
