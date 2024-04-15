@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$dsn = 'mysql:host=localhost;dbname=job_portal';
+$dsn = 'mysql:host=localhost;dbname=jobsite';
 $username = 'huda';
 $password = 'huda123';
 
