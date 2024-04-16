@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-include '../php/login.php';
+include '../php/seeker_login.php';
 ?>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/landing_page.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <title>Document</title>
 </head>
@@ -54,7 +53,7 @@ include '../php/login.php';
             </div>
         </div>
     </section>
-    <script src="../js/login_validation.js"></script>
+    <script src="../js/seeker_login_validation.js"></script>
 </body>
 
 </html>
