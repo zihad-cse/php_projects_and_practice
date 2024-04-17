@@ -9,6 +9,7 @@ document.getElementById('recruitRegistration').addEventListener('submit', functi
     var companyYear = document.getElementById('companyYear').value.trim();
     var companySize = document.getElementById('companySize').value.trim();
     var companyCategory = document.getElementById('companyCategory').value.trim();
+    var companyCode = document.getElementById('companyCode').value.trim();
     var companyAddCountry = document.getElementById('companyAddCountry').value.trim();
     var companyAddDistrict = document.getElementById('companyAddDistrict').value.trim();
     var companyAddThana = document.getElementById('companyAddThana').value.trim();
@@ -44,6 +45,7 @@ document.getElementById('recruitRegistration').addEventListener('submit', functi
         isValidInput(pass) && 
         isValidInput(companyName) && 
         isValidInput(companyYear) && 
+        isValidInput(companyCode) && 
         isValidInput(companyAddCountry) && 
         isValidInput(companyAddDistrict) && 
         isValidInput(companyAddThana) && 
