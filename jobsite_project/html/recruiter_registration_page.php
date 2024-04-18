@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/recruiter_regis.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <title>Document</title>
+    <title>Recruiter: Register</title>
 </head>
 
 <body class="bg-dark">
@@ -18,7 +18,7 @@
             </a>
             <div class="btn-group">
                 <div class="btn btn-outline-dark disabled">Already have an account?</div>
-                <a href="login_page.php" class="btn btn-primary">Sign In</a>
+                <a href="recruiter_login_page.php" class="btn btn-primary">Sign In</a>
             </div>
         </div>
     </nav>

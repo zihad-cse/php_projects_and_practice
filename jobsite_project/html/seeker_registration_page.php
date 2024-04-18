@@ -9,7 +9,7 @@ include '../php/seeker_regis.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <title>Document</title>
+    <title>Register</title>
 </head>
 
 <body class="bg-dark">
@@ -20,7 +20,7 @@ include '../php/seeker_regis.php';
             </a>
             <div class="btn-group">
                 <div class="btn btn-outline-dark disabled">Already have an account?</div>
-                <a href="login_page.php" class="btn btn-primary">Sign In</a>
+                <a href="seeker_login_page.php" class="btn btn-primary">Sign In</a>
             </div>
         </div>
     </nav>
