@@ -2,7 +2,7 @@
 <html lang="en">
 <?php
     
-    include '../php/authentication.php';
+    include '../php/seeker_auth.php';
     include '../php/db_connection.php';
     
     session_start();
@@ -47,7 +47,7 @@
                     <li><a class="dropdown-item btn" href="#">Edit Profile</a></li>
                     <li><a class="dropdown-item btn" href="#">Settings</a></li>
                     <li>
-                        <form action="../php/logout.php" method="post" class="dropdown-item"><input class="btn p-0"
+                        <form action="../php/seeker_logout.php" method="post" class="dropdown-item"><input class="btn p-0"
                                 type="submit" value="Log Out" id="#logout-button"></form>
                     </li>
                 </ul>

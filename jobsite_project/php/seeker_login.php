@@ -3,7 +3,7 @@
     ini_set('display_errors', 1);
 
     include 'db_connection.php';
-    include 'authentication.php';
+    include 'seeker_auth.php';
 
     $phn = $pass = $errmsg = '';
 

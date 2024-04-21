@@ -35,7 +35,7 @@ include '../php/recruiter_login.php';
                         <div class="col-4"></div>
                         <div class="col-4">
                             <div id="userName_error" class="text-danger"></div>
-                            <div id="passError" class="text-danger"><?php echo $errorMessage?></div>
+                            <div id="passError" class="text-danger"><?php echo $errmsg?></div>
                             <label class="mt-2 form-label" for="userName">Username</label>
                             <input class="form-control" type="text" id="userName" name="userName">
                             <label class="form-label" for="password">Password</label>

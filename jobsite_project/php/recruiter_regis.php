@@ -44,9 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $contactEmail = filter_var($_POST['contactPersonEmail'], FILTER_SANITIZE_EMAIL);
     $creationDate = date('y-m-d');
 
-    // file_put_contents('hashed_pass.log', $hashedPass . PHP_EOL, FILE_APPEND);
-    // file_put_contents('hashed_pass.log', $pass . PHP_EOL, FILE_APPEND);
-    // file_put_contents('hashed_pass.log', $passConfirm . PHP_EOL, FILE_APPEND);
+
 
     if($pass !== $passConfirm) {
         $errMessage = "<p class='text-danger'>Passwords do not match </p>";
