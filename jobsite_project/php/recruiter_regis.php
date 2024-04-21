@@ -72,7 +72,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             $stmt->bindParam(':hashedPass', $hashedPass, PDO::PARAM_STR);
 
             if($stmt->execute()){
-                header('Location: #');
+                session_start();
+                $_SESSION['orguser'] = $userName;
+                header('location: ../html/recruiter_dashboard.php');
                 exit;
             }
 

@@ -51,7 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bindParam(':membersince', $membersince, PDO::PARAM_STR);
 
             if($stmt->execute()){
-                header('Location: #');
+                session_start();
+                $_SESSION['phnNumber'];
+                header('Location: ../html/seeker_dashboard.php');
                 exit();
             }
         }
