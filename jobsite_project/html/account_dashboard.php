@@ -1,20 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-include '';
+include '../php/user_data.php';
+include '../php/auth.php';
 include '../php/db_connection.php';
-include '../php/seeker_dashboard_edit.php';
 
-//!!!!!!!!!!!!!!FIX THE EDITING FORM!!!!!!!!!!!!!!!!
 
-if (!isset($_SESSION['phnNumber'])) {
-    header("Location: seeker_login_page.php");
+session_start();
+
+if (!isset($_SESSION['token'])) {
+    header("Location: login_page.php");
     exit();
 }
 
-$auth = new Auth($pdo);
-
-$userData = $auth->getUserData($_SESSION['phnNumber']);
+if (isset($_GET['phnNumber'])) {
+    $phnNumber = $_GET['phnNumber'];
+    $userData = getUserData($pdo, $phnNumber);
+}
+// if ($userData == false){
+//     echo 'NO USER DATA FOUND';
+//     exit();
+// }
 ?>
 
 <head>
@@ -46,7 +52,7 @@ $userData = $auth->getUserData($_SESSION['phnNumber']);
                     <li><a class="dropdown-item btn" href="#">Edit Profile</a></li>
                     <li><a class="dropdown-item btn" href="#">Settings</a></li>
                     <li>
-                        <form action="../php/seeker_logout.php" method="post" class="dropdown-item"><input class="btn p-0" type="submit" value="Log Out" id="#logout-button"></form>
+                        <form action="../php/logout.php" method="post" class="dropdown-item"><input class="btn p-0" type="submit" value="Log Out" id="#logout-button"></form>
                     </li>
                 </ul>
             </div>
@@ -59,28 +65,21 @@ $userData = $auth->getUserData($_SESSION['phnNumber']);
         <div class="card col-8">
             <div class="card-body">
                 <h3>Profile</h3>
-                <form action="">
-                    <table class="table table-bordered">
-                        <tr>
-                            <th scope="row">Username</th>
-                            <td><input name="userName" class="form-control" type="text" placeholder="<?php echo $userData['user_name']; ?>"></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Email</th>
-                            <td><input name="eMail" class="form-control" type="email" placeholder="<?php echo $userData['email_add']; ?>"></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Phone Number</th>
-                            <td><input name="phnNumber" class="form-control" type="text" placeholder="<?php echo $userData['phn_number']; ?>"></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Date of Birth</th>
-                            <td><?php echo $userData['dob']; ?></td>
-                        </tr>
-                    </table>
-                    <input class="btn btn-primary" value="Save" type="submit">
-                </form>
-
+                <table class="table table-bordered">
+                    <tr>
+                        <th scope="row">Username</th>
+                        <td><?php echo $userData['orguser']; ?></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Email</th>
+                        <td><?php echo $userData['premail']; ?></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Phone Number</th>
+                        <td><?php echo $userData['prphone']; ?></td>
+                    </tr>
+                </table>
+                <a href="seeker_dashboard_edit_page.php"><button class="btn btn-primary">Edit</button></a>
             </div>
         </div>
         <div class="card col-2">
@@ -89,10 +88,10 @@ $userData = $auth->getUserData($_SESSION['phnNumber']);
 
                 </div>
                 <div>
-                    <h4 class="text-center pt-3"><?php echo $userData['user_name']; ?></h4>
+                    <h4 class="text-center pt-3"><?php echo $userData['orguser']; ?></h4>
                     <hr>
-                    <h5 class="text-center">Phone:<?php echo $userData['phn_number']; ?></h5>
-                    <h5 class="text-center">Email: <?php echo $userData['email_add']; ?></h5>
+                    <h5 class="text-center">Phone:<?php echo $userData['prphone']; ?></h5>
+                    <h5 class="text-center">Email: <?php echo $userData['premail']; ?></h5>
                     <hr>
                     <h5 class="text-center">Skills:</h5>
                     <ul class="list-inline">
@@ -105,10 +104,10 @@ $userData = $auth->getUserData($_SESSION['phnNumber']);
                     <hr>
                     <h5>Status: </h5>
                     <hr>
-                    <h5>Member Since: <?php echo $userData['member_since']; ?> </h5>
+                    <h5>Member Since: <?php echo $userData['created']; ?> </h5>
                     <hr>
                     <div class="text-center">
-                        <a href="#"><button class="btn btn-primary">Click to view full profile</button></a>
+                        <a href="seeker_dashboard_edit.php"><button class="btn btn-primary">Click to view full profile</button></a>
                     </div>
                 </div>
             </div>

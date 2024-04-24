@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-include '../php/seeker_regis.php';
+include '../php/registration.php';
 ?>
 
 <head>
@@ -20,7 +20,7 @@ include '../php/seeker_regis.php';
             </a>
             <div class="btn-group">
                 <div class="btn btn-outline-dark disabled">Already have an account?</div>
-                <a href="seeker_login_page.php" class="btn btn-primary">Sign In</a>
+                <a href="login_page.php" class="btn btn-primary">Sign In</a>
             </div>
         </div>
     </nav>
@@ -34,7 +34,11 @@ include '../php/seeker_regis.php';
                     <div id="cardBody" class="card-body row" style="padding: 0px 100px;">
                         <div class="container">
 
-                            <label for="email" class="mt-3 form-label">Valid E-mail</label>
+                            <label for="name">Username</label>
+                            <input id="user" name="fname" type="text" class="form-control my-2">
+                            <p id="userError" class="text-danger"></p>
+
+                            <label for="email" class="form-label">Valid E-mail</label>
                             <input id="email" name="email" type="email" class="form-control my-2">
                             <p id="emailError" class="text-danger"> <?php echo $errmsg; ?></p>
 
@@ -51,28 +55,7 @@ include '../php/seeker_regis.php';
                             <label for="pass2">Repeat Password</label>
                             <input id="pass2" name="pass2" type="password" class="form-control my-2">
                             <p id="passError" class="text-danger"></p>
-
-                            <label for="name">Full Name</label>
-                            <input id="fname" name="fname" type="text" class="form-control my-2">
-                            <p id="fnameError" class="text-danger"></p>
-
-                            <div class="row mb-3">
-                                <div class="col-6">
-                                    <label for="gender">Gender</label>
-                                    <select name="gender" class="form-select my-2" id="gender">
-                                        <option selected>Select an option</option>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                    <p id="genderError" class="text-danger"></p>
-                                </div>
-                                <div class="col-6">
-                                    <label for="dob">Date of Birth</label>
-                                    <input name="dob" class="form-control my-2" type="date" id="dob">
-                                    <p id="dobError" class="text-danger"></p>
-                                </div>
-                            </div>
+                          
                         </div>
                     </div>
                     <div class="card-footer">
@@ -82,7 +65,7 @@ include '../php/seeker_regis.php';
             </div>
         </div>
     </section>
-    <script src="../js/seeker_regis_validation.js"></script>
+    <script src="../js/regis_valid.js"></script>
 </body>
 
 </html>

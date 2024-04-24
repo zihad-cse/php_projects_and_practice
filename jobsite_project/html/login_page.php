@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-include '../php/seeker_login.php';
+session_start();
+
+include '../php/login.php';
 ?>
 
 <head>
@@ -20,7 +22,7 @@ include '../php/seeker_login.php';
             </a>
             <div class="btn-group">
                 <div class="btn btn-outline-dark disabled">Not a member?</div>
-                <a href="seeker_registration_page.php" class="btn btn-primary">Register</a>
+                <a href="registration_page.php" class="btn btn-primary">Register</a>
             </div>
         </div>
     </nav>
@@ -42,7 +44,8 @@ include '../php/seeker_login.php';
                             <div id="phnError" class="text-danger"></div>
                             <label class="form-label" for="password">Password</label>
                             <input id="pass" name="pass" class="mb-3 form-control" type="password">
-                            <div id="passError" class="text-danger"><?php echo $errmsg?></div>
+                            <div id="passError" class="text-danger"><?php echo $errmsg ?></div>
+                            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                         </div>
                         <div class="col-4"></div>
                     </div>

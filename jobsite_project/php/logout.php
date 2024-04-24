@@ -6,5 +6,5 @@ $_SESSION = array();
 
 session_destroy();
 
-header("Location: ../html/seeker_login_page.php");
+header("Location: ../html/login_page.php");
 exit();

@@ -2,6 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+require_once 'utility.php';
 class Auth
 {
     private $pdo;
@@ -10,19 +11,20 @@ class Auth
     {
         $this->pdo = $pdo;
     }
-
+    
     public function login($phnNumber, $pass)
     {
         try {
-            $stmt = $this->pdo->prepare("SELECT user_password FROM users WHERE phn_number = :phnNumber");
+            $stmt = $this->pdo->prepare("SELECT pass FROM org WHERE prphone = :phnNumber");
             $stmt->bindParam(':phnNumber', $phnNumber, PDO::PARAM_STR);
             $stmt->execute();
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($user) {
-                if (password_verify($pass, $user['user_password'])) {
+                if (password_verify($pass, $user['pass'])) {
                     session_start();
-                    $_SESSION['phnNumber'] = $phnNumber;
+                    $token = randomToken();
+                    $_SESSION['token'] = $token;
                     return true;
                 } else {
                     return false;
@@ -30,22 +32,6 @@ class Auth
             } else {
                 return false;
             }
-        } catch (PDOException $e) {
-            error_log("Error: " . $e->getMessage());
-            return false;
-        }
-    }
-
-    public function getUserData($phnNumber)
-    {
-        try {
-            $stmt = $this->pdo->prepare("SELECT * FROM users WHERE phn_number = :phnNumber");
-            $stmt->bindParam(':phnNumber', $phnNumber, PDO::PARAM_STR);
-            $stmt->execute();
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            // Return the user data
-            return $user;
         } catch (PDOException $e) {
             error_log("Error: " . $e->getMessage());
             return false;
