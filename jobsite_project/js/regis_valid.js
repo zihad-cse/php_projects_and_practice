@@ -58,14 +58,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function isValidUsername(user) {
-
-        var regex = /^[a-zA-Z0-9]/;
-
-        console.log(regex.test(user)); //FiX
-        if (regex.test(user)) {
-            return false;
-        } else {
-            return true;
-        }
+        var regex = /^[a-zA-Z0-9]+$/;
+        return regex.test(user);
     }
+    
 })

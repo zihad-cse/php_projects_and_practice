@@ -24,6 +24,7 @@ class Auth
                 if (password_verify($pass, $user['pass'])) {
                     session_start();
                     $token = randomToken();
+                    $_SESSION['phnNumber'] = $phnNumber;
                     $_SESSION['token'] = $token;
                     return true;
                 } else {

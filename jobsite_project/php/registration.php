@@ -52,7 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 session_start();
                 $token = randomToken();
                 $_SESSION['token'] = $token;
-                header("Location: ../html/account_dashboard.php?phnNumber=$phn");
+                $_SESSION['phnNumber'] = $phn;
+                header("Location: ../html/dashboard.php");
                 exit();
             }
         }

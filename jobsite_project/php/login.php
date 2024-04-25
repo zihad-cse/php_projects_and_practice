@@ -14,7 +14,7 @@
         $auth = new Auth($pdo);
 
         if ($auth->login($phnNumber, $pass)) {
-            header("location: account_dashboard.php?phnNumber=$phnNumber");
+            header("location: dashboard.php");
             exit();
         } else {
             $errmsg = "<p class='text-danger'>Incorrect credentials. Please try again.</p>";
