@@ -12,6 +12,24 @@ if (!isset($_SESSION['token'])) {
     exit();
 }
 
+if (isset($_SESSION['phnNumber'])) {
+    $phnNumber = $_SESSION['phnNumber'];
+    $userData = getUserData($pdo, $phnNumber);
+}
+
+
+
+if (isset($_SESSION['phnNumber'])) {
+    $phnNumber = $_SESSION['phnNumber'];
+    $resumeData = getResumeData($pdo, $phnNumber);
+}
+
+$dob = $resumeData['dateofbirth'];
+
+
+$formatteddob = date("Y-d-m", strtotime($dob));
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
     $companyCategory = $_POST['companyCategory'];
     $companyDetails = $_POST['companyDetails'];
@@ -25,16 +43,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
         $stmt->bindParam(":displayuNote", $companyDetailsShow, PDO::PARAM_BOOL);
         $stmt->bindParam(":phnSession", $phnNumber, PDO::PARAM_STR);
         $stmt->execute();
-    
+    } catch (PDOException $e) {
+        echo 'Error: ' . $e->getMessage();
+    }
+}
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
+    $fullName = $_POST['fullname'];
+    $fatherName = $_POST['fathername'];
+    $motherName = $_POST['mothername'];
+    $dateOfBirth = $_POST['dateofbirth'];
+    $religion = $_POST['religion'];
+    $homeAddress = $_POST['homeaddress'];
+    $birthArea = $_POST['birtharea'];
+    $skills = $_POST['skilleduexp'];
+    $resumeDetailsShow = $_POST['resumeDetailsShow'];
+    $userIndex = $userData['orgindex'];
+
+
+    try {
+        $sql = 'UPDATE resumes SET visible = :resumeDataShow, fullname = :fullName, fathername = :fatherName, mothername = :motherName, dateofbirth = :dateOfBirth, religion = :religion, homeaddress = :homeAddress, birtharea = :birthArea, skilleduexp = :skills WHERE orgindex = :userIndex';
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(":fullName", $fullName, PDO::PARAM_STR);
+        $stmt->bindParam(":fatherName", $fatherName, PDO::PARAM_STR);
+        $stmt->bindParam(":motherName", $motherName, PDO::PARAM_STR);
+        $stmt->bindParam(":dateOfBirth", $dateOfBirth, PDO::PARAM_STR);
+        $stmt->bindParam(":religion", $religion, PDO::PARAM_STR);
+        $stmt->bindParam(":homeAddress", $homeAddress, PDO::PARAM_STR);
+        $stmt->bindParam(":birthArea", $birthArea, PDO::PARAM_STR);
+        $stmt->bindParam(":skills", $skills, PDO::PARAM_STR);
+        $stmt->bindParam(":resumeDataShow", $resumeDetailsShow, PDO::PARAM_BOOL);
+        $stmt->bindParam(":userIndex", $userIndex, PDO::PARAM_STR);
+        $stmt->execute();
     } catch (PDOException $e) {
         echo 'Error: ' . $e->getMessage();
     }
 }
 
-if (isset($_SESSION['phnNumber'])) {
-    $phnNumber = $_SESSION['phnNumber'];
-    $userData = getUserData($pdo, $phnNumber);
-}
+
+
 ?>
 
 <head>
@@ -130,6 +176,72 @@ if (isset($_SESSION['phnNumber'])) {
                             </div>
                         </div>
                     <?php } ?>
+                    <?php if ($resumeData['visible'] == 1) { ?>
+                        <div class="row pb-1">
+                            <div class="col-3">
+                                <b>Full Name</b>
+                            </div>
+                            <div class="col-6">
+                                <p><?php echo $resumeData['fullname'] ?></p>
+                            </div>
+                        </div>
+                        <div class="row pb-1">
+                            <div class="col-3">
+                                <b>Father's Name</b>
+                            </div>
+                            <div class="col-6">
+                                <p><?php echo $resumeData['fathername'] ?></p>
+                            </div>
+                        </div>
+                        <div class="row pb-1">
+                            <div class="col-3">
+                                <b>Mother's Name</b>
+                            </div>
+                            <div class="col-6">
+                                <p><?php echo $resumeData['mothername'] ?></p>
+                            </div>
+                        </div>
+                        <div class="row pb-1">
+                            <div class="col-3">
+                                <b>Date of Birth</b>
+                            </div>
+                            <div class="col-6">
+                                <p><?php echo $resumeData['dateofbirth'] ?></p>
+                            </div>
+                        </div>
+                        <div class="row pb-1">
+                            <div class="col-3">
+                                <b>Religion</b>
+                            </div>
+                            <div class="col-6">
+                                <p><?php echo $resumeData['religion'] ?></p>
+                            </div>
+                        </div>
+                        <div class="row pb-1">
+                            <div class="col-3">
+                                <b>Address</b>
+                            </div>
+                            <div class="col-6">
+                                <p><?php echo $resumeData['homeaddress'] ?></p>
+                            </div>
+                        </div>
+                        <div class="row pb-1">
+                            <div class="col-3">
+                                <b>Birth Area</b>
+                            </div>
+                            <div class="col-6">
+                                <p><?php echo $resumeData['birtharea'] ?></p>
+                            </div>
+                        </div>
+                        <div class="row pb-1">
+                            <div class="col-3">
+                                <b>Skills</b>
+                            </div>
+                            <div class="col-6">
+                                <p><?php echo $resumeData['skilleduexp'] ?></p>
+                            </div>
+                        </div>
+                    <?php } ?>
                 <?php } ?>
                 <?php if (isset($_GET['edit'])) { ?>
                     <div>
@@ -140,9 +252,9 @@ if (isset($_SESSION['phnNumber'])) {
                                 </div>
                                 <div class="col-6">
                                     <select class="form-select" name="companyCategory" id="companyCategory">
-                                        <option selected>Select a category</option>
-                                        <option value="1">NGO</option>
-                                        <option value="2">Tech</option>
+                                        <option >Select a category</option>
+                                        <option <?= $userData['ocatindex'] == 1 ? "selected" : "" ?> value="1">NGO</option>
+                                        <option <?= $userData['ocatindex'] == 2 ? "selected" : "" ?> value="2">Tech</option>
                                     </select>
                                 </div>
                             </div>
@@ -151,7 +263,7 @@ if (isset($_SESSION['phnNumber'])) {
                                     <b>Company Details</b>
                                 </div>
                                 <div class="col-6">
-                                    <textarea class="mt-3 form-control" style="resize: none;" name="companyDetails" id="companyAddDetails" cols="30" rows="10" placeholder="Write Company Details"></textarea>
+                                    <textarea class="mt-3 form-control" style="resize: none;" name="companyDetails" id="companyAddDetails" cols="30" rows="10"><?php echo $userData['orgnote'] ?></textarea>
                                 </div>
                             </div>
                             <div class="row">
@@ -160,7 +272,98 @@ if (isset($_SESSION['phnNumber'])) {
                                 </div>
                                 <div class="col-6">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="1" name="companyDetailsShow" id="flexCheckDefault">
+                                        <input <?= $userData['displayunote'] == 1 ? "checked" : "" ?> class="form-check-input" type="checkbox" value="1" name="companyDetailsShow" id="flexCheckDefault">
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row py-3">
+                                <div class="col-3">
+                                    <b>Full Name</b>
+                                </div>
+                                <div class="col-6">
+                                    <div>
+                                        <input name="fullname" class="form-control" type="text" value = <?php echo $resumeData['fullname']?>>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row py-3">
+                                <div class="col-3">
+                                    <b>Father's Name</b>
+                                </div>
+                                <div class="col-6">
+                                    <div>
+                                        <input name="fathername" class="form-control" type="text" value = <?php echo $resumeData['fathername']?>>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row py-3">
+                                <div class="col-3">
+                                    <b>Mother's Name</b>
+                                </div>
+                                <div class="col-6">
+                                    <div>
+                                        <input name="mothername" class="form-control" type="text" value = <?php echo $resumeData['mothername']?>> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row py-3">
+                                <div class="col-3">
+                                    <b>Date of Birth</b>
+                                </div>
+                                <div class="col-6">
+                                    <div>
+                                        <input name="dateofbirth" class="form-control" type="date" value=<?php echo $formatteddob?>>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row py-3">
+                                <div class="col-3">
+                                    <b>Religion</b>
+                                </div>
+                                <div class="col-6">
+                                    <div>
+                                        <input name="religion" class="form-control" type="text" value = <?php echo $resumeData['religion']?>>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row py-3">
+                                <div class="col-3">
+                                    <b>Address</b>
+                                </div>
+                                <div class="col-6">
+                                    <div>
+                                        <textarea class="mt-3 form-control" style="resize: none;" name="homeaddress" id="homeAddress" cols="30" rows="10"><?php echo $resumeData['homeaddress']?></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row py-3">
+                                <div class="col-3">
+                                    <b>Birth Area</b>
+                                </div>
+                                <div class="col-6">
+                                    <div>
+                                        <input name="birtharea" class="form-control" type="text" value = <?php echo $resumeData['birtharea']?> >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row py-3">
+                                <div class="col-3">
+                                    <b>Skills</b>
+                                </div>
+                                <div class="col-6">
+                                    <div>
+                                        <input name="skilleduexp" class="form-control" type="text" value = <?php echo $resumeData['skilleduexp']?>>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <b>Display Resume Details</b>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <input <?= $resumeData['visible'] == 1 ? "checked" : "" ?> class="form-check-input" type="checkbox" value="1" name="resumeDetailsShow" id="flexCheckDefault">
                                     </div>
                                 </div>
                             </div>
