@@ -32,3 +32,51 @@ function getResumeData($pdo, $phnNumber)
         return false;
     }
 }
+
+function getPostedJobData ($pdo, $phnNumber)
+{
+    try
+    {
+        $stmt = $pdo->prepare("SELECT job.*, org.orgindex FROM job LEFT JOIN org ON org.orgindex = job.orgindex WHERE prphone = :phnNumber");
+        $stmt->bindParam(':phnNumber', $phnNumber, PDO::PARAM_STR);
+        $stmt->execute();
+        $jobs = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $jobs;
+    }
+    catch (PDOException $e)
+    {
+        error_log("Error: " . $e->getMessage());
+        return false;
+    }
+}
+
+function getJobCategories($pdo){
+    try
+    {
+        $stmt = $pdo->prepare("SELECT * FROM jobcat");
+        $stmt->execute();
+        $jobCatData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $jobCatData;
+    }
+    catch (PDOException $e)
+    {
+        error_log("Error: ". $e->getMessage());
+        return false;
+    }
+}
+
+function getOrgCategories($pdo){
+    try
+    {
+        $stmt = $pdo->prepare("SELECT * FROM orgcat");
+        $stmt->execute();
+        $orgCatData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $orgCatData;
+    } 
+    catch (PDOException $e)
+    {
+        error_log("Error: ". $e->getMessage());
+        return false;
+    }
+}
