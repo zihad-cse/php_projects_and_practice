@@ -65,9 +65,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bindParam(":conemail", $conEmail, PDO::PARAM_STR);
         $stmt->bindParam(":conphone", $conPhone, PDO::PARAM_STR);
         $stmt->bindParam(":visibility", $visibility, PDO::PARAM_STR);
-        $stmt->execute();
+
         if ($stmt->execute()) {
-            header("Location: dashboard.php");
+            header("Location: posted_jobs.php");
         }
     } catch (PDOException $e) {
         echo 'Error: ' . $e->getMessage();
@@ -113,10 +113,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </button>
                             <div class="collapse" id="dashboard-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
-                                    <li><a href="#" class="btn btn-secondary-outline">Overview</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">Weekly</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">Monthly</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">Annually</a></li>
+                                    <li><a href="#" class="btn btn-secondary-outline">##</a></li>
+                                    <li><a href="#" class="btn btn-secondary-outline">##</a></li>
+                                    <li><a href="#" class="btn btn-secondary-outline">##</a></li>
+                                    <li><a href="#" class="btn btn-secondary-outline">##</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -126,10 +126,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </button>
                             <div class="collapse" id="orders-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
-                                    <li><a href="#" class="btn btn-secondary-outline">New</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">Processed</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">Shipped</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">Returned</a></li>
+                                    <li><a href="job_post.php" class="btn btn-secondary-outline">New</a></li>
+                                    <li><a href="posted_jobs.php" class="btn btn-secondary-outline">Posted</a></li>
+
                                 </ul>
                             </div>
                         </li>

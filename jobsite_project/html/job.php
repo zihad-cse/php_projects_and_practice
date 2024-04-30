@@ -36,6 +36,11 @@ $jobData = getPostedJobData($pdo, $phnNumber);
 
 $allJobsData = getAllPostedJobs($pdo, $orgindex);
 
+$jobId = $_GET['id'];
+$jobdetails = getJob($pdo, $jobId);
+
+$jobCat = getJobCategory($pdo, $jobdetails['jobcategory']);
+
 ?>
 
 <head>
@@ -55,7 +60,7 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
             resize: none;
         }
     </style>
-    <title>Posted Circulars
+    <title>Posted Circular
     </title>
 </head>
 
@@ -114,37 +119,80 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
                     </ul>
                 </div>
                 <div class="col-9 p-5" style="min-height: 1000px; background-color: #ddd;">
-                    <h3>Posted Jobs</h3>
                     <div class="row">
                         <div class="col-2">
-                            <b>Circular ID</b>
-                        </div>
-                        <div class="col-4">
                             <b>Title</b>
                         </div>
-                        <div class="col-2">
-                            <b>Deadline</b>
-                        </div>
-                        <div class="col-2">
-                            
+                        <div class="col-6">
+                            <p><?php echo $jobdetails['jobtitle'] ?></p>
                         </div>
                     </div>
-                    <?php foreach ($allJobsData as $aJob){?>
-                    <div class="row my-3">
+                    <div class="row">
                         <div class="col-2">
-                            <p><?php echo $aJob['jindex']?></p>
+                            <b>Category</b>
                         </div>
-                        <div class="col-4">
-                            <p><?php echo $aJob['jobtitle']?></p>
-                        </div>
-                        <div class="col-2">
-                            <p><?php echo $aJob['enddate']?></p>
-                        </div>
-                        <div class="col-2">
-                            <a href="job.php?id=<?php echo $aJob['jindex'] ?>">View</a>
+                        <div class="col-6">
+                            <p><?php foreach ($jobCat as $cat) {
+                                    echo $cat;
+                                } ?></p>
                         </div>
                     </div>
-                    <?php } ?>
+                    <div class="row">
+                        <div class="col-2">
+                            <b>Responsibilities</b>
+                        </div>
+                        <div class="col-6">
+                            <p><?php echo $jobdetails['dutyskilleduexp'] ?></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <b>Start Date</b>
+                        </div>
+                        <div class="col-6">
+                            <p><?php echo $jobdetails['startdate'] ?></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <b>End Date</b>
+                        </div>
+                        <div class="col-6">
+                            <p><?php echo $jobdetails['enddate'] ?></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <b>Location</b>
+                        </div>
+                        <div class="col-6">
+                            <p><?php echo $jobdetails['workarea'] ?></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <b>Salary</b>
+                        </div>
+                        <div class="col-6">
+                            <p><?php echo $jobdetails['salary'] ?></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <b>Contact Email</b>
+                        </div>
+                        <div class="col-6">
+                            <p><?php echo $jobdetails['conemail'] ?></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <b>Contact Phone</b>
+                        </div>
+                        <div class="col-6">
+                            <p><?php echo $jobdetails['conphone'] ?></p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -195,20 +195,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
                         </li>
                         <li class="mb-1">
                             <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
-                                <i class="fa-solid fa-chevron-down pe-2"></i>Orders
+                                <i class="fa-solid fa-chevron-down pe-2"></i>Jobs
                             </button>
                             <div class="collapse" id="orders-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
-                                    <li><a href="#" class="btn btn-secondary-outline">###</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">###</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">###</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">###</a></li>
+                                    <li><a href="job_post.php" class="btn btn-secondary-outline">New</a></li>
+                                    <li><a href="posted_jobs.php" class="btn btn-secondary-outline">Posted Jobs</a></li>
                                 </ul>
                             </div>
                         </li>
-                        <li class="border-top my-3"></li>
-                        <li class="my-3 ps-3"><a href="job_post.php" class="btn btn-primary">Post a job circular</a></li>
-                        <li class="border-top my-3"></li>
+
                         <li class="mb-1">
                             <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
                                 <i class="fa-solid fa-chevron-down pe-2"></i>Account
