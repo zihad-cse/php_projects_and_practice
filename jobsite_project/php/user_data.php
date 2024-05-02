@@ -2,6 +2,9 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include 'db_connection.php';
+
+// Single org data with org prphone
+
 function getUserData($pdo, $phnNumber)
 {
     try {
@@ -17,6 +20,8 @@ function getUserData($pdo, $phnNumber)
     }
 };
 
+// Single resume data with org prphone
+
 function getResumeData($pdo, $phnNumber)
 {
     try {
@@ -26,107 +31,150 @@ function getResumeData($pdo, $phnNumber)
         $resume = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $resume;
-
     } catch (PDOException $e) {
         error_log("Error: " . $e->getMessage());
         return false;
     }
 }
 
-function getPostedJobData ($pdo, $phnNumber)
+// Single posted job data with org prphone
+
+function getPostedJobData($pdo, $phnNumber)
 {
-    try
-    {
+    try {
         $stmt = $pdo->prepare("SELECT job.*, org.orgindex FROM job LEFT JOIN org ON org.orgindex = job.orgindex WHERE prphone = :phnNumber");
         $stmt->bindParam(':phnNumber', $phnNumber, PDO::PARAM_STR);
         $stmt->execute();
         $jobs = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $jobs;
-    }
-    catch (PDOException $e)
-    {
+    } catch (PDOException $e) {
         error_log("Error: " . $e->getMessage());
         return false;
     }
 }
 
-function getAllPostedJobs ($pdo, $orgIndex){
-    try
-    {
+// All posted jobs with OrgIndex
+
+function getAllPostedJobs($pdo, $orgIndex)
+{
+    try {
         $stmt = $pdo->prepare("SELECT * FROM job WHERE orgindex = :orgIndex");
         $stmt->bindParam(':orgIndex', $orgIndex, PDO::PARAM_STR);
         $stmt->execute();
         $allJobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $allJobs;
-    }
-    catch (PDOException $e)
-    {
+    } catch (PDOException $e) {
         error_log("Error: " . $e->getMessage());
         return false;
     }
 }
 
-function getJob ($pdo, $jobId){
-    try
-    {
+// Number of Jobs in Database
+
+function postedJobsNumber($pdo)
+{
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM job");
+        $stmt->execute();
+        $numberOfJobs = $stmt->rowCount();
+
+        return $numberOfJobs;
+    } catch (PDOException $e) {
+        error_log("Error: " . $e->getMessage());
+    }
+}
+
+// Single Job based on Job ID
+
+function getJob($pdo, $jobId)
+{
+    try {
         $stmt = $pdo->prepare("SELECT * FROM job WHERE jindex = :jindex");
         $stmt->bindParam(':jindex', $jobId, PDO::PARAM_STR);
         $stmt->execute();
         $job = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $job;
-    }
-    catch (PDOException $e)
-    {
+    } catch (PDOException $e) {
         error_log("Error: " . $e->getMessage());
         return false;
     }
 }
 
-function getJobCategories($pdo){
-    try
-    {
+// All job categories
+
+function getJobCategories($pdo)
+{
+    try {
         $stmt = $pdo->prepare("SELECT * FROM jobcat");
         $stmt->execute();
         $jobCatData = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $jobCatData;
-    }
-    catch (PDOException $e)
-    {
-        error_log("Error: ". $e->getMessage());
+    } catch (PDOException $e) {
+        error_log("Error: " . $e->getMessage());
         return false;
     }
 }
 
-function getJobCategory($pdo, $categoryId){
-    try
-    {
+// Single Job Category Based on category ID
+
+function getJobCategory($pdo, $categoryId)
+{
+    try {
         $stmt = $pdo->prepare("SELECT jcategory FROM jobcat WHERE jcatindex = :categoryId");
         $stmt->bindParam(':categoryId', $categoryId, PDO::PARAM_STR);
         $stmt->execute();
         $jobCat = $stmt->fetch(PDO::FETCH_ASSOC);
         return $jobCat;
-    }
-    catch (PDOException $e)
-    {
-        error_log("Error: ". $e->getMessage());
+    } catch (PDOException $e) {
+        error_log("Error: " . $e->getMessage());
         return false;
     }
 }
 
-function getOrgCategories($pdo){
-    try
-    {
+// All Organization Categories
+
+function getOrgCategories($pdo)
+{
+    try {
         $stmt = $pdo->prepare("SELECT * FROM orgcat");
         $stmt->execute();
         $orgCatData = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $orgCatData;
-    } 
-    catch (PDOException $e)
-    {
-        error_log("Error: ". $e->getMessage());
+    } catch (PDOException $e) {
+        error_log("Error: " . $e->getMessage());
+        return false;
+    }
+}
+
+
+function pageination_alljobrows($pdo)
+{
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM job");
+        $stmt->execute();
+        $countjobrows=  $stmt->rowCount();
+
+        return $countjobrows;
+    } catch (PDOException $e) {
+        error_log("Error: " . $e->getMessage());
+        return false;
+    }
+}
+
+function pageination_alljobdetails($pdo ,$initial_page, $limit){
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM job LIMIT :initialpage, :limitnumber");
+        $stmt->bindParam(':initialpage', $initial_page, PDO::PARAM_INT);
+        $stmt->bindParam(':limitnumber', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        $alljobdetails= $stmt->fetchAll(PDO::FETCH_ASSOC); 
+
+        return $alljobdetails;
+    } catch (PDOException $e) {
+        error_log("Error: " . $e->getMessage());
         return false;
     }
 }

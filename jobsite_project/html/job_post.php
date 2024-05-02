@@ -39,9 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $jobTitle = $_POST['jobTitle'];
     $workArea = $_POST['workArea'];
     $dutySkilledUExp = $_POST['dutySkilledUExp'];
-    $salary = $_POST['salary'];
-    $startDate = $_POST['startDate'];
+    $startDate = date('Y-m-d');
     $endDate = $_POST['endDate'];
+    $salary = $_POST['salary'];
     $conEmail = $_POST['conEmail'];
     $conPhone = $_POST['conPhone'];
 
@@ -153,13 +153,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="col-9 p-5" style="min-height: 1000px; background-color: #ddd;">
                     <h4 class="mb-3">Post A Circular</h4>
                     <hr>
-                    <form method="post">
+                    <form method="post" id="job-post">
+                        <div style="display: none;" id="error-message-box" class="row my-4">
+                            <div class="col-3">
+                                <div class="bg-danger rounded p-3">
+                                    <p id="error-message" class=" m-0 text-center text-light"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: none;" id="phone-error-message-box" class="row my-4">
+                            <div class="col-3">
+                                <div class="bg-danger rounded p-3">
+                                    <p id="phone-error-message" class=" m-0 text-center text-light"></p>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row my-2">
                             <div class="col-2">
                                 <b>Job title</b>
                             </div>
                             <div class="col-6">
-                                <input name="jobTitle" type="text" class="form-control">
+                                <input id="jobTitle" name="jobTitle" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row my-2">
@@ -167,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <b>Job Category</b>
                             </div>
                             <div class="col-6">
-                                <select name="jobCategory" id="" class="form-control">
+                                <select name="jobCategory" id="jobCategory" class="form-control">
                                     <option selected>Select A Category</option>
                                     <?php foreach ($jobCatData as $row) {
                                         echo "<option value='" . $row["jcatindex"] . "'>" . $row["jcategory"] . "</option>";
@@ -181,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <b>Location</b>
                             </div>
                             <div class="col-6">
-                                <input name="workArea" type="text" class="form-control">
+                                <input id="workArea" name="workArea" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row my-2">
@@ -189,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <b>Responsibilities</b>
                             </div>
                             <div class="col-6">
-                                <textarea style="resize: none;" name="dutySkilledUExp" class="form-control" cols="30" rows="10"></textarea>
+                                <textarea id="dutySkilledUExp" style="resize: none;" name="dutySkilledUExp" class="form-control" cols="30" rows="10"></textarea>
                             </div>
                         </div>
                         <div class="row my-2">
@@ -197,23 +211,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <b>Salary</b>
                             </div>
                             <div class="col-6">
-                                <input name="salary" type="text" class="form-control">
+                                <input id="salary" name="salary" type="text" class="form-control">
                             </div>
                         </div>
-                        <div class="row my-2">
+                        <!-- <div class="row my-2">
                             <div class="col-2">
                                 <b>Start Date</b>
                             </div>
                             <div class="col-6">
                                 <input name="startDate" type="date" class="form-control">
                             </div>
-                        </div>
+                        </div> -->
                         <div class="row my-2">
                             <div class="col-2">
                                 <b>Deadline</b>
                             </div>
                             <div class="col-6">
-                                <input name="endDate" type="date" class="form-control">
+                                <input id="endDate" name="endDate" type="date" class="form-control">
                             </div>
                         </div>
                         <div class="row my-2">
@@ -221,7 +235,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <b>Contact Email</b>
                             </div>
                             <div class="col-6">
-                                <input name="conEmail" type="email" class="form-control">
+                                <input id="conEmail" name="conEmail" type="email" class="form-control">
                             </div>
                         </div>
                         <div class="row my-2">
@@ -229,7 +243,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <b>Contact Phone Number</b>
                             </div>
                             <div class="col-6">
-                                <input name="conPhone" type="text" class="form-control">
+                                <input id="conPhone" name="conPhone" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row my-2">
@@ -241,7 +255,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </div>
                         </div>
                         <hr>
-                        <input name="jobPost" type="submit" class="btn btn-primary" value="Post">
+                        <input id="jobPost" name="jobPost" type="submit" class="btn btn-primary" value="Post">
                     </form>
                 </div>
             </div>
@@ -252,6 +266,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script src="../js/job_post_valid.js"></script>
 </body>
 
 </html>
