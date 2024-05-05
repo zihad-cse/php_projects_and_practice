@@ -62,7 +62,7 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
 <body class="bg-light">
     <nav class="navbar bg-light sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="landing_page.html">Logo</a>
+            <a class="navbar-brand" href="landing_page.php">Logo</a>
         </div>
     </nav>
     <section id="dashboard-main-content">
@@ -141,7 +141,7 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
                             <p><?php echo $aJob['enddate']?></p>
                         </div>
                         <div class="col-2">
-                            <a href="job.php?id=<?php echo $aJob['jindex'] ?>">View</a>
+                            <a href="job.php?view&id=<?php echo $aJob['jindex'] ?>">View</a>
                         </div>
                     </div>
                     <?php } ?>

@@ -166,7 +166,7 @@ function pageination_alljobrows($pdo)
 
 function pageination_alljobdetails($pdo ,$initial_page, $limit){
     try {
-        $stmt = $pdo->prepare("SELECT * FROM job LIMIT :initialpage, :limitnumber");
+        $stmt = $pdo->prepare("SELECT * FROM job WHERE visibility = 1 LIMIT :limitnumber OFFSET :initialpage");
         $stmt->bindParam(':initialpage', $initial_page, PDO::PARAM_INT);
         $stmt->bindParam(':limitnumber', $limit, PDO::PARAM_INT);
         $stmt->execute();

@@ -17,7 +17,7 @@ include '../php/login.php';
 <body class="bg-dark">
     <nav class="navbar bg-light sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="landing_page.html">
+            <a class="navbar-brand" href="landing_page.php">
                 Logo
             </a>
             <div class="btn-group">

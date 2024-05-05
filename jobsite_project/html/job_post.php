@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body class="bg-light">
     <nav class="navbar bg-light sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="landing_page.html">Logo</a>
+            <a class="navbar-brand" href="landing_page.php">Logo</a>
         </div>
     </nav>
     <section id="dashboard-main-content">
