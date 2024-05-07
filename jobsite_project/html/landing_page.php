@@ -4,81 +4,9 @@
 include "../php/user_data.php";
 include "../php/db_connection.php";
 
-$allJobsNumber = postedJobsNumber($pdo);
 session_start();
 
-if($_SERVER['REQUEST_METHOD'] == 'POST'){$_SESSION['limit'] = $_POST['pagination-limit'];}
-// $limit = 50;
-
-if (!isset($_GET['page'])) {
-    $page_number = 1;
-} elseif (isset($_GET['page'])) {
-    $page_number = $_GET['page'];
-}
-
-$initial_page = ($page_number - 1) * $_SESSION['limit'];
-$numberofjobs = pageination_alljobrows($pdo);
-$total_pages = ceil($numberofjobs / $_SESSION['limit']);
-$allJobDetails = pageination_alljobdetails($pdo, $initial_page, $_SESSION['limit']);
-$alljobcategories = getJobCategories($pdo);
-
-if (isset($_GET['page'])) {
-    $current_page = $_GET['page'];
-} elseif (!isset($_GET['page'])) {
-    $current_page = 1;
-}
-
-$first_page = 1;
-$last_page = $total_pages;
-$default_loop = 3;
-
-$first_loop = $default_loop;
-$last_loop = $default_loop;
-
-if (($current_page - $first_page) <= 3) {
-    $first_loop = $current_page - $first_page;
-    $last_loop = $default_loop + ($default_loop - $first_loop);
-    // echo "F First Loop $first_loop </br>";
-    // echo "F Last Loop $last_loop </br>";
-}
-
-if (($last_page - $current_page) <= 3) {
-    $last_loop = $last_page - $current_page;
-    $first_loop = $default_loop + ($default_loop - $last_loop);
-    // echo "L First Loop $first_loop </br>";
-    // echo "L Last Loop $last_loop </br>";
-}
-if (($first_loop == 3) && ($last_loop == 3)) {
-    $rangeFirstNumber = $current_page - 3;
-    if ($rangeFirstNumber <= $first_page) {
-        $rangeFirstNumber = $first_page;
-    }
-    $rangeLastNumber = $current_page + 3;
-    if ($rangeLastNumber >= $last_page) {
-        $rangeLastNumber = $last_page;
-    }
-}
-if (($first_loop < 3) && ($last_loop > 3)) {
-    $rangeFirstNumber = $current_page - $first_loop;
-    if ($rangeFirstNumber <= $first_page) {
-        $rangeFirstNumber = $first_page;
-    }
-    $rangeLastNumber = $current_page + $last_loop;
-    if ($rangeLastNumber >= $last_page) {
-        $rangeLastNumber = $last_page;
-    }
-}
-if (($first_loop > 3) && ($last_loop < 3)) {
-    $rangeFirstNumber = $current_page - $first_loop;
-    if ($rangeFirstNumber <= $first_page) {
-        $rangeFirstNumber = $first_page;
-    }
-    $rangeLastNumber = $current_page + $last_loop;
-    if ($rangeLastNumber >= $last_page) {
-        $rangeLastNumber = $last_page;
-    }
-}
-
+include "../php/pagination.php"
 
 
 ?>
@@ -138,7 +66,7 @@ if (($first_loop > 3) && ($last_loop < 3)) {
                             <div class="row">
                                 <div class="col-12 my-3">
                                     <h3>Find your Next Job Now</h3>
-                                    <b>Search among <?php echo $allJobsNumber ?> job listings</b>
+                                    <b>Search among <?php echo $allJobsNumber ?> job listings and </b> </br> <b> <?php echo $allResumesNumber; ?> Potential employees!</b>
                                 </div>
                                 <div class="col-12">
                                     <div class="input-group">
@@ -173,7 +101,7 @@ if (($first_loop > 3) && ($last_loop < 3)) {
                             </div>
                         </div>
                         <hr>
-        
+
                     </div>
                     <?php foreach ($allJobDetails as $row) { ?>
                         <div class="container">
@@ -198,33 +126,35 @@ if (($first_loop > 3) && ($last_loop < 3)) {
                 <nav aria-label="Page navigation">
                     <ul class="pagination mt-3 justify-content-center">
                         <form method="post">
-                            <select onchange="this.form.submit()" class="btn btn-primary" name="pagination-limit" id="">
-                                <option <?=($_SESSION["limit"]==10?"selected":"")?> value="10">10</option>
-                                <option <?=($_SESSION["limit"]==20?"selected":"")?> value="20">20</option>
-                                <option <?=($_SESSION["limit"]==50?"selected":"")?> value="50">50</option>
+                            <select onchange="this.form.submit()" class="btn btn-primary" name="jobs-pagination-limit" id="">
+                                <option <?= ($_SESSION["jobs-pagination-limit"] == 10 ? "selected" : "") ?> value="10">10</option>
+                                <option <?= ($_SESSION["jobs-pagination-limit"] == 20 ? "selected" : "") ?> value="20">20</option>
+                                <option <?= ($_SESSION["jobs-pagination-limit"] == 50 ? "selected" : "") ?> value="50">50</option>
                             </select>
                         </form>
                         <!-- Determine Page Number -->
-        
-                        <?php 
-        
-                        if ($page_number > 1) {
-                            $prevPage = $current_page - 1;
+
+                        <?php
+
+                        if ($job_current_page > 1) {
+                            $jobPrevPage = $job_current_page - 1;
                         ?>
                             <!-- Previous Page -->
-                            <li class="page-item"><a class="page-link" href="?page=<?php echo $prevPage; ?>">Previous</a></li>
+                            <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $jobPrevPage; ?>">Previous</a></li>
                         <?php } else { ?>
                             <li class="page-item disabled"><a class="page-link" href="">Previous</a></li>
                         <?php } ?>
                         <!-- All Pages -->
-                        <?php foreach (range($rangeFirstNumber, $rangeLastNumber) as $page_number) { ?>
-                            <li class="page-item <?= ($current_page == $page_number ? "active" : "");  ?>"><a class="page-link" href="?page=<?php echo $page_number ?>"><?php echo $page_number ?></a></li>
+                        <?php foreach (range($jobsPagination_rangeFirstNumber, $jobsPagination_rangeLastNumber) as $page_number) { ?>
+                            <li class="page-item <?= ($job_current_page == $page_number ? "active" : "");  ?>">
+                            <a class="page-link" href="?jobpage=<?php echo $page_number ?>"><?php echo $page_number ?></a>
+                        </li>
                         <?php } ?>
                         <!-- Next Page -->
-                        <?php if ($current_page < $total_pages) {
-                            $nextPage = $current_page + 1;
+                        <?php if ($job_current_page < $job_total_pages) {
+                            $jobNextPage = $job_current_page + 1;
                         ?>
-                            <li class="page-item"><a class="page-link" href="?page=<?php echo $nextPage ?>">Next</a></li>
+                            <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $jobNextPage ?>">Next</a></li>
                         <?php } else { ?>
                             <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
                         <?php } ?>
@@ -236,10 +166,83 @@ if (($first_loop > 3) && ($last_loop < 3)) {
             <div class="border-start border-dark col-1">
             </div>
             <div class="col-5">
-    
-            </div>
+            <div>
+                    <h2 class="text-center mb-5">Available Jobs</h2>
+                    <div class="container">
+                        <div class="row text-center">
+                            <div class="col-3">
+                                <b>Job Title</b>
+                            </div>
+                            <div class="col-3">
+                                <b>Category</b>
+                            </div>
+                            <div class="col-3">
+                                <b>Salary</b>
+                            </div>
+                        </div>
+                        <hr>
+
+                    </div>
+                    <?php foreach ($allresumedetails as $row) { ?>
+                        <div class="container">
+                            <div class="row text-center">
+                                <div class="col-3 my-3">
+                                    <p><?php echo $row['fullname']; ?> </p>
+                                </div>
+                                <div class="col-3 my-3">
+                                    
+                                </div>
+                                <div class="col-3 my-3">
+                                    <p><?php echo $row['dateofbirth']; ?> </p>
+                                </div>
+                                <div class="col-3 my-3">
+                                    <a class="btn btn-primary" href="job.php?view&id=<?php echo $row['jindex'] ?>">View</a>
+                                </div>
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination mt-3 justify-content-center">
+                        <form method="post">
+                            <select onchange="this.form.submit()" class="btn btn-primary" name="resume-pagination-limit" id="">
+                                <option <?= ($_SESSION["resumes-pagination-limit"] == 10 ? "selected" : "") ?> value="10">10</option>
+                                <option <?= ($_SESSION["resumes-pagination-limit"] == 20 ? "selected" : "") ?> value="20">20</option>
+                                <option <?= ($_SESSION["resumes-pagination-limit"] == 50 ? "selected" : "") ?> value="50">50</option>
+                            </select>
+                        </form>
+                        <!-- Determine Page Number -->
+
+                        <?php
+
+                        if ($resume_current_page > 1) {
+                            $resumePrevPage = $resume_current_page - 1;
+                        ?>
+                            <!-- Previous Page -->
+                            <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $resumePrevPage; ?>">Previous</a></li>
+                        <?php } else { ?>
+                            <li class="page-item disabled"><a class="page-link" href="">Previous</a></li>
+                        <?php } ?>
+                        <!-- All Pages -->
+                        <?php foreach (range($resumePagination_rangeFirstNumber, $resumePagination_rangeLastNumber) as $page_number) { ?>
+                            <li class="page-item <?= ($resume_current_page == $page_number ? "active" : "");  ?>">
+                            <a class="page-link" href="?jobpage=<?php echo $page_number ?>"><?php echo $page_number ?></a>
+                        </li>
+                        <?php } ?>
+                        <!-- Next Page -->
+                        <?php if ($resume_current_page < $resume_total_pages) {
+                            $resumeNextPage = $resume_current_page + 1;
+                        ?>
+                            <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $resumeNextPage ?>">Next</a></li>
+                        <?php } else { ?>
+                            <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
+                        <?php } ?>
+                    </ul>
+                </nav>
+            <div>
         </div>
     </section>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

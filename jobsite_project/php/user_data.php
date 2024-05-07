@@ -178,3 +178,32 @@ function pageination_alljobdetails($pdo ,$initial_page, $limit){
         return false;
     }
 }
+
+function pageination_allresumedetails($pdo, $initial_page, $limit){
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM resumes WHERE visible = 1 LIMIT :limitnumber OFFSET :initialpage");
+        $stmt->bindParam(':initialpage', $initial_page, PDO::PARAM_INT);
+        $stmt->bindParam(':limitnumber', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        $allresumedetails= $stmt->fetchAll(PDO::FETCH_ASSOC); 
+
+        return $allresumedetails;
+    } catch (PDOException $e) {
+        error_log("Error: " . $e->getMessage());
+        return false;
+    }
+}
+
+function pageination_allresumerows($pdo)
+{
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM resumes");
+        $stmt->execute();
+        $countresumerows=  $stmt->rowCount();
+
+        return $countresumerows;
+    } catch (PDOException $e) {
+        error_log("Error: " . $e->getMessage());
+        return false;
+    }
+}

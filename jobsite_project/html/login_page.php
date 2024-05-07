@@ -45,12 +45,11 @@ include '../php/login.php';
                             <label class="form-label" for="password">Password</label>
                             <input id="pass" name="pass" class="mb-3 form-control" type="password">
                             <div id="passError" class="text-danger"><?php echo $errmsg ?></div>
-                            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                         </div>
                         <div class="col-4"></div>
                     </div>
                     <div class="card-footer">
-                        <input type="submit" class="btn btn-primary" value="Submit">
+                        <input type="submit" class="btn btn-primary" value="Login">
                     </div>
                 </form>
             </div>
