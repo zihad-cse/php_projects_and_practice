@@ -13,6 +13,7 @@ session_start();
 
 include '../php/pagination.php';
 
+
 ?>
 
 <head>
@@ -32,14 +33,14 @@ include '../php/pagination.php';
             resize: none;
         }
     </style>
-    <title>Posted Circular
+    <title>Jobs
     </title>
 </head>
 
 <body class="bg-light">
     <nav class="navbar bg-light sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="landing_page.php">
+            <a class="navbar-brand" href="../index.php">
                 <img src="../img/logoipsum-248.svg" alt="">
             </a>
             <div>
@@ -132,53 +133,61 @@ include '../php/pagination.php';
                                 <div class="">
                                     <h2 class="text-center mb-5">Available Jobs</h2>
                                 </div>
-                                <div class="">
-                                    <?php foreach ($allJobDetails as $row) { ?>
-                                        <div class="container">
-                                            <div style="height: 300px; overflow-y: auto;" class="m-4 card">
-                                                <div class="card-body">
-                                                    <div class="row ">
-                                                        <div class="col-3">
+                                <div class="container">
+                                    <?php $foreachCounter = 0;
+                                    foreach ($allJobDetails as $row) {
 
-                                                        </div>
-                                                        <div class="col-8">
+                                        if ($foreachCounter % 3 == 0) { ?>
+
+                                            <div class="row">
+
+                                            <?php } ?>
+                                            <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+                                                <a href="job.php?view&id=<?php echo $row['jindex']; ?>" style="height: 250px; overflow-y: none;" class="text-start btn btn-outline-dark m-4 card">
+                                                    <div class="card-body">
+                                                        <div class="row ">
                                                             <div class="row">
-                                                                <div class="col-4">
-                                                                    <b>Title</b>
+                                                                <div class="col-12">
+                                                                    <img style="height: 50px; width: 50px; margin-bottom: 10px" src="https://hotjobs.bdjobs.com/logos/bracbank300.png" alt="">
                                                                 </div>
-                                                                <div class="col-6">
-                                                                    <p><?php echo $row['jobtitle']; ?> </p>
-                                                                </div>
+                                                                <hr>
                                                             </div>
-                                                            <div class="row">
-                                                                <div class="col-4">
-                                                                    <b>Category</b>
+                                                            <div class="col-10">
+                                                                <div class="row">
+                                                                    <div class="col-6">
+                                                                        <b>Title</b>
+                                                                    </div>
+                                                                    <div class="col-6">
+                                                                        <p><?php echo $row['jobtitle']; ?> </p>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-6">
-                                                                    <?php $jobcategory =  getJobCategory($pdo, $row['jobcategory']) ?>
-                                                                    <p><?php echo $jobcategory['jcategory']; ?> </p>
+                                                                <div class="row">
+                                                                    <div class="col-6">
+                                                                        <b>Category</b>
+                                                                    </div>
+                                                                    <div class="col-6">
+                                                                        <?php $jobcategory = getJobCategory($pdo, $row['jobcategory']) ?>
+                                                                        <p><?php echo $jobcategory['jcategory']; ?> </p>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-4">
-                                                                    <b>Salary</b>
-                                                                </div>
-                                                                <div class="col-6">
-                                                                    <p><?php echo $row['salary']; ?> </p>
+                                                                <div class="row">
+                                                                    <div class="col-6">
+                                                                        <b>Salary</b>
+                                                                    </div>
+                                                                    <div class="col-6">
+                                                                        <p><?php echo $row['salary']; ?> </p>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="card-footer">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <a class="btn btn-primary" href="job.php?view&id=<?php echo $row['jindex'] ?>">View</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                </a>
                                             </div>
-                                        </div>
+                                            <?php $foreachCounter++;
+                                            if ($foreachCounter % 3 == 0 || $foreachCounter == count($allJobDetails)) {
+                                            ?>
+                                            </div>
+                                        <?php } ?>
                                     <?php } ?>
                                 </div>
                                 <div class="">
@@ -191,25 +200,19 @@ include '../php/pagination.php';
                                                     <option <?= ($_SESSION["jobs-pagination-limit"] == 50 ? "selected" : "") ?> value="50">50</option>
                                                 </select>
                                             </form>
-                                            <!-- Determine Page Number -->
-
-                                            <?php
-
-                                            if ($job_current_page > 1) {
+                                            <?php if ($job_current_page > 1) {
                                                 $jobPrevPage = $job_current_page - 1;
                                             ?>
-                                                <!-- Previous Page -->
                                                 <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $jobPrevPage; ?>">Previous</a></li>
                                             <?php } else { ?>
                                                 <li class="page-item disabled"><a class="page-link" href="">Previous</a></li>
                                             <?php } ?>
-                                            <!-- All Pages -->
                                             <?php foreach (range($jobsPagination_rangeFirstNumber, $jobsPagination_rangeLastNumber) as $job_page_number) { ?>
                                                 <li class="page-item <?= ($job_current_page == $job_page_number ? "active" : "");  ?>">
                                                     <a class="page-link" href="?jobpage=<?php echo $job_page_number ?>"><?php echo $job_page_number ?></a>
                                                 </li>
                                             <?php } ?>
-                                            <!-- Next Page -->
+
                                             <?php if ($job_current_page < $job_total_pages) {
                                                 $jobNextPage = $job_current_page + 1;
                                             ?>

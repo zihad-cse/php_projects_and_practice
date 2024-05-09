@@ -32,14 +32,14 @@ include '../php/pagination.php';
             resize: none;
         }
     </style>
-    <title>Posted Circular
+    <title>Resumes
     </title>
 </head>
 
 <body class="bg-light">
     <nav class="navbar bg-light sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="landing_page.php">
+            <a class="navbar-brand" href="../index.php">
                 <img src="../img/logoipsum-248.svg" alt="">
             </a>
             <div>
@@ -126,22 +126,22 @@ include '../php/pagination.php';
                     </ul>
                 </div>
                 <div class="col-10 p-5" style="min-height: 1000px; background-color: #ddd;">
-                    <div class="col-5">
+                    <div class="">
                         <div class="container">
-                            <div class="card">
-                                <div class="card-header">
+                            <div class="">
+                                <div class="">
                                     <h2 class="text-center mb-5">Available Jobs</h2>
                                 </div>
-                                <div style="height: 800px; overflow-y: auto;" class="card-body">
+                                <div class="">
                                     <?php foreach ($allresumedetails as $row) { ?>
                                         <div class="container">
-                                            <div style="height: 300px; overflow-y: auto;" class="card m-4">
+                                            <div style="height: 200px;" class="card m-4">
                                                 <div class="card-body">
                                                     <div class="row">
                                                         <div class="col-3">
 
                                                         </div>
-                                                        <div class="col-8">
+                                                        <div class="col-7">
                                                             <div class="row">
                                                                 <div class="row">
                                                                     <div class="col-4">
@@ -169,16 +169,16 @@ include '../php/pagination.php';
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <div class="col-2">
+                                                            <a href="#" class="btn btn-outline-dark">View Resume</a>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="card-footer">
-                                                    <a href="#"><button class="btn btn-primary">View</button></a>
                                                 </div>
                                             </div>
                                         </div>
                                     <?php } ?>
                                 </div>
-                                <div class="card-footer">
+                                <div class="">
                                     <nav aria-label="Page navigation">
                                         <ul class="pagination mt-3 justify-content-center">
                                             <form method="post">

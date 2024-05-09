@@ -29,122 +29,189 @@ if (isset($_SESSION['phnNumber'])) {
     $phnNumber = $_SESSION['phnNumber'];
     $resumeData = getResumeData($pdo, $phnNumber);
 }
-
 //Formats Date of Birth for the edit form.
 $orgCatData = getOrgCategories($pdo);
-$dob = $resumeData['dateofbirth'];
+$dob = '';
+if (isset($reumeData) == true) {
+    $dob = $resumeData['dateofbirth'];
+}
 $formatteddob = date("Y-d-m", strtotime($dob));
 
 //Updates company details (table: org)
+if ($userData == true) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
+        $companyCategory = $_POST['companyCategory'];
+        $companyDetails = $_POST['companyDetails'];
+        $companyDetailsShow = isset($_POST['companyDetailsShow']) ? 1 : 0;
+        $phnNumber = $_SESSION['phnNumber'];
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
-    $companyCategory = $_POST['companyCategory'];
-    $companyDetails = $_POST['companyDetails'];
-    $companyDetailsShow = isset($_POST['companyDetailsShow']) ? 1 : 0;
-    $phnNumber = $_SESSION['phnNumber'];
+        try {
+            $sql = "UPDATE org SET ocatindex = :orgCat, orgnote = :orgNote, displayunote = :displayuNote WHERE prphone = :phnSession";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(":orgCat", $companyCategory, PDO::PARAM_STR);
+            $stmt->bindParam(":orgNote", $companyDetails, PDO::PARAM_STR);
+            $stmt->bindParam(":displayuNote", $companyDetailsShow, PDO::PARAM_BOOL);
+            $stmt->bindParam(":phnSession", $phnNumber, PDO::PARAM_STR);
+            $stmt->execute();
 
-    try {
-        $sql = "UPDATE org SET ocatindex = :orgCat, orgnote = :orgNote, displayunote = :displayuNote WHERE prphone = :phnSession";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(":orgCat", $companyCategory, PDO::PARAM_STR);
-        $stmt->bindParam(":orgNote", $companyDetails, PDO::PARAM_STR);
-        $stmt->bindParam(":displayuNote", $companyDetailsShow, PDO::PARAM_BOOL);
-        $stmt->bindParam(":phnSession", $phnNumber, PDO::PARAM_STR);
-        $stmt->execute();
-
-        if ($stmt->execute()) {
-            header("Location: dashboard.php");
+            if ($stmt->execute()) {
+                header("Location: dashboard.php");
+            }
+        } catch (PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
         }
-    } catch (PDOException $e) {
-        echo 'Error: ' . $e->getMessage();
+    }
+} else if ($userData == false) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
+        $companyCategory = $_POST['companyCategory'];
+        $companyDetails = $_POST['companyDetails'];
+        $companyDetailsShow = isset($_POST['companyDetailsShow']) ? 1 : 0;
+        $phnNumber = $_SESSION['phnNumber'];
+
+        try {
+            $sql = "INSERT INTO org (ocatindex, orgnote, displayunote) VALUES (:orgCat, :orgNote, :displayuNote) WHERE prphone = :phnSession";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(":orgCat", $companyCategory, PDO::PARAM_STR);
+            $stmt->bindParam(":orgNote", $companyDetails, PDO::PARAM_STR);
+            $stmt->bindParam(":displayuNote", $companyDetailsShow, PDO::PARAM_BOOL);
+            $stmt->bindParam(":phnSession", $phnNumber, PDO::PARAM_STR);
+            $stmt->execute();
+
+            if ($stmt->execute()) {
+                header("Location: dashboard.php");
+            }
+        } catch (PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
     }
 }
 
 //Updates resume details (table: resumes)
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
-    $fullName = $_POST['fullname'];
-    $fatherName = $_POST['fathername'];
-    $motherName = $_POST['mothername'];
-    $dateOfBirth = $_POST['dateofbirth'];
-    $religion = $_POST['religion'];
-    $homeAddress = $_POST['homeaddress'];
-    $birthArea = $_POST['birtharea'];
-    $skills = $_POST['skilleduexp'];
-    $resumeDetailsShow = isset($_POST['resumeDetailsShow']) ? 1 : 0;
-    $userIndex = $userData['orgindex'];
+if ($resumeData == true) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
+        $fullName = $_POST['fullname'];
+        $fatherName = $_POST['fathername'];
+        $motherName = $_POST['mothername'];
+        $dateOfBirth = $_POST['dateofbirth'];
+        $religion = $_POST['religion'];
+        $homeAddress = $_POST['homeaddress'];
+        $birthArea = $_POST['birtharea'];
+        $skills = $_POST['skilleduexp'];
+        $resumeDetailsShow = isset($_POST['resumeDetailsShow']) ? 1 : 0;
+        $userIndex = $userData['orgindex'];
 
-    try {
-        $sql = 'UPDATE resumes SET visible = :resumeDataShow, fullname = :fullName, fathername = :fatherName, mothername = :motherName, dateofbirth = :dateOfBirth, religion = :religion, homeaddress = :homeAddress, birtharea = :birthArea, skilleduexp = :skills WHERE orgindex = :userIndex';
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(":fullName", $fullName, PDO::PARAM_STR);
-        $stmt->bindParam(":fatherName", $fatherName, PDO::PARAM_STR);
-        $stmt->bindParam(":motherName", $motherName, PDO::PARAM_STR);
-        $stmt->bindParam(":dateOfBirth", $dateOfBirth, PDO::PARAM_STR);
-        $stmt->bindParam(":religion", $religion, PDO::PARAM_STR);
-        $stmt->bindParam(":homeAddress", $homeAddress, PDO::PARAM_STR);
-        $stmt->bindParam(":birthArea", $birthArea, PDO::PARAM_STR);
-        $stmt->bindParam(":skills", $skills, PDO::PARAM_STR);
-        $stmt->bindParam(":resumeDataShow", $resumeDetailsShow, PDO::PARAM_BOOL);
-        $stmt->bindParam(":userIndex", $userIndex, PDO::PARAM_STR);
-        $stmt->execute();
+        try {
+            $sql = 'UPDATE resumes SET visible = :resumeDataShow, fullname = :fullName, fathername = :fatherName, mothername = :motherName, dateofbirth = :dateOfBirth, religion = :religion, homeaddress = :homeAddress, birtharea = :birthArea, skilleduexp = :skills WHERE orgindex = :userIndex';
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(":fullName", $fullName, PDO::PARAM_STR);
+            $stmt->bindParam(":fatherName", $fatherName, PDO::PARAM_STR);
+            $stmt->bindParam(":motherName", $motherName, PDO::PARAM_STR);
+            $stmt->bindParam(":dateOfBirth", $dateOfBirth, PDO::PARAM_STR);
+            $stmt->bindParam(":religion", $religion, PDO::PARAM_STR);
+            $stmt->bindParam(":homeAddress", $homeAddress, PDO::PARAM_STR);
+            $stmt->bindParam(":birthArea", $birthArea, PDO::PARAM_STR);
+            $stmt->bindParam(":skills", $skills, PDO::PARAM_STR);
+            $stmt->bindParam(":resumeDataShow", $resumeDetailsShow, PDO::PARAM_BOOL);
+            $stmt->bindParam(":userIndex", $userIndex, PDO::PARAM_STR);
+            $stmt->execute();
 
-        if ($stmt->execute()) {
-            header("Location: dashboard.php");
+            if ($stmt->execute()) {
+                header("Location: dashboard.php");
+            }
+        } catch (PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
         }
-    } catch (PDOException $e) {
-        echo 'Error: ' . $e->getMessage();
+    }
+} else if ($resumeData == false) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
+        $fullName = $_POST['fullname'];
+        $fatherName = $_POST['fathername'];
+        $motherName = $_POST['mothername'];
+        $dateOfBirth = $_POST['dateofbirth'];
+        $religion = $_POST['religion'];
+        $homeAddress = $_POST['homeaddress'];
+        $birthArea = $_POST['birtharea'];
+        $skills = $_POST['skilleduexp'];
+        $resumeDetailsShow = isset($_POST['resumeDetailsShow']) ? 1 : 0;
+        $userIndex = $userData['orgindex'];
+
+        try {
+            $sql = 'INSERT INTO resumes (fullname, fathername, mothername, dateofbirth, religion, homeaddress, birtharea, skilleduexp, visible, orgindex) VALUES (:fullName, :fatherName, :motherName, :dateOfBirth, :religion, :homeAddress, :birthArea, :skills, :resumeDataShow, :userIndex)';
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(":fullName", $fullName, PDO::PARAM_STR);
+            $stmt->bindParam(":fatherName", $fatherName, PDO::PARAM_STR);
+            $stmt->bindParam(":motherName", $motherName, PDO::PARAM_STR);
+            $stmt->bindParam(":dateOfBirth", $dateOfBirth, PDO::PARAM_STR);
+            $stmt->bindParam(":religion", $religion, PDO::PARAM_STR);
+            $stmt->bindParam(":homeAddress", $homeAddress, PDO::PARAM_STR);
+            $stmt->bindParam(":birthArea", $birthArea, PDO::PARAM_STR);
+            $stmt->bindParam(":skills", $skills, PDO::PARAM_STR);
+            $stmt->bindParam(":resumeDataShow", $resumeDetailsShow, PDO::PARAM_BOOL);
+            $stmt->bindParam(":userIndex", $userIndex, PDO::PARAM_STR);
+            $stmt->execute();
+
+            if ($stmt->execute()) {
+                header("Location: dashboard.php");
+            }
+        } catch (PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
     }
 }
 
-// $target_dir = "../uploads/";
-// $target_file = $target_dir . basename($_FILES["imgUpload"]["name"]);
-// $uploadOk = 1;
-// $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-
-// //Check if file is image
-// if (isset($_POST["img-upload"])) {
-//     $check = getimagesize($_FILES["imgUpload"]["tmp_name"]);
-//     if ($check !== false) {
-//         echo "File is an Image - " . $check["mime"] . ".";
-//         $uploadOk = 1;
-//     } else {
-//         echo "File is not an image. ";
-//         var_dump($_POST['img-upload']);
-//         $uploadOk = 0;
-//     }
-// }
-
-// //Same File existance check
-// if (file_exists($target_file)) {
-//     echo "Sorry, file already exists.";
-//     $uploadOk = 0;
-// }
-
-// // File size check
-// if ($_FILES["imgUpload"]["size"] > 5000000) {
-//     echo "Sorry, your file is too large.";
-//     $uploadOk = 0;
-// }
-
-// //Allowing only a few formats
-// if (
-//     $imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-//     && $imageFileType != "gif"
-// ) {
-//     echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-//     $uploadOk = 0;
-// }
-
-// if ($uploadOk == 0) {
-//     echo "Sorry, your file was not uploaded.";
-// } else {
-//     if (move_uploaded_file($_FILES["imgUpload"]["tmp_name"], $target_file)) {
-//         echo "The file " . htmlspecialchars(basename($_FILES["imgUpload"]["name"])) . " has been uploaded.";
-//     } else {
-//         echo "Sorry, there was an error uploading your file.";
-//     }
-// }
+if (isset($_POST['upload-image'])) {
+    if(isset($_FILES['imgUpload']['name']) && !empty($_FILES['imgUpload']['name'])){
+        echo "Start";
+        $target_dir = "../uploads/resumes/";
+        $imgName = $resumeData['rindex'] . ".png";
+        $target_file = $target_dir . $imgName;
+        $uploadOk = 1;
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    
+        //Check if file is image
+        if (isset($_POST["upload-image"])) {
+            // echo '<pre>';
+            var_dump($_FILES["imgUpload"]);
+            $check = getimagesize($_FILES["imgUpload"]["tmp_name"]);
+            if ($check !== false) {
+                echo "File is an Image - " . $check["mime"] . ".";
+                $uploadOk = 1;
+            } else {
+                echo "File is not an image. ";
+                var_dump($_POST['img-upload']);
+                $uploadOk = 0;
+            }
+        }
+    
+        // Same File existance check
+        if (file_exists($target_file)) {
+            unlink($target_file);
+        }
+    
+        // File size check
+        if ($_FILES["imgUpload"]["size"] > 500000000) {
+            echo "Sorry, your file is too large.";
+            $uploadOk = 0;
+        }
+    
+        //Allowing only a few formats
+        if (
+            $imageFileType != "png"
+        ) {
+            echo "Sorry, only PNG files are allowed.";
+            $uploadOk = 0;
+        }
+    
+        if ($uploadOk == 0) {
+            echo "Sorry, your file was not uploaded.";
+        } else {
+            if (move_uploaded_file($_FILES["imgUpload"]["tmp_name"], $target_file)) {
+                echo "Image Uploaded";
+            }
+        }
+    } 
+}
 
 
 ?>
@@ -172,7 +239,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
 <body class="bg-light">
     <nav class="navbar bg-light sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="landing_page.php">
+            <a class="navbar-brand" href="../index.php">
                 <img src="../img/logoipsum-248.svg" alt="">
             </a>
         </div>
@@ -227,6 +294,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
                 </div>
                 <div style="background-color: #eee; min-height: 1000px" class="col-9 p-5 border rounded ">
                     <?php if (!isset($_GET['edit'])) { ?>
+                        <?php $resumePfpPath = "../uploads/resumes/" . $resumeData['rindex'] . '.png' ?>
+                        <?php if (file_exists($resumePfpPath)) { ?>
+                            <div class="row pb-1">
+                                <div class="col-6">
+                                    <img style="length: 100px; width: 100px;" src="<?php echo $resumePfpPath; ?>" alt="">
+                                </div>
+                                <div class="col-3">
+                                    <form method="post" action="" enctype="multipart/form-data">
+                                        <div class="row py-3">
+                                            <div class="col-3">
+                                                <b>Upload An Image</b>
+                                            </div>
+                                            <div class="col-6">
+                                                <div>
+                                                    <input name="imgUpload" class="form-control" type="file">
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <input name="upload-image" type="submit" class="btn btn-primary" value="Upload">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        <?php } else { ?>
+                            <div class="row pb-1">
+                                <div class="col-2">
+                                    <img style="height: 100px; width: 100px;" src="../uploads/resumes/placeholder_pfp.svg" alt="">
+                                </div>
+                                <div class="col-5">
+                                    <form method="post" action="" enctype="multipart/form-data">
+                                        <div class="row py-3">
+
+                                            <div class="col-6">
+                                                <div>
+                                                    <input name="imgUpload" class="form-control" type="file">
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <input name="upload-image" type="submit" class="btn btn-primary" value="Upload">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        <?php } ?>
                         <div class="mb-4">
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
@@ -293,75 +406,80 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
                                         <?php } ?>
                                 </div>
                                 <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-                                    <?php if ($resumeData['visible'] == 1) { ?>
-                                        <hr>
-                                        <h4 class="mb-4">Resume</h4>
-                                        <hr>
-                                        <div class="row pb-1">
-                                            <div class="col-3">
-                                                <b>Full Name</b>
+                                    <?php if (isset($resumeData['visible']) == true) {
+                                        if ($resumeData['visible'] == 1) { ?>
+                                            <hr>
+                                            <h4 class="mb-4">Resume</h4>
+                                            <hr>
+
+                                            <div class="row pb-1">
+                                                <div class="col-3">
+                                                    <b>Full Name</b>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p><?php echo $resumeData['fullname'] ?></p>
+                                                </div>
                                             </div>
-                                            <div class="col-6">
-                                                <p><?php echo $resumeData['fullname'] ?></p>
+                                            <div class="row pb-1">
+                                                <div class="col-3">
+                                                    <b>Father's Name</b>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p><?php echo $resumeData['fathername'] ?></p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row pb-1">
-                                            <div class="col-3">
-                                                <b>Father's Name</b>
+                                            <div class="row pb-1">
+                                                <div class="col-3">
+                                                    <b>Mother's Name</b>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p><?php echo $resumeData['mothername'] ?></p>
+                                                </div>
                                             </div>
-                                            <div class="col-6">
-                                                <p><?php echo $resumeData['fathername'] ?></p>
+                                            <div class="row pb-1">
+                                                <div class="col-3">
+                                                    <b>Date of Birth</b>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p><?php echo $resumeData['dateofbirth'] ?></p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row pb-1">
-                                            <div class="col-3">
-                                                <b>Mother's Name</b>
+                                            <div class="row pb-1">
+                                                <div class="col-3">
+                                                    <b>Religion</b>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p><?php echo $resumeData['religion'] ?></p>
+                                                </div>
                                             </div>
-                                            <div class="col-6">
-                                                <p><?php echo $resumeData['mothername'] ?></p>
+                                            <div class="row pb-1">
+                                                <div class="col-3">
+                                                    <b>Address</b>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p><?php echo $resumeData['homeaddress'] ?></p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row pb-1">
-                                            <div class="col-3">
-                                                <b>Date of Birth</b>
+                                            <div class="row pb-1">
+                                                <div class="col-3">
+                                                    <b>Birth Area</b>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p><?php echo $resumeData['birtharea'] ?></p>
+                                                </div>
                                             </div>
-                                            <div class="col-6">
-                                                <p><?php echo $resumeData['dateofbirth'] ?></p>
+                                            <div class="row pb-1">
+                                                <div class="col-3">
+                                                    <b>Skills</b>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p><?php echo $resumeData['skilleduexp'] ?></p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row pb-1">
-                                            <div class="col-3">
-                                                <b>Religion</b>
-                                            </div>
-                                            <div class="col-6">
-                                                <p><?php echo $resumeData['religion'] ?></p>
-                                            </div>
-                                        </div>
-                                        <div class="row pb-1">
-                                            <div class="col-3">
-                                                <b>Address</b>
-                                            </div>
-                                            <div class="col-6">
-                                                <p><?php echo $resumeData['homeaddress'] ?></p>
-                                            </div>
-                                        </div>
-                                        <div class="row pb-1">
-                                            <div class="col-3">
-                                                <b>Birth Area</b>
-                                            </div>
-                                            <div class="col-6">
-                                                <p><?php echo $resumeData['birtharea'] ?></p>
-                                            </div>
-                                        </div>
-                                        <div class="row pb-1">
-                                            <div class="col-3">
-                                                <b>Skills</b>
-                                            </div>
-                                            <div class="col-6">
-                                                <p><?php echo $resumeData['skilleduexp'] ?></p>
-                                            </div>
-                                        </div>
-                                    <?php } ?>
+                                    <?php }
+                                    } else {
+                                        echo "<b>N/A</b>";
+                                    } ?>
                                 </div>
                             </div>
                         </div>
@@ -410,7 +528,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
                                     </div>
                                     <div class="col-6">
                                         <div>
-                                            <input name="fullname" class="form-control" type="text" value="<?php echo $resumeData['fullname'] ?>">
+                                            <input name="fullname" class="form-control" type="text" value="<?= isset($resumeData['fullname']) == 1 ?  $resumeData['fullname'] : ''; ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -420,7 +538,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
                                     </div>
                                     <div class="col-6">
                                         <div>
-                                            <input name="fathername" class="form-control" type="text" value="<?php echo $resumeData['fathername'] ?>">
+                                            <input name="fathername" class="form-control" type="text" value="<?= isset($resumeData['fathername']) == 1 ?  $resumeData['fathername'] : ''; ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -430,7 +548,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
                                     </div>
                                     <div class="col-6">
                                         <div>
-                                            <input name="mothername" class="form-control" type="text" value="<?php echo $resumeData['mothername'] ?>">
+                                            <input name="mothername" class="form-control" type="text" value="<?= isset($resumeData['mothername']) == 1 ?  $resumeData['mothername'] : ''; ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -440,7 +558,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
                                     </div>
                                     <div class="col-6">
                                         <div>
-                                            <input name="dateofbirth" class="form-control" type="date" value=<?php echo $formatteddob ?>>
+                                            <input name="dateofbirth" class="form-control" type="date" value=<?= isset($resumeData['dateofbirth']) == 1 ?  $resumeData['dateofbirth'] : ''; ?>>
                                         </div>
                                     </div>
                                 </div>
@@ -450,7 +568,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
                                     </div>
                                     <div class="col-6">
                                         <div>
-                                            <input name="religion" class="form-control" type="text" value="<?php echo $resumeData['religion'] ?>">
+                                            <input name="religion" class="form-control" type="text" value="<?= isset($resumeData['religion']) == 1 ?  $resumeData['religion'] : ''; ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -460,7 +578,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
                                     </div>
                                     <div class="col-6">
                                         <div>
-                                            <textarea class="mt-3 small-textarea form-control" style="resize: none;" name="homeaddress" id="homeAddress" cols="30" rows="10"><?php echo $resumeData['homeaddress'] ?></textarea>
+                                            <textarea class="mt-3 small-textarea form-control" style="resize: none;" name="homeaddress" id="homeAddress" cols="30" rows="10"><?= isset($resumeData['homeaddress']) == 1 ?  $resumeData['homeaddress'] : ''; ?></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -470,7 +588,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
                                     </div>
                                     <div class="col-6">
                                         <div>
-                                            <input name="birtharea" class="form-control" type="text" value="<?php echo $resumeData['birtharea'] ?>">
+                                            <input name="birtharea" class="form-control" type="text" value="<?= isset($resumeData['birtharea']) == 1 ?  $resumeData['birtharea'] : ''; ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -480,28 +598,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
                                     </div>
                                     <div class="col-6">
                                         <div>
-                                            <input name="skilleduexp" class="form-control" type="text" value="<?php echo $resumeData['skilleduexp'] ?>">
+                                            <input name="skilleduexp" class="form-control" type="text" value="<?= isset($resumeData['skilleduexp']) == 1 ?  $resumeData['skilleduexp'] : ''; ?>">
                                         </div>
                                     </div>
                                 </div>
-                                <!-- <div class="row py-3">
-                                    <div class="col-3">
-                                        <b>Upload An Image</b>
-                                    </div>
-                                    <div class="col-6">
-                                        <div>
-                                            <input name="imgUpload" class="form-control" type="file">
-                                        </div>
-                                        <button type="submit" name="img-upload" class="btn btn-secondary">Upload</button>
-                                    </div>
-                                </div> -->
                                 <div class="row">
                                     <div class="col-3">
                                         <b>Display Resume Details</b>
                                     </div>
                                     <div class="col-6">
                                         <div class="form-check">
-                                            <input <?= $resumeData['visible'] == 1 ? "checked" : "" ?> class="form-check-input" type="checkbox" value="1" name="resumeDetailsShow" id="flexCheckDefault">
+                                            <input <?php if (isset($resumeData['visible'])) {
+                                                        if ($resumeData['visible'] == 1) {
+                                                            echo "selected";
+                                                        } else {
+                                                            echo '';
+                                                        }
+                                                    } ?> class="form-check-input" type="checkbox" value="1" name="resumeDetailsShow" id="flexCheckDefault">
                                         </div>
                                     </div>
                                 </div>
