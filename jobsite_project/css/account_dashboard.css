@@ -1,6 +1,4 @@
-#profile-picture-area {
-    height: 200px;
-    width: 200px;
-    margin-left: 30px;
-    background-color: red;
+body {
+    width: auto;
+    height: auto;
 }

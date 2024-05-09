@@ -18,7 +18,7 @@ include '../php/login.php';
     <nav class="navbar bg-light sticky-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="landing_page.php">
-                Logo
+                <img src="../img/logoipsum-248.svg" alt="">
             </a>
             <div class="btn-group">
                 <div class="btn btn-outline-dark disabled">Not a member?</div>

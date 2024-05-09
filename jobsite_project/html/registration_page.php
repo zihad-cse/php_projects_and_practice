@@ -16,7 +16,7 @@ include '../php/registration.php';
     <nav class="navbar bg-light sticky-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="landing_page.php">
-                Logo
+                <img src="../img/logoipsum-248.svg" alt="">
             </a>
             <div class="btn-group">
                 <div class="btn btn-outline-dark disabled">Already have an account?</div>
@@ -55,7 +55,7 @@ include '../php/registration.php';
                             <label for="pass2">Repeat Password</label>
                             <input id="pass2" name="pass2" type="password" class="form-control my-2">
                             <p id="passError" class="text-danger"></p>
-                          
+
                         </div>
                     </div>
                     <div class="card-footer">

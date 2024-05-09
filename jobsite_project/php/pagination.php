@@ -22,6 +22,7 @@ $job_initial_page = ($job_current_page - 1) * $_SESSION['jobs-pagination-limit']
 $numberofjobs = pageination_alljobrows($pdo);
 $job_total_pages = ceil($numberofjobs / $_SESSION['jobs-pagination-limit']);
 $allJobDetails = pageination_alljobdetails($pdo, $job_initial_page, $_SESSION['jobs-pagination-limit']);
+$landingpage_allJobDetails = pageination_alljobdetails($pdo, 1, 10);
 $alljobcategories = getJobCategories($pdo);
 
 
@@ -99,6 +100,7 @@ $resume_initial_page = ($resume_current_page - 1) * $_SESSION['resumes-paginatio
 $numberofresumes = pageination_allresumerows($pdo);
 $resume_total_pages = ceil($numberofresumes / $_SESSION['resumes-pagination-limit']);
 $allresumedetails = pageination_allresumedetails($pdo, $resume_initial_page, $_SESSION['resumes-pagination-limit']);
+$landingpage_allresumedetails = pageination_allresumedetails($pdo, 1, 10);
 
 $resume_first_page = 1;
 $resume_last_page = $resume_total_pages;

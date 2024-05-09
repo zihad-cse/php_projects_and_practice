@@ -62,7 +62,9 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
 <body class="bg-light">
     <nav class="navbar bg-light sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="landing_page.php">Logo</a>
+            <a class="navbar-brand" href="landing_page.php">
+                <img src="../img/logoipsum-248.svg" alt="">
+            </a>
         </div>
     </nav>
     <section id="dashboard-main-content">
@@ -126,24 +128,24 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
                             <b>Deadline</b>
                         </div>
                         <div class="col-2">
-                            
+
                         </div>
                     </div>
-                    <?php foreach ($allJobsData as $aJob){?>
-                    <div class="row my-3">
-                        <div class="col-2">
-                            <p><?php echo $aJob['jindex']?></p>
+                    <?php foreach ($allJobsData as $aJob) { ?>
+                        <div class="row my-3">
+                            <div class="col-2">
+                                <p><?php echo $aJob['jindex'] ?></p>
+                            </div>
+                            <div class="col-4">
+                                <p><?php echo $aJob['jobtitle'] ?></p>
+                            </div>
+                            <div class="col-2">
+                                <p><?php echo $aJob['enddate'] ?></p>
+                            </div>
+                            <div class="col-2">
+                                <a href="job.php?view&id=<?php echo $aJob['jindex'] ?>">View</a>
+                            </div>
                         </div>
-                        <div class="col-4">
-                            <p><?php echo $aJob['jobtitle']?></p>
-                        </div>
-                        <div class="col-2">
-                            <p><?php echo $aJob['enddate']?></p>
-                        </div>
-                        <div class="col-2">
-                            <a href="job.php?view&id=<?php echo $aJob['jindex'] ?>">View</a>
-                        </div>
-                    </div>
                     <?php } ?>
                 </div>
             </div>

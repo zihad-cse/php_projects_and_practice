@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php include '../php/recruiter_regis.php'; ?>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +15,7 @@
     <nav class="navbar bg-light sticky-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="landing_page.php">
-                Logo
+                <img src="../img/logoipsum-248.svg" alt="">
             </a>
             <div class="btn-group">
                 <div class="btn btn-outline-dark disabled">Already have an account?</div>
@@ -38,7 +39,7 @@
                         <div id="passError" class="text-danger">
                         </div>
                         <div id="phnError" class="text-danger">
-                        
+
                         </div>
                         <div class="col-12 row p-3">
                             <h3>Account Information</h3>
@@ -153,7 +154,7 @@
                                         <input id="companyUrl" type="url" class="form-control" name="companyUrl">
                                     </div>
                                     <div class="col-6">
-                                        <label class="my-2" for="companyCode">Business / Trade License  *</label>
+                                        <label class="my-2" for="companyCode">Business / Trade License *</label>
                                         <input id="companyCode" type="text" class="form-control" name="companyCode">
                                     </div>
                                 </div>
