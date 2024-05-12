@@ -36,6 +36,20 @@ function getResumeData($pdo, $phnNumber)
         return false;
     }
 }
+function getResumeDataGuest($pdo, $rindex)
+{
+    try {
+        $stmt = $pdo->prepare("SELECT resumes.*, org.orgindex FROM resumes LEFT JOIN org ON org.orgindex = resumes.orgindex WHERE rindex = :rindex");
+        $stmt->bindParam(':rindex', $rindex, PDO::PARAM_STR);
+        $stmt->execute();
+        $resume = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $resume;
+    } catch (PDOException $e) {
+        error_log("Error: " . $e->getMessage());
+        return false;
+    }
+}
 
 // Single posted job data with org prphone
 
@@ -59,7 +73,7 @@ function getPostedJobData($pdo, $phnNumber)
 function getAllPostedJobs($pdo, $orgIndex)
 {
     try {
-        $stmt = $pdo->prepare("SELECT * FROM job WHERE orgindex = :orgIndex");
+        $stmt = $pdo->prepare("SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE orgindex = :orgIndex");
         $stmt->bindParam(':orgIndex', $orgIndex, PDO::PARAM_STR);
         $stmt->execute();
         $allJobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -91,7 +105,7 @@ function postedJobsNumber($pdo)
 function getJob($pdo, $jobId)
 {
     try {
-        $stmt = $pdo->prepare("SELECT * FROM job WHERE jindex = :jindex");
+        $stmt = $pdo->prepare("SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE jindex = :jindex");
         $stmt->bindParam(':jindex', $jobId, PDO::PARAM_STR);
         $stmt->execute();
         $job = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -112,22 +126,6 @@ function getJobCategories($pdo)
         $stmt->execute();
         $jobCatData = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $jobCatData;
-    } catch (PDOException $e) {
-        error_log("Error: " . $e->getMessage());
-        return false;
-    }
-}
-
-// Single Job Category Based on category ID
-
-function getJobCategory($pdo, $categoryId)
-{
-    try {
-        $stmt = $pdo->prepare("SELECT jcategory FROM jobcat WHERE jcatindex = :categoryId");
-        $stmt->bindParam(':categoryId', $categoryId, PDO::PARAM_STR);
-        $stmt->execute();
-        $jobCat = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $jobCat;
     } catch (PDOException $e) {
         error_log("Error: " . $e->getMessage());
         return false;
@@ -166,7 +164,7 @@ function pageination_alljobrows($pdo)
 
 function pageination_alljobdetails($pdo ,$initial_page, $limit){
     try {
-        $stmt = $pdo->prepare("SELECT * FROM job WHERE visibility = 1 LIMIT :limitnumber OFFSET :initialpage");
+        $stmt = $pdo->prepare("SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1 LIMIT :limitnumber OFFSET :initialpage");
         $stmt->bindParam(':initialpage', $initial_page, PDO::PARAM_INT);
         $stmt->bindParam(':limitnumber', $limit, PDO::PARAM_INT);
         $stmt->execute();

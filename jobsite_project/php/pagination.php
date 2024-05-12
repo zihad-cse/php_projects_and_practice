@@ -100,7 +100,7 @@ $resume_initial_page = ($resume_current_page - 1) * $_SESSION['resumes-paginatio
 $numberofresumes = pageination_allresumerows($pdo);
 $resume_total_pages = ceil($numberofresumes / $_SESSION['resumes-pagination-limit']);
 $allresumedetails = pageination_allresumedetails($pdo, $resume_initial_page, $_SESSION['resumes-pagination-limit']);
-$landingpage_allresumedetails = pageination_allresumedetails($pdo, 1, 100);
+$landingpage_allresumedetails = pageination_allresumedetails($pdo, 1, 10);
 
 $resume_first_page = 1;
 $resume_last_page = $resume_total_pages;

@@ -13,7 +13,6 @@ session_start();
 
 include '../php/pagination.php';
 
-
 ?>
 
 <head>
@@ -32,15 +31,24 @@ include '../php/pagination.php';
             height: 100px;
             resize: none;
         }
+        
+        #landing-page-mouse-hover-card {
+            box-shadow: 1px 1px 8px #999;
+        }
+
+
+        #landing-page-mouse-hover-card:hover {
+            border: var(--bs-card-border-width) solid black;
+            box-shadow: 4px 4px 8px #999;
+        }
     </style>
-    <title>Jobs
-    </title>
+    <title>Jobs</title>
 </head>
 
 <body class="bg-light">
-    <nav class="navbar bg-light sticky-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="../index.php">
+    <nav class="navbar p-3 bg-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="../">
                 <img src="../img/logoipsum-248.svg" alt="">
             </a>
             <div>
@@ -72,7 +80,7 @@ include '../php/pagination.php';
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
                         <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
-                        <li><a class="dropdown-item" href="../php/logout.php">Logout</a></li>
+                        <li><a class="dropdown-item" href="../php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']);?>">Logout</a></li>
                     </ul>
                 </div>
             <?php } ?>
@@ -81,114 +89,73 @@ include '../php/pagination.php';
     <section id="dashboard-main-content">
         <div class="bg-light">
             <div class="row">
-                <div class="col-2 bg-white">
-                    <ul class="list-unstyled ps-0">
-                        <li class="mb-1">
-                            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
-                                <i class="fa-solid fa-chevron-down pe-2"></i>Dashboard
-                            </button>
-                            <div class="collapse" id="dashboard-collapse">
-                                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
-                                    <li><a href="#" class="btn btn-secondary-outline">Overview</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">Weekly</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">Monthly</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">Annually</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="mb-1">
-                            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
-                                <i class="fa-solid fa-chevron-down pe-2"></i>Jobs
-                            </button>
-                            <div class="collapse" id="orders-collapse">
-                                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
-                                    <li><a href="job_post.php" class="btn btn-secondary-outline">New</a></li>
-                                    <li><a href="posted_jobs.php" class="btn btn-secondary-outline">Posted</a></li>
-
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="border-top my-3"></li>
-                        <li class="mb-1">
-                            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
-                                <i class="fa-solid fa-chevron-down pe-2"></i>Account
-                            </button>
-                            <div class="collapse" id="account-collapse">
-                                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
-                                    <li><a href="dashboard.php" class="btn btn-secondary-outline">Overview</a></li>
-                                    <li>
-                                        <form action="../php/logout.php" method="post" class="btn btn-secondary-outline">
-                                            <input class="btn p-0" type="submit" value="Log Out" id="#logout-button">
-                                        </form>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-10 p-5" style="min-height: 1000px; background-color: #ddd;">
+                <div class="col-12 p-5" style="min-height: 1000px; background-color: #ddd;">
                     <div class="">
                         <div class="container">
                             <div class="">
                                 <div class="">
                                     <h2 class="text-center mb-5">Available Jobs</h2>
                                 </div>
-                                <div class="container">
-                                    <?php $foreachCounter = 0;
-                                    foreach ($allJobDetails as $row) {
+                                <div class="row">
+                                    <div class="col-1">
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="container">
+                                            <div class="">
 
-                                        if ($foreachCounter % 3 == 0) { ?>
-
-                                            <div class="row">
-
-                                            <?php } ?>
-                                            <div class="col-lg-4 col-md-4 col-sm-12 col-12">
-                                                <a href="job.php?view&id=<?php echo $row['jindex']; ?>" style="height: 250px; overflow-y: none;" class="text-start btn btn-outline-dark m-4 card">
-                                                    <div class="card-body">
-                                                        <div class="row ">
-                                                            <div class="row">
-                                                                <div class="col-12">
-                                                                    <img style="height: 50px; width: 50px; margin-bottom: 10px" src="https://hotjobs.bdjobs.com/logos/bracbank300.png" alt="">
-                                                                </div>
-                                                                <hr>
-                                                            </div>
-                                                            <div class="col-10">
-                                                                <div class="row">
-                                                                    <div class="col-6">
-                                                                        <b>Title</b>
+                                                <div class="row">
+                                                    <?php foreach ($allJobDetails as $row) {
+                                                        $job_img_src = "../uploads/job/placeholder-company.png";
+                                                        if (file_exists("../uploads/job/" . $row['jindex'] . ".png")) {
+                                                            $job_img_src = "../uploads/job/" . $row['jindex'] . ".png";
+                                                        }
+                                                    ?>
+                                                        <div class="container">
+                                                            <div class="col-12">
+                                                                <a id="landing-page-mouse-hover-card" style="max-height: 150px;" href="../html/job.php?view&id=<?php echo $row['jindex'] ?>" class="text-start m-4 card text-decoration-none">
+                                                                    <div class="card-body">
+                                                                        <div class="row ">
+                                                                            <div class="col-3">
+                                                                                <img style="height:100px; width: 100px;" src="<?php echo $job_img_src ?>" alt="">
+                                                                            </div>
+                                                                            <div class="col-8">
+                                                                                <div class="row">
+                                                                                    <div class="col-4">
+                                                                                        <b>Title</b>
+                                                                                    </div>
+                                                                                    <div class="col-6">
+                                                                                        <p><?php echo $row['jobtitle']; ?> </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col-4">
+                                                                                        <b>Category</b>
+                                                                                    </div>
+                                                                                    <div class="col-6">
+                                                                                        <p><?php echo $row['categoryName']; ?> </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col-4">
+                                                                                        <b>Salary</b>
+                                                                                    </div>
+                                                                                    <div class="col-6">
+                                                                                        <p><?php echo $row['salary']; ?> </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-                                                                    <div class="col-6">
-                                                                        <p><?php echo $row['jobtitle']; ?> </p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-6">
-                                                                        <b>Category</b>
-                                                                    </div>
-                                                                    <div class="col-6">
-                                                                        <?php $jobcategory = getJobCategory($pdo, $row['jobcategory']) ?>
-                                                                        <p><?php echo $jobcategory['jcategory']; ?> </p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-6">
-                                                                        <b>Salary</b>
-                                                                    </div>
-                                                                    <div class="col-6">
-                                                                        <p><?php echo $row['salary']; ?> </p>
-                                                                    </div>
-                                                                </div>
+                                                                </a>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </a>
+                                                    <?php } ?>
+                                                </div>
                                             </div>
-                                            <?php $foreachCounter++;
-                                            if ($foreachCounter % 3 == 0 || $foreachCounter == count($allJobDetails)) {
-                                            ?>
-                                            </div>
-                                        <?php } ?>
-                                    <?php } ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-1">
+                                    </div>
                                 </div>
                                 <div class="">
                                     <nav aria-label="Page navigation">

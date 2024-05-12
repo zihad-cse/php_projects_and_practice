@@ -1,10 +1,14 @@
 <?php
 
 session_start();
-
 $_SESSION = array();
 
 session_destroy();
 
-header("Location: ../html/landing_page.php");
+if(isset($_GET['return_url'])){
+    $return_url = urldecode($_GET['return_url']);
+    header('location: '."$return_url");
+} else {
+    header('location: ../');
+}
 exit();

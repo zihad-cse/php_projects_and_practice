@@ -9,17 +9,13 @@ include '../php/auth.php';
 include '../php/db_connection.php';
 
 session_start();
-
 if(isset($_GET['id'])){
-    $jobId = $_GET['id'];
+    $rindex = $_GET['id'];
 } else {
-    echo 'Job Data Not Found';
+    echo "Could Not Get Resume Data";
     exit;
 }
-
-$jobData = getJob($pdo, $jobId);
-
-$jobPicFilePath = "../uploads/job/". $jobData['jindex']. '.png';
+$resumeData = getResumeDataGuest($pdo, $rindex);
 ?>
 
 <head>
@@ -104,22 +100,19 @@ $jobPicFilePath = "../uploads/job/". $jobData['jindex']. '.png';
             <div class="row p-3">
                 <div class="col-10">
                     <div class="row">
-                        <h2>Org Name</h2>
-                    </div>
-                    <div class="row">
-                        <h2 class="text-primary"><?php echo $jobData['jobtitle'] ?></h2>
+                        <h2><?= $resumeData['fullname'] ?></h2>
                     </div>
                 </div>
                 <div class=" col-2">
-                    <img class="img-normal" src="<?php echo $jobPicFilePath ?>" alt="">
+                    <img class="img-normal" src="../uploads/resumes/<?php echo $rindex ?>.png" alt="">
                 </div>
             </div>
             <div class="row p-3">
-                <b class="col-12">Deadline: <?php echo $jobData['enddate'] ?></b>
+                <b class="col-12">Availability</b>
             </div>
             <div class="row p-3">
                 <div class="col-12">
-                    <h4>Requirements</h4>
+                    <h4>Skills</h4>
                     <h5>Education</h5>
                     <p>Diploma in Mechanical Engineering from any reputed institution.</p>
 
@@ -170,10 +163,12 @@ $jobPicFilePath = "../uploads/job/". $jobData['jindex']. '.png';
             </div>
             <div class="row p-3">
                 <div class="border border-top border-dark"></div>
-                <h4></h4>
-            </div>
-            <div class="row p-3">
-                <h4>Salary</h4>
+                <div class="col-6">
+                    <h4><?php $resumeData['homeaddress'] ?></h4>
+                </div>
+                <div class="col-6">
+                    <h4><?php $resumeData['birtharea'] ?></h4>
+                </div>
             </div>
             <div class="row p-3">
                 <div class="col-4">
@@ -183,7 +178,7 @@ $jobPicFilePath = "../uploads/job/". $jobData['jindex']. '.png';
                     <b>Contact Email</b>
                 </div>
                 <div class="col-4 text-end">
-                    <a href="#" class="btn btn-primary">Apply</a>
+                    <a href="#" class="btn btn-primary">Invite</a>
                 </div>
             </div>
         </div>

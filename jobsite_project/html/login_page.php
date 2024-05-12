@@ -4,6 +4,11 @@
 session_start();
 
 include '../php/login.php';
+
+if (isset($_SESSION['token'])) {
+    header("Location: ../");
+    exit();
+}
 ?>
 
 <head>

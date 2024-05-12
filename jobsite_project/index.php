@@ -20,14 +20,13 @@ include "php/pagination.php"
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <title>Document</title>
     <style>
-
-        #landing-page-mouse-hover-card{
+        #landing-page-mouse-hover-card {
             box-shadow: 1px 1px 8px #999;
         }
 
 
         #landing-page-mouse-hover-card:hover {
-            border:var(--bs-card-border-width) solid black;
+            border: var(--bs-card-border-width) solid black;
             box-shadow: 4px 4px 8px #999;
         }
     </style>
@@ -59,7 +58,7 @@ include "php/pagination.php"
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="html/dashboard.php">Dashboard</a></li>
                         <li><a class="dropdown-item" href="html/posted_jobs.php">Jobs Posted</a></li>
-                        <li><a class="dropdown-item" href="php/logout.php">Logout</a></li>
+                        <li><a class="dropdown-item" href="/php_basics/jobsite_project/php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']);?>">Logout</a></li>
                     </ul>
                 </div>
             <?php } ?>
@@ -137,8 +136,8 @@ include "php/pagination.php"
                                                                 <b>Category</b>
                                                             </div>
                                                             <div class="col-6">
-                                                                <?php $jobcategory =  getJobCategory($pdo, $row['jobcategory']) ?>
-                                                                <p><?php echo $jobcategory['jcategory']; ?> </p>
+                                                                <?php $jobcategory =  getJob($pdo, $row['jindex']) ?>
+                                                                <p><?php echo $jobcategory['categoryName']; ?> </p>
                                                             </div>
                                                         </div>
                                                         <div class="row">
@@ -170,19 +169,19 @@ include "php/pagination.php"
                             <h2 class="text-center mb-5">Available Resumes</h2>
                         </div>
                         <div class="row">
-                            <?php foreach ($landingpage_allresumedetails as $row) { 
+                            <?php foreach ($landingpage_allresumedetails as $row) {
                                 $resume_img_src = "uploads/resumes/placeholder_pfp.svg";
-                                if (file_exists("uploads/resumes/" . $row['rindex'] . ".png")){
+                                if (file_exists("uploads/resumes/" . $row['rindex'] . ".png")) {
                                     $resume_img_src = "uploads/resumes/" . $row['rindex'] . ".png";
                                 }
-                                ?>
+                            ?>
                                 <div class="container">
                                     <div class="col-12">
-                                        <a href="<?php echo $row['rindex'] ?>" id="landing-page-mouse-hover-card" style="max-height: 150px;" class="card text-decoration-none text-start m-4">
+                                        <a href="html/resume.php?view&id=<?php echo $row['rindex'] ?>" id="landing-page-mouse-hover-card" style="max-height: 150px;" class="card text-decoration-none text-start m-4">
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-3">
-                                                        <img style="height:100px; width: 100px;" src="<?php echo $resume_img_src;?>" alt="">
+                                                        <img style="height:100px; width: 100px;" src="<?php echo $resume_img_src; ?>" alt="">
                                                     </div>
                                                     <div class="col-8">
                                                         <div class="row">
@@ -224,11 +223,10 @@ include "php/pagination.php"
                         </div>
                     </div>
                 </div>
-                <div>
-                </div>
             </div>
             <div class="col-1">
             </div>
+        </div>
     </section>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

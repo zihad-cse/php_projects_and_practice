@@ -2,6 +2,12 @@
 <html lang="en">
 <?php
 include '../php/registration.php';
+
+session_start();
+if (isset($_SESSION['token'])) {
+    header("Location: ../");
+    exit();
+}
 ?>
 
 <head>

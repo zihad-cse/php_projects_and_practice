@@ -31,15 +31,24 @@ include '../php/pagination.php';
             height: 100px;
             resize: none;
         }
+
+        #landing-page-mouse-hover-card {
+            box-shadow: 1px 1px 8px #999;
+        }
+
+
+        #landing-page-mouse-hover-card:hover {
+            border: var(--bs-card-border-width) solid black;
+            box-shadow: 4px 4px 8px #999;
+        }
     </style>
-    <title>Resumes
-    </title>
+    <title>Jobs</title>
 </head>
 
 <body class="bg-light">
-    <nav class="navbar bg-light sticky-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="../index.php">
+    <nav class="navbar p-3 bg-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="../">
                 <img src="../img/logoipsum-248.svg" alt="">
             </a>
             <div>
@@ -71,7 +80,7 @@ include '../php/pagination.php';
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
                         <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
-                        <li><a class="dropdown-item" href="../php/logout.php">Logout</a></li>
+                        <li><a class="dropdown-item" href="../php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
             <?php } ?>
@@ -80,137 +89,100 @@ include '../php/pagination.php';
     <section id="dashboard-main-content">
         <div class="bg-light">
             <div class="row">
-                <div class="col-2 bg-white">
-                    <ul class="list-unstyled ps-0">
-                        <li class="mb-1">
-                            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
-                                <i class="fa-solid fa-chevron-down pe-2"></i>Dashboard
-                            </button>
-                            <div class="collapse" id="dashboard-collapse">
-                                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
-                                    <li><a href="#" class="btn btn-secondary-outline">Overview</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">Weekly</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">Monthly</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">Annually</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="mb-1">
-                            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
-                                <i class="fa-solid fa-chevron-down pe-2"></i>Jobs
-                            </button>
-                            <div class="collapse" id="orders-collapse">
-                                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
-                                    <li><a href="job_post.php" class="btn btn-secondary-outline">New</a></li>
-                                    <li><a href="posted_jobs.php" class="btn btn-secondary-outline">Posted</a></li>
-
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="border-top my-3"></li>
-                        <li class="mb-1">
-                            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
-                                <i class="fa-solid fa-chevron-down pe-2"></i>Account
-                            </button>
-                            <div class="collapse" id="account-collapse">
-                                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
-                                    <li><a href="dashboard.php" class="btn btn-secondary-outline">Overview</a></li>
-                                    <li>
-                                        <form action="../php/logout.php" method="post" class="btn btn-secondary-outline">
-                                            <input class="btn p-0" type="submit" value="Log Out" id="#logout-button">
-                                        </form>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-10 p-5" style="min-height: 1000px; background-color: #ddd;">
+                <div class="col-12 p-5" style="min-height: 1000px; background-color: #ddd;">
                     <div class="">
                         <div class="container">
                             <div class="">
                                 <div class="">
-                                    <h2 class="text-center mb-5">Available Jobs</h2>
+                                    <h2 class="text-center mb-5">Available Resumes</h2>
                                 </div>
-                                <div class="">
-                                    <?php foreach ($allresumedetails as $row) { ?>
+                                <div class="row">
+                                    <div class="col-1">
+                                    </div>
+                                    <div class="col-12">
                                         <div class="container">
-                                            <div style="height: 200px;" class="card m-4">
-                                                <div class="card-body">
-                                                    <div class="row">
-                                                        <div class="col-3">
-
-                                                        </div>
-                                                        <div class="col-7">
-                                                            <div class="row">
-                                                                <div class="row">
-                                                                    <div class="col-4">
-                                                                        <b>Full Name</b>
+                                            <div class="">
+                                                <div class="row">
+                                                    <?php foreach ($allresumedetails as $row) {
+                                                        $resume_img_src = "../uploads/resumes/placeholder_pfp.svg";
+                                                        if (file_exists("../uploads/resumes/" . $row['rindex'] . ".png")) {
+                                                            $resume_img_src = "../uploads/resumes/" . $row['rindex'] . ".png";
+                                                        }
+                                                    ?>
+                                                        <div class="container">
+                                                            <div class="col-12">
+                                                                <a id="landing-page-mouse-hover-card" style="max-height: 150px;" href="../html/resume.php?view&id=<?php echo $row['rindex'] ?>" class="text-start m-4 card text-decoration-none">
+                                                                    <div class="card-body">
+                                                                        <div class="row ">
+                                                                            <div class="col-3">
+                                                                                <img style="height:100px; width: 100px;" src="<?php echo $resume_img_src ?>" alt="">
+                                                                            </div>
+                                                                            <div class="col-8">
+                                                                                <div class="row">
+                                                                                    <div class="col-4">
+                                                                                        <b>Title</b>
+                                                                                    </div>
+                                                                                    <div class="col-6">
+                                                                                        <p><?php echo $row['fullname']; ?> </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col-4">
+                                                                                        <b>Date Of Birth</b>
+                                                                                    </div>
+                                                                                    <div class="col-6">
+                                                                                        <p><?php echo $row['dateofbirth']; ?> </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col-4">
+                                                                                        <b>Skills</b>
+                                                                                    </div>
+                                                                                    <div class="col-6">
+                                                                                        <p><?php echo $row['skilleduexp']; ?></p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-                                                                    <div class="col-6">
-                                                                        <p><?php echo $row['fullname']; ?> </p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-4">
-                                                                        <b>Date of Birth</b>
-                                                                    </div>
-                                                                    <div class="col-6">
-                                                                        <p><?php echo $row['dateofbirth']; ?> </p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-4">
-                                                                        <b>Skills</b>
-                                                                    </div>
-                                                                    <div class="col-6">
-                                                                        <p><?php echo $row['skilleduexp']; ?></p>
-                                                                    </div>
-                                                                </div>
+                                                                </a>
                                                             </div>
                                                         </div>
-                                                        <div class="col-2">
-                                                            <a href="#" class="btn btn-outline-dark">View Resume</a>
-                                                        </div>
-                                                    </div>
+                                                    <?php } ?>
                                                 </div>
                                             </div>
                                         </div>
-                                    <?php } ?>
+                                    </div>
+                                    <div class="col-1">
+                                    </div>
                                 </div>
                                 <div class="">
                                     <nav aria-label="Page navigation">
                                         <ul class="pagination mt-3 justify-content-center">
                                             <form method="post">
-                                                <select onchange="this.form.submit()" class="btn btn-primary" name="resume-pagination-limit" id="">
+                                                <select onchange="this.form.submit()" class="btn btn-primary" name="resumes-pagination-limit" id="">
                                                     <option <?= ($_SESSION["resumes-pagination-limit"] == 10 ? "selected" : "") ?> value="10">10</option>
                                                     <option <?= ($_SESSION["resumes-pagination-limit"] == 20 ? "selected" : "") ?> value="20">20</option>
                                                     <option <?= ($_SESSION["resumes-pagination-limit"] == 50 ? "selected" : "") ?> value="50">50</option>
                                                 </select>
                                             </form>
-                                            <!-- Determine Page Number -->
-
-                                            <?php
-
-                                            if ($resume_current_page > 1) {
+                                            <?php if ($resume_current_page > 1) {
                                                 $resumePrevPage = $resume_current_page - 1;
                                             ?>
-                                                <!-- Previous Page -->
-                                                <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $job_current_page; ?>&?resumepage<?php echo $resumePrevPage; ?>">Previous</a></li>
+                                                <li class="page-item"><a class="page-link" href="?resumepage=<?php echo $resumePrevPage; ?>">Previous</a></li>
                                             <?php } else { ?>
                                                 <li class="page-item disabled"><a class="page-link" href="">Previous</a></li>
                                             <?php } ?>
-                                            <!-- All Pages -->
                                             <?php foreach (range($resumePagination_rangeFirstNumber, $resumePagination_rangeLastNumber) as $resume_page_number) { ?>
                                                 <li class="page-item <?= ($resume_current_page == $resume_page_number ? "active" : "");  ?>">
-                                                    <a class="page-link" href="?jobpage=<?php echo $job_current_page; ?>&?resumepage<?php echo $resume_page_number; ?>"><?php echo $resume_page_number ?></a>
+                                                    <a class="page-link" href="?resumepage=<?php echo $resume_page_number ?>"><?php echo $resume_page_number ?></a>
                                                 </li>
                                             <?php } ?>
-                                            <!-- Next Page -->
+
                                             <?php if ($resume_current_page < $resume_total_pages) {
                                                 $resumeNextPage = $resume_current_page + 1;
                                             ?>
-                                                <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $job_current_page; ?>&?resumepage<?php echo $resumeNextPage; ?>">Next</a></li>
+                                                <li class="page-item"><a class="page-link" href="?resumepage=<?php echo $resumeNextPage ?>">Next</a></li>
                                             <?php } else { ?>
                                                 <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
                                             <?php } ?>
@@ -218,8 +190,6 @@ include '../php/pagination.php';
                                     </nav>
                                 </div>
                             </div>
-                        </div>
-                        <div>
                         </div>
                     </div>
                 </div>

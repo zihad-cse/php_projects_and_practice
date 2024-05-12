@@ -143,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
                                     <li><a href="dashboard.php" class="btn btn-secondary-outline">Overview</a></li>
                                     <li>
-                                        <form action="../php/logout.php" method="post" class="btn btn-secondary-outline">
+                                        <form action="../php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']);?>" method="post" class="btn btn-secondary-outline">
                                             <input class="btn p-0" type="submit" value="Log Out" id="#logout-button">
                                         </form>
                                     </li>
