@@ -102,12 +102,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <a class="navbar-brand" href="../index.php">
                 <img src="../img/logoipsum-248.svg" alt="">
             </a>
+            <div class="d-sm-block d-md-block d-lg-none d-block dropdown">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-regular fa-user"></i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="html/dashboard.php">Dashboard</a></li>
+                    <li><a class="dropdown-item" href="html/posted_jobs.php">Jobs Posted</a></li>
+                    <li><a class="dropdown-item" href="/php_basics/jobsite_project/php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
+                </ul>
+            </div>
         </div>
     </nav>
     <section id="dashboard-main-content">
         <div class="bg-light">
             <div class="row">
-                <div class="col-3 p-3 bg-white" style="width: 280px;">
+                <div class="d-none d-sm-none d-md-none d-lg-block col-2 p-3 bg-white">
                     <ul class="list-unstyled ps-0">
                         <li class="mb-1">
                             <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
@@ -143,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
                                     <li><a href="dashboard.php" class="btn btn-secondary-outline">Overview</a></li>
                                     <li>
-                                        <form action="../php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']);?>" method="post" class="btn btn-secondary-outline">
+                                        <form action="../php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" method="post" class="btn btn-secondary-outline">
                                             <input class="btn p-0" type="submit" value="Log Out" id="#logout-button">
                                         </form>
                                     </li>
@@ -152,7 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </li>
                     </ul>
                 </div>
-                <div class="col-9 p-5" style="min-height: 1000px; background-color: #ddd;">
+                <div class="col-lg-10 col-md-12 col-sm-12 col-12 p-5" style="min-height: 1000px; background-color: #ddd;">
                     <h4 class="mb-3">Post A Circular</h4>
                     <hr>
                     <form method="post" id="job-post">
@@ -171,18 +181,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </div>
                         </div>
                         <div class="row my-2">
-                            <div class="col-2">
+                            <div class="col-lg-2 col-md-2 col-sm-12 col-12">
                                 <b>Job title</b>
                             </div>
-                            <div class="col-6">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                                 <input id="jobTitle" name="jobTitle" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row my-2">
-                            <div class="col-2">
+                            <div class="col-lg-2 col-md-2 col-sm-12 col-12">
                                 <b>Job Category</b>
                             </div>
-                            <div class="col-6">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                                 <select name="jobCategory" id="jobCategory" class="form-control">
                                     <option selected>Select A Category</option>
                                     <?php foreach ($jobCatData as $row) {
@@ -193,66 +203,58 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-2">
+                            <div class="col-lg-2 col-md-2 col-sm-12 col-12">
                                 <b>Location</b>
                             </div>
-                            <div class="col-6">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                                 <input id="workArea" name="workArea" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row my-2">
-                            <div class="col-2">
+                            <div class="col-lg-2 col-md-2 col-sm-12 col-12">
                                 <b>Responsibilities</b>
                             </div>
-                            <div class="col-6">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                                 <textarea id="dutySkilledUExp" style="resize: none;" name="dutySkilledUExp" class="form-control" cols="30" rows="10"></textarea>
                             </div>
                         </div>
                         <div class="row my-2">
-                            <div class="col-2">
+                            <div class="col-lg-2 col-md-2 col-sm-12 col-12">
                                 <b>Salary</b>
                             </div>
-                            <div class="col-6">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                                 <input id="salary" name="salary" type="text" class="form-control">
                             </div>
                         </div>
-                        <!-- <div class="row my-2">
-                            <div class="col-2">
-                                <b>Start Date</b>
-                            </div>
-                            <div class="col-6">
-                                <input name="startDate" type="date" class="form-control">
-                            </div>
-                        </div> -->
                         <div class="row my-2">
-                            <div class="col-2">
+                            <div class="col-lg-2 col-md-2 col-sm-12 col-12">
                                 <b>Deadline</b>
                             </div>
-                            <div class="col-6">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                                 <input id="endDate" name="endDate" type="date" class="form-control">
                             </div>
                         </div>
                         <div class="row my-2">
-                            <div class="col-2">
+                            <div class="col-lg-2 col-md-2 col-sm-12 col-12">
                                 <b>Contact Email</b>
                             </div>
-                            <div class="col-6">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                                 <input id="conEmail" name="conEmail" type="email" class="form-control">
                             </div>
                         </div>
                         <div class="row my-2">
-                            <div class="col-2">
+                            <div class="col-lg-2 col-md-2 col-sm-12 col-12">
                                 <b>Contact Phone Number</b>
                             </div>
-                            <div class="col-6">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                                 <input id="conPhone" name="conPhone" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row my-2">
-                            <div class="col-2">
+                            <div class="col-lg-2 col-md-2 col-sm-4 col-4">
                                 <b>Visibility</b>
                             </div>
-                            <div class="col-6 form-check">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-6 form-check">
                                 <input value="1" type="checkbox" id="visibility" class="form-check-input" name="visibility">
                             </div>
                         </div>
@@ -263,7 +265,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </section>
-
+    <div id="footer" class="bg-dark text-light" >
+        <div class="container">
+            <footer class="row py-5">
+                <div class="col-6">
+                    <img src="../img/logoipsum-248.svg" alt="">
+                </div>
+                <div class="col-6">
+                    <ul class="list-unstyled d-flex justify-content-end">
+                        <li class="ms-3"><a class="text-decoration-none text-light" href="#">Home</a></li>
+                        <li class="ms-3"><a class="text-decoration-none text-light" href="#">Terms and Conditions</a></li>
+                        <li class="ms-3"><a class="text-decoration-none text-light" href="#">FAQs</a></li>
+                    </ul>
+                </div>
+            </footer>
+        </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

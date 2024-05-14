@@ -10,7 +10,7 @@ include '../php/db_connection.php';
 
 session_start();
 
-if(isset($_GET['id'])){
+if (isset($_GET['id'])) {
     $jobId = $_GET['id'];
 } else {
     echo 'Job Data Not Found';
@@ -19,7 +19,7 @@ if(isset($_GET['id'])){
 
 $jobData = getJob($pdo, $jobId);
 
-$jobPicFilePath = "../uploads/job/". $jobData['jindex']. '.png';
+$jobPicFilePath = "../uploads/job/" . $jobData['jindex'] . '.png';
 ?>
 
 <head>
@@ -63,13 +63,16 @@ $jobPicFilePath = "../uploads/job/". $jobData['jindex']. '.png';
             <a class="navbar-brand" href="../">
                 <img src="../img/logoipsum-248.svg" alt="">
             </a>
-            <div>
+            <div class="d-lg-block d-md-block d-sm-none d-none">
                 <div class="input-group">
                     <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
                     <span class="input-group-text border-0" id="search-addon">
                         <i class="fas fa-search"></i>
                     </span>
                 </div>
+            </div>
+            <div class="d-lg-none d-md-none d-sm-block d-block btn btn-primary">
+                <i class="fa-solid fa-magnifying-glass"></i>
             </div>
             <?php if (!isset($_SESSION['token']) && !isset($_SESSION['phnNumber'])) { ?>
                 <div>
@@ -90,17 +93,17 @@ $jobPicFilePath = "../uploads/job/". $jobData['jindex']. '.png';
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
-                        <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
+                        <li><a class="dropdown-item" href="/dashboard.php">Dashboard</a></li>
+                        <li><a class="dropdown-item" href="/posted_jobs.php">Jobs Posted</a></li>
                         <li><a class="dropdown-item" href="../php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
             <?php } ?>
-            </dv>
+        </div>
     </nav>
     <section class="bg-dark" id="dashboard-main-content">
         <h2 class="text-center text-light">Template</h2>
-        <div class="bg-light p-5 container">
+        <div class="bg-light p-lg-5 p-md-4 p-sm-3 p-3 container">
             <div class="row p-3">
                 <div class="col-10">
                     <div class="row">
@@ -110,8 +113,12 @@ $jobPicFilePath = "../uploads/job/". $jobData['jindex']. '.png';
                         <h2 class="text-primary"><?php echo $jobData['jobtitle'] ?></h2>
                     </div>
                 </div>
-                <div class=" col-2">
+                <div class=" col-lg-2 col-md-2 col-sm-12 col-12">
+                    <?php if(file_exists($jobPicFilePath)){ ?>
                     <img class="img-normal" src="<?php echo $jobPicFilePath ?>" alt="">
+                    <?php } else { ?>
+                    <img class="img-normal" src="../uploads/job/placeholder-company.png" alt="">
+                    <?php } ?>
                 </div>
             </div>
             <div class="row p-3">
@@ -124,11 +131,11 @@ $jobPicFilePath = "../uploads/job/". $jobData['jindex']. '.png';
                     <p>Diploma in Mechanical Engineering from any reputed institution.</p>
 
                     <li>The applicants should have experience in the following business area(s):</li>
-                        <ul>
-                            <li>Manufacturing (Light Engineering and Heavy Industry)</li>
-                            <li>Electronic Equipment/Home Appliances</li>
-                            <li>Research Organization</li>
-                        </ul>
+                    <ul>
+                        <li>Manufacturing (Light Engineering and Heavy Industry)</li>
+                        <li>Electronic Equipment/Home Appliances</li>
+                        <li>Research Organization</li>
+                    </ul>
                     </ul>
 
                     <h5>Additional Requirements</h5>
@@ -188,7 +195,22 @@ $jobPicFilePath = "../uploads/job/". $jobData['jindex']. '.png';
             </div>
         </div>
     </section>
-
+    <div id="footer" class="bg-dark text-light" >
+        <div class="container">
+            <footer class="row py-5">
+                <div class="col-6">
+                    <img src="../img/logoipsum-248.svg" alt="">
+                </div>
+                <div class="col-6">
+                    <ul class="list-unstyled d-flex justify-content-end">
+                        <li class="ms-3"><a class="text-decoration-none text-light" href="#">Home</a></li>
+                        <li class="ms-3"><a class="text-decoration-none text-light" href="#">Terms and Conditions</a></li>
+                        <li class="ms-3"><a class="text-decoration-none text-light" href="#">FAQs</a></li>
+                    </ul>
+                </div>
+            </footer>
+        </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

@@ -25,8 +25,11 @@ if (isset($_SESSION['token'])) {
             <a class="navbar-brand" href="../index.php">
                 <img src="../img/logoipsum-248.svg" alt="">
             </a>
-            <div class="btn-group">
+            <div class="d-lg-block d-md-block d-sm-none d-none btn-group">
                 <div class="btn btn-outline-dark disabled">Not a member?</div>
+                <a href="registration_page.php" class="btn btn-primary">Register</a>
+            </div>
+            <div class="d-lg-none d-md-none d-sm-block d-block">
                 <a href="registration_page.php" class="btn btn-primary">Register</a>
             </div>
         </div>
@@ -39,8 +42,8 @@ if (isset($_SESSION['token'])) {
                 </div>
                 <form id="login" action="" method="post">
                     <div id="cardBody" class="card-body row" style="padding: 0px 100px;">
-                        <div class="col-4"></div>
-                        <div class="col-4">
+                        <div class="col-lg-4 col-md-4 col-sm-0 col-0"></div>
+                        <div class="col-lg-4 col-md-12 col-sm-12 col-12">
                             <label class="mt-2 form-label" for="phn">Phone Number</label>
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="addon">+880</span>
@@ -51,7 +54,7 @@ if (isset($_SESSION['token'])) {
                             <input id="pass" name="pass" class="mb-3 form-control" type="password">
                             <div id="passError" class="text-danger"><?php echo $errmsg ?></div>
                         </div>
-                        <div class="col-4"></div>
+                        <div class="col-lg-4 col-md-4 col-sm-0 col-0"></div>
                     </div>
                     <div class="card-footer">
                         <input type="submit" class="btn btn-primary" value="Login">

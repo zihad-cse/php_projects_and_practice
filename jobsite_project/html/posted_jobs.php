@@ -64,12 +64,22 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
             <a class="navbar-brand" href="../index.php">
                 <img src="../img/logoipsum-248.svg" alt="">
             </a>
+            <div class="d-sm-block d-md-block d-lg-none d-block dropdown">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-regular fa-user"></i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="html/dashboard.php">Dashboard</a></li>
+                    <li><a class="dropdown-item" href="html/posted_jobs.php">Jobs Posted</a></li>
+                    <li><a class="dropdown-item" href="/php_basics/jobsite_project/php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
+                </ul>
+            </div>
         </div>
     </nav>
     <section id="dashboard-main-content">
         <div class="bg-light">
             <div class="row">
-                <div class="col-3 p-3 bg-white" style="width: 280px;">
+                <div class="col-lg-2 d-lg-block d-md-none d-sm-none d-none col-3 p-3 bg-white">
                     <ul class="list-unstyled ps-0">
                         <li class="mb-1">
                             <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
@@ -105,7 +115,7 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
                                     <li><a href="dashboard.php" class="btn btn-secondary-outline">Overview</a></li>
                                     <li>
-                                        <form action="../php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']);?>" method="post" class="btn btn-secondary-outline">
+                                        <form action="../php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" method="post" class="btn btn-secondary-outline">
                                             <input class="btn p-0" type="submit" value="Log Out" id="#logout-button">
                                         </form>
                                     </li>
@@ -114,13 +124,16 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
                         </li>
                     </ul>
                 </div>
-                <div class="col-9 p-5" style="min-height: 1000px; background-color: #ddd;">
+                <div class="col-lg-10 col-md-12 col-sm-12 col-12 p-5" style="background-color: #ddd;">
                     <h3>Posted Jobs</h3>
                     <div class="row">
-                        <div class="col-2">
+                        <div class="col-2 d-sm-none d-md-block d-none d-lg-block">
                             <b>Circular ID</b>
                         </div>
-                        <div class="col-4">
+                        <div class="col-2 d-sm-block d-md-none d-block d-lg-none">
+                            <b>ID</b>
+                        </div>
+                        <div class="col-6">
                             <b>Title</b>
                         </div>
                         <div class="col-2">
@@ -135,10 +148,10 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
                             <div class="col-2">
                                 <p><?php echo $aJob['jindex'] ?></p>
                             </div>
-                            <div class="col-4">
+                            <div class="col-lg-6 col-md-6 col-sm-4 col-4">
                                 <p><?php echo $aJob['jobtitle'] ?></p>
                             </div>
-                            <div class="col-2">
+                            <div class="col-lg-2 col-md-2 col-sm-4 col-4">
                                 <p><?php echo $aJob['enddate'] ?></p>
                             </div>
                             <div class="col-2">
@@ -150,7 +163,22 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
             </div>
         </div>
     </section>
-
+    <div id="footer" class="bg-dark text-light" >
+        <div class="container">
+            <footer class="row py-5">
+                <div class="col-6">
+                    <img src="../img/logoipsum-248.svg" alt="">
+                </div>
+                <div class="col-6">
+                    <ul class="list-unstyled d-flex justify-content-end">
+                        <li class="ms-3"><a class="text-decoration-none text-light" href="#">Home</a></li>
+                        <li class="ms-3"><a class="text-decoration-none text-light" href="#">Terms and Conditions</a></li>
+                        <li class="ms-3"><a class="text-decoration-none text-light" href="#">FAQs</a></li>
+                    </ul>
+                </div>
+            </footer>
+        </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

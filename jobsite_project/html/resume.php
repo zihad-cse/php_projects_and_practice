@@ -9,7 +9,7 @@ include '../php/auth.php';
 include '../php/db_connection.php';
 
 session_start();
-if(isset($_GET['id'])){
+if (isset($_GET['id'])) {
     $rindex = $_GET['id'];
 } else {
     echo "Could Not Get Resume Data";
@@ -59,13 +59,16 @@ $resumeData = getResumeDataGuest($pdo, $rindex);
             <a class="navbar-brand" href="../">
                 <img src="../img/logoipsum-248.svg" alt="">
             </a>
-            <div>
+            <div class="d-lg-block d-md-block d-sm-none d-none">
                 <div class="input-group">
                     <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
                     <span class="input-group-text border-0" id="search-addon">
                         <i class="fas fa-search"></i>
                     </span>
                 </div>
+            </div>
+            <div class="d-lg-none d-md-none d-sm-block d-block btn btn-primary">
+                <i class="fa-solid fa-magnifying-glass"></i>
             </div>
             <?php if (!isset($_SESSION['token']) && !isset($_SESSION['phnNumber'])) { ?>
                 <div>
@@ -96,15 +99,20 @@ $resumeData = getResumeDataGuest($pdo, $rindex);
     </nav>
     <section class="bg-dark" id="dashboard-main-content">
         <h2 class="text-center text-light">Template</h2>
-        <div class="bg-light p-5 container">
+        <div class="bg-light p-lg-5 p-md-4 p-sm-3 p-3 container">
             <div class="row p-3">
                 <div class="col-10">
                     <div class="row">
                         <h2><?= $resumeData['fullname'] ?></h2>
                     </div>
                 </div>
-                <div class=" col-2">
-                    <img class="img-normal" src="../uploads/resumes/<?php echo $rindex ?>.png" alt="">
+                <div class=" col-lg-2 col-md-2 col-sm-12 col-12">
+                    <?php $filePath = "../uploads/resumes/" . $rindex . ".png";
+                    if (file_exists($filePath)) { ?>
+                        <img class="img-thumbnail img-normal" src="../uploads/resumes/<?php echo $rindex ?>.png" alt="">
+                    <?php } else { ?>
+                        <img class="img-thumbnail img-normal" src="../uploads/resumes/placeholder_pfp.svg" alt="">
+                        <?php } ?>
                 </div>
             </div>
             <div class="row p-3">
@@ -117,11 +125,11 @@ $resumeData = getResumeDataGuest($pdo, $rindex);
                     <p>Diploma in Mechanical Engineering from any reputed institution.</p>
 
                     <li>The applicants should have experience in the following business area(s):</li>
-                        <ul>
-                            <li>Manufacturing (Light Engineering and Heavy Industry)</li>
-                            <li>Electronic Equipment/Home Appliances</li>
-                            <li>Research Organization</li>
-                        </ul>
+                    <ul>
+                        <li>Manufacturing (Light Engineering and Heavy Industry)</li>
+                        <li>Electronic Equipment/Home Appliances</li>
+                        <li>Research Organization</li>
+                    </ul>
                     </ul>
 
                     <h5>Additional Requirements</h5>
@@ -183,7 +191,22 @@ $resumeData = getResumeDataGuest($pdo, $rindex);
             </div>
         </div>
     </section>
-
+    <div id="footer" class="bg-dark text-light" >
+        <div class="container">
+            <footer class="row py-5">
+                <div class="col-6">
+                    <img src="../img/logoipsum-248.svg" alt="">
+                </div>
+                <div class="col-6">
+                    <ul class="list-unstyled d-flex justify-content-end">
+                        <li class="ms-3"><a class="text-decoration-none text-light" href="#">Home</a></li>
+                        <li class="ms-3"><a class="text-decoration-none text-light" href="#">Terms and Conditions</a></li>
+                        <li class="ms-3"><a class="text-decoration-none text-light" href="#">FAQs</a></li>
+                    </ul>
+                </div>
+            </footer>
+        </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

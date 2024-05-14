@@ -24,8 +24,11 @@ if (isset($_SESSION['token'])) {
             <a class="navbar-brand" href="../index.php">
                 <img src="../img/logoipsum-248.svg" alt="">
             </a>
-            <div class="btn-group">
+            <div class="d-lg-block d-md-block d-sm-none d-none btn-group">
                 <div class="btn btn-outline-dark disabled">Already have an account?</div>
+                <a href="login_page.php" class="btn btn-primary">Sign In</a>
+            </div>
+            <div class="d-lg-none d-md-none d-sm-block d-block">
                 <a href="login_page.php" class="btn btn-primary">Sign In</a>
             </div>
         </div>
