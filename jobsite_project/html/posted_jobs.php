@@ -54,7 +54,7 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
             resize: none;
         }
     </style>
-    <title>Posted Circulars
+    <title>Posted Listings
     </title>
 </head>
 

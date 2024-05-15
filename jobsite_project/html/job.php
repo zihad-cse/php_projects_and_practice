@@ -54,7 +54,7 @@ $jobPicFilePath = "../uploads/job/" . $jobData['jindex'] . '.png';
             width: 100px;
         }
     </style>
-    <title>Jobs</title>
+    <title><?php echo $jobData['jobtitle'] ?></title>
 </head>
 
 <body class="bg-light">

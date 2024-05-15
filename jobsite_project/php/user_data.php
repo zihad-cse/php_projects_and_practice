@@ -153,7 +153,7 @@ function pageination_alljobrows($pdo)
     try {
         $stmt = $pdo->prepare("SELECT * FROM job");
         $stmt->execute();
-        $countjobrows=  $stmt->rowCount();
+        $countjobrows =  $stmt->rowCount();
 
         return $countjobrows;
     } catch (PDOException $e) {
@@ -162,13 +162,14 @@ function pageination_alljobrows($pdo)
     }
 }
 
-function pageination_alljobdetails($pdo ,$initial_page, $limit){
+function pageination_alljobdetails($pdo, $initial_page, $limit)
+{
     try {
         $stmt = $pdo->prepare("SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1 LIMIT :limitnumber OFFSET :initialpage");
         $stmt->bindParam(':initialpage', $initial_page, PDO::PARAM_INT);
         $stmt->bindParam(':limitnumber', $limit, PDO::PARAM_INT);
         $stmt->execute();
-        $alljobdetails= $stmt->fetchAll(PDO::FETCH_ASSOC); 
+        $alljobdetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $alljobdetails;
     } catch (PDOException $e) {
@@ -177,13 +178,14 @@ function pageination_alljobdetails($pdo ,$initial_page, $limit){
     }
 }
 
-function pageination_allresumedetails($pdo, $initial_page, $limit){
+function pageination_allresumedetails($pdo, $initial_page, $limit)
+{
     try {
         $stmt = $pdo->prepare("SELECT * FROM resumes WHERE visible = 1 LIMIT :limitnumber OFFSET :initialpage");
         $stmt->bindParam(':initialpage', $initial_page, PDO::PARAM_INT);
         $stmt->bindParam(':limitnumber', $limit, PDO::PARAM_INT);
         $stmt->execute();
-        $allresumedetails= $stmt->fetchAll(PDO::FETCH_ASSOC); 
+        $allresumedetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $allresumedetails;
     } catch (PDOException $e) {
@@ -197,7 +199,7 @@ function pageination_allresumerows($pdo)
     try {
         $stmt = $pdo->prepare("SELECT * FROM resumes");
         $stmt->execute();
-        $countresumerows=  $stmt->rowCount();
+        $countresumerows =  $stmt->rowCount();
 
         return $countresumerows;
     } catch (PDOException $e) {

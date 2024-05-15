@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             resize: none;
         }
     </style>
-    <title>Post a circular</title>
+    <title>Post a listing</title>
 </head>
 
 <body class="bg-light">

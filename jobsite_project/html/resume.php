@@ -50,7 +50,7 @@ $resumeData = getResumeDataGuest($pdo, $rindex);
             width: 100px;
         }
     </style>
-    <title>Jobs</title>
+    <title><?= $resumeData['fullname'] ?></title>
 </head>
 
 <body class="bg-light">

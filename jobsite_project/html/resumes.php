@@ -42,7 +42,7 @@ include '../php/pagination.php';
             box-shadow: 4px 4px 8px #999;
         }
     </style>
-    <title>Jobs</title>
+    <title>All Resumes</title>
 </head>
 
 <body class="bg-light">
