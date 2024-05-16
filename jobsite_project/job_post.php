@@ -5,9 +5,9 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 
-include '../php/user_data.php';
-include '../php/auth.php';
-include '../php/db_connection.php';
+include 'php/user_data.php';
+include 'php/auth.php';
+include 'php/db_connection.php';
 
 session_start();
 
@@ -79,10 +79,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="../css/account_dashboard.css">
+    <link rel="stylesheet" href="css/account_dashboard.css">
     <style>
         #logout-button:hover {
             color: #dc3545;
@@ -99,16 +99,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body class="bg-light">
     <nav class="navbar bg-light sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="../index.php">
-                <img src="../img/logoipsum-248.svg" alt="">
+            <a class="navbar-brand" href="index.php">
+                <img src="img/logoipsum-248.svg" alt="">
             </a>
             <div class="d-sm-block d-md-block d-lg-none d-block dropdown">
                 <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa-regular fa-user"></i>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="html/dashboard.php">Dashboard</a></li>
-                    <li><a class="dropdown-item" href="html/posted_jobs.php">Jobs Posted</a></li>
+                    <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
+                    <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
                     <li><a class="dropdown-item" href="/php_basics/jobsite_project/php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                 </ul>
             </div>
@@ -153,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
                                     <li><a href="dashboard.php" class="btn btn-secondary-outline">Overview</a></li>
                                     <li>
-                                        <form action="../php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" method="post" class="btn btn-secondary-outline">
+                                        <form action="php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" method="post" class="btn btn-secondary-outline">
                                             <input class="btn p-0" type="submit" value="Log Out" id="#logout-button">
                                         </form>
                                     </li>
@@ -269,7 +269,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="container">
             <footer class="row py-5">
                 <div class="col-6">
-                    <img src="../img/logoipsum-248.svg" alt="">
+                    <img src="img/logoipsum-248.svg" alt="">
                 </div>
                 <div class="col-6">
                     <ul class="list-unstyled d-flex justify-content-end">
@@ -285,7 +285,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-    <script src="../js/job_post_valid.js"></script>
+    <script src="js/job_post_valid.js"></script>
 </body>
 
 </html>

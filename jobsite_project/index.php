@@ -14,7 +14,7 @@ include "php/pagination.php";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="../css/landing_page.css">
+    <link rel="stylesheet" href="css/landing_page.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <title>Document</title>
@@ -57,8 +57,8 @@ include "php/pagination.php";
                             Log in or Sign up
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="html/login_page.php">Log In</a></li>
-                            <li><a class="dropdown-item" href="html/registration_page.php">Sign Up</a></li>
+                            <li><a class="dropdown-item" href="login_page.php">Log In</a></li>
+                            <li><a class="dropdown-item" href="registration_page.php">Sign Up</a></li>
                         </ul>
                     </div>
                 </div>
@@ -68,8 +68,8 @@ include "php/pagination.php";
                         <i class="fa-regular fa-user"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="html/dashboard.php">Dashboard</a></li>
-                        <li><a class="dropdown-item" href="html/posted_jobs.php">Jobs Posted</a></li>
+                        <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
+                        <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
                         <li><a class="dropdown-item" href="/php_basics/jobsite_project/php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
@@ -95,8 +95,16 @@ include "php/pagination.php";
                                         </div>
 
                                         <div class="col-10">
-                                            <?php if(isset($_GET['search-filter'] )){if($_GET['search-filter'] == 'resume'){$queryPath = 'html/resume_search_results.php';} else { $queryPath = 'html/job_search_results.php';}} ?>
-                                            <form method="get" action="<?php echo $queryPath;?>">
+                                            <?php
+                                            $queryPath = 'jobs.php';
+                                            if (isset($_GET['search-filter'])) {
+                                                if ($_GET['search-filter'] == 'resume') {
+                                                    $queryPath = 'resumes.php';
+                                                } else if ($_GET['search-filter'] == 'job') {
+                                                    $queryPath = 'jobs.php';
+                                                }
+                                            } ?>
+                                            <form method="get" action="<?php echo $queryPath; ?>">
                                                 <div class="input-group">
                                                     <input id="search-field" type="search" name="search" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
                                                     <input onclick="if(document.getElementById('search-field').value.trim() === '') {event.preventDefault();}" type="submit" name="search-submit" class="btn btn-outline-light" value="Search">
@@ -110,20 +118,24 @@ include "php/pagination.php";
                                                 <p class="m-0 text-center pt-lg-2 pt-md-0 pt-sm-0 pt-0">Search among:</p>
                                             </div>
                                             <div class="pt-lg-2 pt-md-0 pt-sm-0 pt-0 col-lg-5 col-sm-8 col-md-8 col-8">
-                                            <form method="get" id="search-filter" action="">
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="search-filter"  <?php if(isset($_GET['search-filter'])){echo $_GET['search-filter'] == 'job' ? 'checked' : '';}?> id="search-filter-job" value="job">
-                                                    <label class="form-check-label" for="search-filter-job">
-                                                        Jobs
-                                                    </label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="search-filter"  <?php if(isset($_GET['search-filter'])){echo $_GET['search-filter'] == 'resume' ? 'checked' : '';}?> id="search-filter-resume" value="resume">
-                                                    <label class="form-check-label" for="search-filter-resume">
-                                                        Resumes
-                                                    </label>
-                                                </div>
-                                            </form>
+                                                <form method="get" id="search-filter" action="">
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="search-filter" <?php if (isset($_GET['search-filter'])) {
+                                                                                                                                echo $_GET['search-filter'] == 'job' ? 'checked' : '';
+                                                                                                                            } ?> id="search-filter-job" value="job">
+                                                        <label class="form-check-label" for="search-filter-job">
+                                                            Jobs
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="search-filter" <?php if (isset($_GET['search-filter'])) {
+                                                                                                                                echo $_GET['search-filter'] == 'resume' ? 'checked' : '';
+                                                                                                                            } ?> id="search-filter-resume" value="resume">
+                                                        <label class="form-check-label" for="search-filter-resume">
+                                                            Resumes
+                                                        </label>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -154,7 +166,7 @@ include "php/pagination.php";
                             ?>
                                 <div class="container">
                                     <div class="col-12">
-                                        <a id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='html/job.php?view&id=<?= $row['jindex'] ?>'" class="text-start m-4 card text-decoration-none">
+                                        <a id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start m-4 card text-decoration-none">
                                             <div class="card-body">
                                                 <div class="row text-sm-center text-md-center text-lg-start text-center">
                                                     <div class="col-lg-4 col-md-12 col-sm-12 col-12">
@@ -168,9 +180,8 @@ include "php/pagination.php";
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-12">
-                                                                <?php $jobcategory =  getJob($pdo, $row['jindex']) ?>
                                                                 <div class="p-2">
-                                                                    <p onclick="location.href='#'" class="m-0 btn btn-outline-dark btn-sm"><?php echo $jobcategory['categoryName']; ?> </p>
+                                                                    <p onclick="location.href='#'" class="m-0 btn btn-outline-dark btn-sm"><?php echo $row['categoryName']; ?> </p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -198,7 +209,7 @@ include "php/pagination.php";
                                 <div class="col-lg-0 col-md-4 col-sm-4 col-4">
 
                                 </div>
-                                <a class="col-lg-12 col-md-5 col-sm-5 col-5 btn btn-outline-dark" href="html/jobs.php">
+                                <a class="col-lg-12 col-md-5 col-sm-5 col-5 btn btn-outline-dark" href="jobs.php">
                                     <p class="m-0 p-sm-1 p-md-1 p-lg-4 p-1">View all</p>
                                 </a>
                                 <div class="col-lg-0 col-md-3 col-sm-3 col-3">
@@ -224,7 +235,7 @@ include "php/pagination.php";
                             ?>
                                 <div class="container">
                                     <div class="col-12">
-                                        <a href="html/resume.php?view&id=<?php echo $row['rindex'] ?>" id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" class="card text-decoration-none text-start m-4">
+                                        <a href="resume.php?view&id=<?php echo $row['rindex'] ?>" id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" class="card text-decoration-none text-start m-4">
                                             <div class="card-body">
                                                 <div class="row text-center text-sm-center text-lg-start text-md-center">
                                                     <div class="col-12 col-sm-12 col-md-12 col-lg-3">
@@ -254,15 +265,11 @@ include "php/pagination.php";
                                 </div>
                             <?php } ?>
                             <div class="row">
-                                <div class="col-lg-0 col-md-4 col-sm-4 col-4">
-
-                                </div>
-                                <a class="col-lg-12 col-md-5 col-sm-5 col-5 btn btn-outline-dark" href="html/resumes.php">
+                                <div class="col-lg-0 col-md-4 col-sm-4 col-4"></div>
+                                <a class="col-lg-12 col-md-5 col-sm-5 col-5 btn btn-outline-dark" href="resumes.php">
                                     <p class="m-0 p-sm-1 p-md-1 p-lg-4 p-1">View all</p>
                                 </a>
-                                <div class="col-lg-0 col-md-3 col-sm-3 col-3">
-
-                                </div>
+                                <div class="col-lg-0 col-md-3 col-sm-3 col-3"></div>
                             </div>
                         </div>
                     </div>
@@ -292,8 +299,8 @@ include "php/pagination.php";
         var form = document.getElementById('search-filter');
         var radioButtons = document.querySelectorAll('input[name="search-filter"]');
 
-        radioButtons.forEach(function(radioButton){
-            radioButton.addEventListener('change', function(){
+        radioButtons.forEach(function(radioButton) {
+            radioButton.addEventListener('change', function() {
                 form.submit();
             });
         });

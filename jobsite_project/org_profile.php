@@ -5,9 +5,9 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 
-include '../php/user_data.php';
-include '../php/auth.php';
-include '../php/db_connection.php';
+include 'php/user_data.php';
+include 'php/auth.php';
+include 'php/db_connection.php';
 
 session_start();
 
@@ -90,7 +90,7 @@ if ($userData == true) {
 if (isset($_POST['upload-image'])) {
     if (isset($_FILES['imgUpload']['name']) && !empty($_FILES['imgUpload']['name'])) {
         // echo "Start";
-        $target_dir = "../uploads/org/";
+        $target_dir = "uploads/org/";
         $imgName = $userData['orgindex'] . ".png";
         $target_file = $target_dir . $imgName;
         $uploadOk = 1;
@@ -140,7 +140,7 @@ if (isset($_POST['upload-image'])) {
     }
 }
 
-$orgPfpPath = "../uploads/org/" . $userData['orgindex'] . '.png';
+$orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
 
 
 ?>
@@ -148,10 +148,10 @@ $orgPfpPath = "../uploads/org/" . $userData['orgindex'] . '.png';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="../css/account_dashboard.css">
+    <link rel="stylesheet" href="css/account_dashboard.css">
     <style>
         #logout-button:hover {
             color: #dc3545;
@@ -168,16 +168,16 @@ $orgPfpPath = "../uploads/org/" . $userData['orgindex'] . '.png';
 <body class="bg-light">
     <nav class="navbar bg-light sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="../index.php">
-                <img src="../img/logoipsum-248.svg" alt="">
+            <a class="navbar-brand" href="index.php">
+                <img src="img/logoipsum-248.svg" alt="">
             </a>
             <div class="d-sm-block d-md-block d-lg-none d-block dropdown">
                 <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa-regular fa-user"></i>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="html/dashboard.php">Dashboard</a></li>
-                    <li><a class="dropdown-item" href="html/posted_jobs.php">Jobs Posted</a></li>
+                    <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
+                    <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
                     <li><a class="dropdown-item" href="/php_basics/jobsite_project/php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                 </ul>
             </div>
@@ -222,7 +222,7 @@ $orgPfpPath = "../uploads/org/" . $userData['orgindex'] . '.png';
                                     <li><a href="dashboard.php" class="btn btn-secondary-outline">Overview</a></li>
                                     <li><a href="?edit" class="btn btn-secondary-outline">Edit Profile</a></li>
                                     <li>
-                                        <form action="../php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" method="post" class="btn btn-secondary-outline">
+                                        <form action="php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" method="post" class="btn btn-secondary-outline">
                                             <input class="btn p-0" type="submit" value="Log Out" id="#logout-button">
                                         </form>
                                     </li>
@@ -254,7 +254,7 @@ $orgPfpPath = "../uploads/org/" . $userData['orgindex'] . '.png';
 
                                     <h4 class="mb-4">Company Profile</h5>
                                         <hr>
-                                        <?php $orgPfpPath = "../uploads/org/" . $userData['orgindex'] . '.png' ?>
+                                        <?php $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png' ?>
                                         <?php if (file_exists($orgPfpPath)) { ?>
                                             <div class="row pb-1">
                                                 <div class="col-2">
@@ -264,7 +264,7 @@ $orgPfpPath = "../uploads/org/" . $userData['orgindex'] . '.png';
                                         <?php } else { ?>
                                             <div class="row pb-1">
                                                 <div class="col-2">
-                                                    <img class="img-fluid" style="max-height:100px; max-width:100px;" src="../uploads/job/placeholder-company.png" alt="">
+                                                    <img class="img-fluid" style="max-height:100px; max-width:100px;" src="uploads/job/placeholder-company.png" alt="">
                                                 </div>
                                             </div>
                                         <?php } ?>
@@ -321,7 +321,7 @@ $orgPfpPath = "../uploads/org/" . $userData['orgindex'] . '.png';
                                         <?php } else { ?>
                                             <div class="row pb-1">
                                                 <div class="col-lg-2 col-md-12 col-sm-12 col-12">
-                                                    <img class="img-fluid" style="max-height:100px; max-width:100px;" src="../uploads/resumes/placeholder_pfp.svg" alt="">
+                                                    <img class="img-fluid" style="max-height:100px; max-width:100px;" src="uploads/resumes/placeholder_pfp.svg" alt="">
                                                 </div>
                                                 <div class="col-lg-5 col-md-12 col-sm-12 col-12">
                                                     <form method="post" action="" enctype="multipart/form-data">
@@ -392,7 +392,7 @@ $orgPfpPath = "../uploads/org/" . $userData['orgindex'] . '.png';
         <div class="container">
             <footer class="row py-5">
                 <div class="col-6">
-                    <img src="../img/logoipsum-248.svg" alt="">
+                    <img src="img/logoipsum-248.svg" alt="">
                 </div>
                 <div class="col-6">
                     <ul class="list-unstyled d-flex justify-content-end">

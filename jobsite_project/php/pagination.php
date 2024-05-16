@@ -7,7 +7,7 @@ if (isset($_POST['jobs-pagination-limit'])) {
 } else if (isset($_SESSION['jobs-pagination-limit'])) {
     $_POST['jobs-pagination-limit'] = $_SESSION['jobs-pagination-limit'];
 } else {
-    $_SESSION['jobs-pagination-limit'] = 20;
+    $_SESSION['jobs-pagination-limit'] = 10;
 }
 
 if (isset($_GET['jobpage'])) {
@@ -19,10 +19,14 @@ if (isset($_GET['jobpage'])) {
 // Jobs pagination Start
 
 $job_initial_page = ($job_current_page - 1) * $_SESSION['jobs-pagination-limit'];
-$numberofjobs = pageination_alljobrows($pdo);
+if (isset($_GET['search']) && !empty($_GET['search'])) {
+    $numberofjobs = pageination_alljobrows($pdo, $_GET['search']);
+} else {
+    $numberofjobs = pageination_alljobrows($pdo);
+}
 $job_total_pages = ceil($numberofjobs / $_SESSION['jobs-pagination-limit']);
-$allJobDetails = pageination_alljobdetails($pdo, $job_initial_page, $_SESSION['jobs-pagination-limit']);
-$landingpage_allJobDetails = pageination_alljobdetails($pdo, 1, 10);
+$landingpage_allJobDetails = pageination_alljobdetails($pdo, $job_initial_page, $_SESSION['jobs-pagination-limit'], $search);
+// $allJobDetails = pageination_alljobdetails($pdo, 0, 10, $search);
 $alljobcategories = getJobCategories($pdo);
 
 
@@ -97,9 +101,18 @@ if (isset($_GET['resumepage'])) {
 }
 
 $resume_initial_page = ($resume_current_page - 1) * $_SESSION['resumes-pagination-limit'];
-$numberofresumes = pageination_allresumerows($pdo);
+
+
+if (isset($_GET['search']) && !empty($_GET['search'])) {
+    $numberofresumes = pageination_allresumerows($pdo, $_GET['search']);
+} else {
+    $numberofresumes = pageination_allresumerows($pdo);
+}
 $resume_total_pages = ceil($numberofresumes / $_SESSION['resumes-pagination-limit']);
-$allresumedetails = pageination_allresumedetails($pdo, $resume_initial_page, $_SESSION['resumes-pagination-limit']);
+
+$allresumedetails = pageination_allresumedetails($pdo, $resume_initial_page, $_SESSION['resumes-pagination-limit'], $search);
+
+
 $landingpage_allresumedetails = pageination_allresumedetails($pdo, 1, 10);
 
 $resume_first_page = 1;

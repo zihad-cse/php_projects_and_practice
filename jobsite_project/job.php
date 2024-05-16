@@ -4,27 +4,32 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-include '../php/user_data.php';
-include '../php/auth.php';
-include '../php/db_connection.php';
+include 'php/user_data.php';
+include 'php/auth.php';
+include 'php/db_connection.php';
+include 'php/job_search_query.php';
 
 session_start();
+
 if (isset($_GET['id'])) {
-    $rindex = $_GET['id'];
+    $jobId = $_GET['id'];
 } else {
-    echo "Could Not Get Resume Data";
+    echo 'Job Data Not Found';
     exit;
 }
-$resumeData = getResumeDataGuest($pdo, $rindex);
+
+$jobData = getJob($pdo, $jobId);
+
+$jobPicFilePath = "uploads/job/" . $jobData['jindex'] . '.png';
 ?>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="../css/account_dashboard.css">
+    <link rel="stylesheet" href="css/account_dashboard.css">
     <style>
         #logout-button:hover {
             color: #dc3545;
@@ -50,22 +55,25 @@ $resumeData = getResumeDataGuest($pdo, $rindex);
             width: 100px;
         }
     </style>
-    <title><?= $resumeData['fullname'] ?></title>
+    <title><?php echo $jobData['jobtitle'] ?></title>
 </head>
 
 <body class="bg-light">
     <nav class="navbar p-3 bg-light sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="../">
-                <img src="../img/logoipsum-248.svg" alt="">
+            <a class="navbar-brand" href="index.php">
+                <img src="img/logoipsum-248.svg" alt="">
             </a>
             <div class="d-lg-block d-md-block d-sm-none d-none">
-                <div class="input-group">
-                    <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-                    <span class="input-group-text border-0" id="search-addon">
-                        <i class="fas fa-search"></i>
-                    </span>
-                </div>
+                <?php
+                $queryPath = 'jobs.php'
+                ?>
+                <form action="<?= $queryPath; ?>" method="get">
+                    <div class="input-group mb-3">
+                        <input name="search" id="search-field" type="search" class="form-control border-dark" placeholder="Search Job Listings" aria-label="Job Listing Search Bar" aria-describedby="search-button">
+                        <button name="search-submit" value="Search" class="btn btn-outline-dark" type="submit" id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </div>
+                </form>
             </div>
             <div class="d-lg-none d-md-none d-sm-block d-block btn btn-primary">
                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -89,13 +97,13 @@ $resumeData = getResumeDataGuest($pdo, $rindex);
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
-                        <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
-                        <li><a class="dropdown-item" href="../php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
+                        <li><a class="dropdown-item" href="/dashboard.php">Dashboard</a></li>
+                        <li><a class="dropdown-item" href="/posted_jobs.php">Jobs Posted</a></li>
+                        <li><a class="dropdown-item" href="php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
             <?php } ?>
-            </dv>
+        </div>
     </nav>
     <section class="bg-dark" id="dashboard-main-content">
         <h2 class="text-center text-light">Template</h2>
@@ -103,24 +111,26 @@ $resumeData = getResumeDataGuest($pdo, $rindex);
             <div class="row p-3">
                 <div class="col-10">
                     <div class="row">
-                        <h2><?= $resumeData['fullname'] ?></h2>
+                        <h2>Org Name</h2>
+                    </div>
+                    <div class="row">
+                        <h2 class="text-primary"><?php echo $jobData['jobtitle'] ?></h2>
                     </div>
                 </div>
                 <div class=" col-lg-2 col-md-2 col-sm-12 col-12">
-                    <?php $filePath = "../uploads/resumes/" . $rindex . ".png";
-                    if (file_exists($filePath)) { ?>
-                        <img class="img-thumbnail img-normal" src="../uploads/resumes/<?php echo $rindex ?>.png" alt="">
+                    <?php if (file_exists($jobPicFilePath)) { ?>
+                        <img class="img-normal" src="<?php echo $jobPicFilePath ?>" alt="">
                     <?php } else { ?>
-                        <img class="img-thumbnail img-normal" src="../uploads/resumes/placeholder_pfp.svg" alt="">
-                        <?php } ?>
+                        <img class="img-normal" src="uploads/job/placeholder-company.png" alt="">
+                    <?php } ?>
                 </div>
             </div>
             <div class="row p-3">
-                <b class="col-12">Availability</b>
+                <b class="col-12">Deadline: <?php echo $jobData['enddate'] ?></b>
             </div>
             <div class="row p-3">
                 <div class="col-12">
-                    <h4>Skills</h4>
+                    <h4>Requirements</h4>
                     <h5>Education</h5>
                     <p>Diploma in Mechanical Engineering from any reputed institution.</p>
 
@@ -171,12 +181,10 @@ $resumeData = getResumeDataGuest($pdo, $rindex);
             </div>
             <div class="row p-3">
                 <div class="border border-top border-dark"></div>
-                <div class="col-6">
-                    <h4><?php $resumeData['homeaddress'] ?></h4>
-                </div>
-                <div class="col-6">
-                    <h4><?php $resumeData['birtharea'] ?></h4>
-                </div>
+                <h4></h4>
+            </div>
+            <div class="row p-3">
+                <h4>Salary</h4>
             </div>
             <div class="row p-3">
                 <div class="col-4">
@@ -186,16 +194,16 @@ $resumeData = getResumeDataGuest($pdo, $rindex);
                     <b>Contact Email</b>
                 </div>
                 <div class="col-4 text-end">
-                    <a href="#" class="btn btn-primary">Invite</a>
+                    <a href="#" class="btn btn-primary">Apply</a>
                 </div>
             </div>
         </div>
     </section>
-    <div id="footer" class="bg-dark text-light" >
+    <div id="footer" class="bg-dark text-light">
         <div class="container">
             <footer class="row py-5">
                 <div class="col-6">
-                    <img src="../img/logoipsum-248.svg" alt="">
+                    <img src="img/logoipsum-248.svg" alt="">
                 </div>
                 <div class="col-6">
                     <ul class="list-unstyled d-flex justify-content-end">

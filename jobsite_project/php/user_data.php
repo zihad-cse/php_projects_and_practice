@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include 'db_connection.php';
-
+$search = "";
 // Single org data with org prphone
 
 function getUserData($pdo, $phnNumber)
@@ -45,23 +45,6 @@ function getResumeDataGuest($pdo, $rindex)
         $resume = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $resume;
-    } catch (PDOException $e) {
-        error_log("Error: " . $e->getMessage());
-        return false;
-    }
-}
-
-// Single posted job data with org prphone
-
-function getPostedJobData($pdo, $phnNumber)
-{
-    try {
-        $stmt = $pdo->prepare("SELECT job.*, org.orgindex FROM job LEFT JOIN org ON org.orgindex = job.orgindex WHERE prphone = :phnNumber");
-        $stmt->bindParam(':phnNumber', $phnNumber, PDO::PARAM_STR);
-        $stmt->execute();
-        $jobs = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $jobs;
     } catch (PDOException $e) {
         error_log("Error: " . $e->getMessage());
         return false;
@@ -148,10 +131,21 @@ function getOrgCategories($pdo)
 }
 
 
-function pageination_alljobrows($pdo)
+function pageination_alljobrows($pdo, $search = '')
 {
     try {
-        $stmt = $pdo->prepare("SELECT * FROM job");
+        $query = "SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1";
+        if (isset($search) && !empty($search)) {
+            $textSearchQuery = '';
+            $searchKeywordList = explode(' ', trim($search));
+
+            foreach ($searchKeywordList as $searchKey) {
+                $textSearchQuery = $textSearchQuery . "job.jobtitle LIKE '%". $searchKey. "%' OR ";
+            }
+            $textSearchQuery = rtrim($textSearchQuery, 'OR ');
+            $query = "SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1 AND $textSearchQuery";
+        }
+        $stmt = $pdo->prepare($query);
         $stmt->execute();
         $countjobrows =  $stmt->rowCount();
 
@@ -162,15 +156,29 @@ function pageination_alljobrows($pdo)
     }
 }
 
-function pageination_alljobdetails($pdo, $initial_page, $limit)
+function pageination_alljobdetails($pdo, $initial_page, $limit, $search = "")
 {
     try {
-        $stmt = $pdo->prepare("SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1 LIMIT :limitnumber OFFSET :initialpage");
+        $query = "SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1 LIMIT :limitnumber OFFSET :initialpage";
+
+        if (isset($search) && !empty($search)) {
+            $textSearchQuery = '';
+
+            $searchKeywordList = explode(' ', trim($search));
+
+            foreach ($searchKeywordList as $searchKey) {
+                $textSearchQuery = $textSearchQuery . "job.jobtitle LIKE '%" . $searchKey . "%' OR ";
+            }
+            $textSearchQuery = rtrim($textSearchQuery, 'OR ');
+            $query = "SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1 AND $textSearchQuery LIMIT :limitnumber OFFSET :initialpage";
+        }
+        $stmt = $pdo->prepare($query);
+
         $stmt->bindParam(':initialpage', $initial_page, PDO::PARAM_INT);
         $stmt->bindParam(':limitnumber', $limit, PDO::PARAM_INT);
         $stmt->execute();
+        // $stmt->debugDumpParams();
         $alljobdetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
         return $alljobdetails;
     } catch (PDOException $e) {
         error_log("Error: " . $e->getMessage());
@@ -178,10 +186,24 @@ function pageination_alljobdetails($pdo, $initial_page, $limit)
     }
 }
 
-function pageination_allresumedetails($pdo, $initial_page, $limit)
+function pageination_allresumedetails($pdo, $initial_page, $limit, $search="")
 {
     try {
-        $stmt = $pdo->prepare("SELECT * FROM resumes WHERE visible = 1 LIMIT :limitnumber OFFSET :initialpage");
+
+        $query = "SELECT * FROM resumes WHERE visible = 1 LIMIT :limitnumber OFFSET :initialpage";
+
+        if(isset($search) && !empty($search)){
+            $textSearchQuery = '';
+            $searchKeywordList = explode(' ', trim($search));
+
+            foreach ($searchKeywordList as $searchKey) {
+                $textSearchQuery = $textSearchQuery . "resumes.skilleduexp LIKE '%". $searchKey . "%' OR ";
+            }
+            $textSearchQuery = rtrim($textSearchQuery, 'OR ');
+            $query = "SELECT * FROM resumes WHERE visible = 1 AND $textSearchQuery LIMIT :limitnumber OFFSET :initialpage";
+        }
+
+        $stmt = $pdo->prepare($query);
         $stmt->bindParam(':initialpage', $initial_page, PDO::PARAM_INT);
         $stmt->bindParam(':limitnumber', $limit, PDO::PARAM_INT);
         $stmt->execute();
@@ -194,14 +216,25 @@ function pageination_allresumedetails($pdo, $initial_page, $limit)
     }
 }
 
-function pageination_allresumerows($pdo)
+function pageination_allresumerows($pdo, $search = '')
 {
     try {
-        $stmt = $pdo->prepare("SELECT * FROM resumes");
-        $stmt->execute();
-        $countresumerows =  $stmt->rowCount();
+        $query = "SELECT * FROM resumes WHERE visible = 1";
+        if (isset($search) && !empty($search)) {
+            $textSearchQuery = '';
+            $searchKeywordList = explode(' ', trim($search));
 
-        return $countresumerows;
+            foreach ($searchKeywordList as $searchKey) {
+                $textSearchQuery = $textSearchQuery . "resume.skilleduexp LIKE '%". $searchKey. "%' OR ";
+            }
+            $textSearchQuery = rtrim($textSearchQuery, 'OR ');
+            $query = "SELECT * FROM resumes WHERE visible = 1 AND $textSearchQuery";
+        }
+        $stmt = $pdo->prepare($query);
+        $stmt->execute();
+        $countjobrows =  $stmt->rowCount();
+
+        return $countjobrows;
     } catch (PDOException $e) {
         error_log("Error: " . $e->getMessage());
         return false;

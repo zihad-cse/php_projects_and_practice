@@ -5,23 +5,25 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 
-include '../php/user_data.php';
-include '../php/auth.php';
-include '../php/db_connection.php';
+include 'php/user_data.php';
+include 'php/auth.php';
+include 'php/db_connection.php';
 
 session_start();
 
-include '../php/pagination.php';
+include 'php/pagination.php';
+include 'php/job_search_query.php';
+
 
 ?>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="../css/account_dashboard.css">
+    <link rel="stylesheet" href="css/account_dashboard.css">
     <style>
         #logout-button:hover {
             color: #dc3545;
@@ -48,16 +50,19 @@ include '../php/pagination.php';
 <body class="bg-light">
     <nav class="navbar p-3 bg-light sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="../">
-                <img src="../img/logoipsum-248.svg" alt="">
+            <a class="navbar-brand" href="index.php">
+                <img src="img/logoipsum-248.svg" alt="">
             </a>
             <div class="d-lg-block d-md-block d-sm-none d-none">
-                <div class="input-group">
-                    <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-                    <span class="input-group-text border-0" id="search-addon">
-                        <i class="fas fa-search"></i>
-                    </span>
-                </div>
+                <?php
+                $queryPath = 'jobs.php'
+                ?>
+                <form action="<?= $queryPath; ?>" method="get">
+                    <div class="input-group mb-3">
+                        <input value="<?=$search?>" name="search" id="search-field" type="search" class="form-control border-dark" placeholder="Search Job Listings" aria-label="Job Listing Search Bar" aria-describedby="search-button">
+                        <button name="search-submit" value="Search" class="btn btn-outline-dark" type="submit" id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </div>
+                </form>
             </div>
             <div class="d-lg-none d-md-none d-sm-block d-block btn btn-primary">
                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -83,7 +88,7 @@ include '../php/pagination.php';
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
                         <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
-                        <li><a class="dropdown-item" href="../php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
+                        <li><a class="dropdown-item" href="php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
             <?php } ?>
@@ -106,15 +111,15 @@ include '../php/pagination.php';
                                         <div class="container">
                                             <div class="">
                                                 <div class="row">
-                                                    <?php foreach ($allJobDetails as $row) {
-                                                        $job_img_src = "../uploads/job/placeholder-company.png";
-                                                        if (file_exists("../uploads/job/" . $row['jindex'] . ".png")) {
-                                                            $job_img_src = "../uploads/job/" . $row['jindex'] . ".png";
+                                                    <?php foreach ($landingpage_allJobDetails as $row) {
+                                                        $job_img_src = "uploads/job/placeholder-company.png";
+                                                        if (file_exists("uploads/job/" . $row['jindex'] . ".png")) {
+                                                            $job_img_src = "uploads/job/" . $row['jindex'] . ".png";
                                                         }
                                                     ?>
                                                         <div class="container">
                                                             <div class="col-12">
-                                                                <a id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='html/job.php?view&id=<?= $row['jindex'] ?>'" class="text-start m-4 card text-decoration-none">
+                                                                <a id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start m-4 card text-decoration-none">
                                                                     <div class="card-body">
                                                                         <div class="row text-sm-center text-md-center text-lg-start text-center">
                                                                             <div class="col-lg-4 col-md-12 col-sm-12 col-12">
@@ -128,9 +133,8 @@ include '../php/pagination.php';
                                                                                 </div>
                                                                                 <div class="row">
                                                                                     <div class="col-12">
-                                                                                        <?php $jobcategory =  getJob($pdo, $row['jindex']) ?>
                                                                                         <div class="p-2">
-                                                                                            <p onclick="location.href='#'" class="m-0 btn btn-outline-dark btn-sm"><?php echo $jobcategory['categoryName']; ?> </p>
+                                                                                            <p onclick="location.href='#'" class="m-0 btn btn-outline-dark btn-sm"><?php echo $row['categoryName']; ?> </p>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -175,20 +179,20 @@ include '../php/pagination.php';
                                             <?php if ($job_current_page > 1) {
                                                 $jobPrevPage = $job_current_page - 1;
                                             ?>
-                                                <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $jobPrevPage; ?>">Previous</a></li>
+                                                <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $jobPrevPage; ?>&search=<?= $_GET['search']?>&search-submit=<?= $_GET['search-submit'];?>">Previous</a></li>
                                             <?php } else { ?>
                                                 <li class="page-item disabled"><a class="page-link" href="">Previous</a></li>
                                             <?php } ?>
                                             <?php foreach (range($jobsPagination_rangeFirstNumber, $jobsPagination_rangeLastNumber) as $job_page_number) { ?>
                                                 <li class="page-item <?= ($job_current_page == $job_page_number ? "active" : "");  ?>">
-                                                    <a class="page-link" href="?jobpage=<?php echo $job_page_number ?>"><?php echo $job_page_number ?></a>
+                                                    <a class="page-link" href="?jobpage=<?php echo $job_page_number ?>&search=<?= $_GET['search']?>&search-submit=<?= $_GET['search-submit'];?>"><?php echo $job_page_number ?></a>
                                                 </li>
                                             <?php } ?>
 
                                             <?php if ($job_current_page < $job_total_pages) {
                                                 $jobNextPage = $job_current_page + 1;
                                             ?>
-                                                <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $jobNextPage ?>">Next</a></li>
+                                                <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $jobNextPage ?>&search=<?= $_GET['search']?>&search-submit=<?= $_GET['search-submit']; ?>">Next</a></li>
                                             <?php } else { ?>
                                                 <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
                                             <?php } ?>
@@ -201,13 +205,13 @@ include '../php/pagination.php';
                                         <div class="col-10">
                                             <div class="row">
                                                 <div class="col-6">
-                                                <form method="post">
-                                                <select onchange="this.form.submit()" class="form-select bg-primary text-light" name="jobs-pagination-limit" id="">
-                                                    <option <?= ($_SESSION["jobs-pagination-limit"] == 10 ? "selected" : "") ?> value="10">10</option>
-                                                    <option <?= ($_SESSION["jobs-pagination-limit"] == 20 ? "selected" : "") ?> value="20">20</option>
-                                                    <option <?= ($_SESSION["jobs-pagination-limit"] == 50 ? "selected" : "") ?> value="50">50</option>
-                                                </select>
-                                            </form>
+                                                    <form method="post">
+                                                        <select onchange="this.form.submit()" class="form-select bg-primary text-light" name="jobs-pagination-limit" id="">
+                                                            <option <?= ($_SESSION["jobs-pagination-limit"] == 10 ? "selected" : "") ?> value="10">10</option>
+                                                            <option <?= ($_SESSION["jobs-pagination-limit"] == 20 ? "selected" : "") ?> value="20">20</option>
+                                                            <option <?= ($_SESSION["jobs-pagination-limit"] == 50 ? "selected" : "") ?> value="50">50</option>
+                                                        </select>
+                                                    </form>
                                                 </div>
                                                 <div class="col-6">
                                                     <div class="input-group">
@@ -237,11 +241,11 @@ include '../php/pagination.php';
             </div>
         </div>
     </section>
-    <div id="footer" class="bg-dark text-light" >
+    <div id="footer" class="bg-dark text-light">
         <div class="container">
             <footer class="row py-5">
                 <div class="col-6">
-                    <img src="../img/logoipsum-248.svg" alt="">
+                    <img src="img/logoipsum-248.svg" alt="">
                 </div>
                 <div class="col-6">
                     <ul class="list-unstyled d-flex justify-content-end">

@@ -3,10 +3,10 @@
 <?php
 session_start();
 
-include '../php/login.php';
+include 'php/login.php';
 
 if (isset($_SESSION['token'])) {
-    header("Location: ../");
+    header("Location: /");
     exit();
 }
 ?>
@@ -14,7 +14,7 @@ if (isset($_SESSION['token'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <title>Log in</title>
 </head>
@@ -22,8 +22,8 @@ if (isset($_SESSION['token'])) {
 <body class="bg-dark">
     <nav class="navbar bg-light sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="../index.php">
-                <img src="../img/logoipsum-248.svg" alt="">
+            <a class="navbar-brand" href="index.php">
+                <img src="img/logoipsum-248.svg" alt="">
             </a>
             <div class="d-lg-block d-md-block d-sm-none d-none btn-group">
                 <div class="btn btn-outline-dark disabled">Not a member?</div>
@@ -63,7 +63,7 @@ if (isset($_SESSION['token'])) {
             </div>
         </div>
     </section>
-    <script src="../js/seeker_login_validation.js"></script>
+    <script src="js/seeker_login_validation.js"></script>
 </body>
 
 </html>

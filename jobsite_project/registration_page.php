@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-include '../php/registration.php';
+include 'php/registration.php';
 
 session_start();
 if (isset($_SESSION['token'])) {
-    header("Location: ../");
+    header("Location: ");
     exit();
 }
 ?>
@@ -13,7 +13,7 @@ if (isset($_SESSION['token'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <title>Register</title>
 </head>
@@ -21,8 +21,8 @@ if (isset($_SESSION['token'])) {
 <body class="bg-dark">
     <nav class="navbar bg-light sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="../index.php">
-                <img src="../img/logoipsum-248.svg" alt="">
+            <a class="navbar-brand" href="index.php">
+                <img src="img/logoipsum-248.svg" alt="">
             </a>
             <div class="d-lg-block d-md-block d-sm-none d-none btn-group">
                 <div class="btn btn-outline-dark disabled">Already have an account?</div>
@@ -74,7 +74,7 @@ if (isset($_SESSION['token'])) {
             </div>
         </div>
     </section>
-    <script src="../js/regis_valid.js"></script>
+    <script src="js/regis_valid.js"></script>
 </body>
 
 </html>
