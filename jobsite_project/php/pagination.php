@@ -10,6 +10,7 @@ if (isset($_POST['jobs-pagination-limit'])) {
     $_SESSION['jobs-pagination-limit'] = 10;
 }
 
+
 if (isset($_GET['jobpage'])) {
     $job_current_page = $_GET['jobpage'];
 } elseif (!isset($_GET['jobpage'])) {
@@ -24,10 +25,13 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
 } else {
     $numberofjobs = pageination_alljobrows($pdo);
 }
+
 $job_total_pages = ceil($numberofjobs / $_SESSION['jobs-pagination-limit']);
+
 $landingpage_allJobDetails = pageination_alljobdetails($pdo, $job_initial_page, $_SESSION['jobs-pagination-limit'], $search);
-// $allJobDetails = pageination_alljobdetails($pdo, 0, 10, $search);
+
 $alljobcategories = getJobCategories($pdo);
+
 
 
 
@@ -91,7 +95,7 @@ if (isset($_POST['resumes-pagination-limit'])) {
 } else if (isset($_POST['resumes-pagination-limit'])) {
     $_POST['resumes-pagination-limit'] = $_SESSION['resumes-pagination-limit'];
 } else {
-    $_SESSION['resumes-pagination-limit'] = 20;
+    $_SESSION['resumes-pagination-limit'] = 10;
 }
 
 if (isset($_GET['resumepage'])) {
@@ -113,7 +117,6 @@ $resume_total_pages = ceil($numberofresumes / $_SESSION['resumes-pagination-limi
 $allresumedetails = pageination_allresumedetails($pdo, $resume_initial_page, $_SESSION['resumes-pagination-limit'], $search);
 
 
-$landingpage_allresumedetails = pageination_allresumedetails($pdo, 1, 10);
 
 $resume_first_page = 1;
 $resume_last_page = $resume_total_pages;
@@ -129,6 +132,7 @@ if (($resume_current_page - $resume_first_page) <= 3) {
 if (($resume_last_page - $resume_current_page) <= 3) {
     $resume_last_loop = $resume_last_page - $resume_current_page;
     $resume_first_loop = $resume_default_loop + ($resume_default_loop - $resume_last_loop);
+
 }
 if (($resume_first_loop == 3) && ($resume_last_loop == 3)) {
     $resumePagination_rangeFirstNumber = $resume_current_page - 3;

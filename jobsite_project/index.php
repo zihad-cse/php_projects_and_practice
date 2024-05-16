@@ -7,6 +7,8 @@ include "php/db_connection.php";
 session_start();
 
 include "php/pagination.php";
+$_SESSION['jobs-pagination-limit'] = 10;
+$_SESSION['resumes-pagination-limit'] = 10;
 
 ?>
 
@@ -227,7 +229,7 @@ include "php/pagination.php";
                             <h2 class="text-center mb-5">Available Resumes</h2>
                         </div>
                         <div class="row">
-                            <?php foreach ($landingpage_allresumedetails as $row) {
+                            <?php foreach ($allresumedetails as $row) {
                                 $resume_img_src = "uploads/resumes/placeholder_pfp.svg";
                                 if (file_exists("uploads/resumes/" . $row['rindex'] . ".png")) {
                                     $resume_img_src = "uploads/resumes/" . $row['rindex'] . ".png";

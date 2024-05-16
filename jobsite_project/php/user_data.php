@@ -225,7 +225,7 @@ function pageination_allresumerows($pdo, $search = '')
             $searchKeywordList = explode(' ', trim($search));
 
             foreach ($searchKeywordList as $searchKey) {
-                $textSearchQuery = $textSearchQuery . "resume.skilleduexp LIKE '%". $searchKey. "%' OR ";
+                $textSearchQuery = $textSearchQuery . "resumes.skilleduexp LIKE '%". $searchKey. "%' OR ";
             }
             $textSearchQuery = rtrim($textSearchQuery, 'OR ');
             $query = "SELECT * FROM resumes WHERE visible = 1 AND $textSearchQuery";

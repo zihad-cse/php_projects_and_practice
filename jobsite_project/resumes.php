@@ -187,20 +187,20 @@ include 'php/resume_search_query.php';
                                             <?php if ($resume_current_page > 1) {
                                                 $resumePrevPage = $resume_current_page - 1;
                                             ?>
-                                                <li class="page-item"><a class="page-link" href="?resumepage=<?php echo $resumePrevPage; ?>">Previous</a></li>
+                                                <li class="page-item"><a class="page-link" href="?resumepage=<?php echo $resumePrevPage; ?>&search=<?= $_GET['search'] ?>&search-submit=<?= $_GET['search-submit'] ?>">Previous</a></li>
                                             <?php } else { ?>
                                                 <li class="page-item disabled"><a class="page-link" href="">Previous</a></li>
                                             <?php } ?>
                                             <?php foreach (range($resumePagination_rangeFirstNumber, $resumePagination_rangeLastNumber) as $resume_page_number) { ?>
                                                 <li class="page-item <?= ($resume_current_page == $resume_page_number ? "active" : "");  ?>">
-                                                    <a class="page-link" href="?resumepage=<?php echo $resume_page_number ?>"><?php echo $resume_page_number ?></a>
+                                                    <a class="page-link" href="?resumepage=<?php echo $resume_page_number ?>&search=<?= $_GET['search'] ?>&search-submit=<?= $_GET['search-submit'] ?>"><?php echo $resume_page_number ?></a>
                                                 </li>
                                             <?php } ?>
 
                                             <?php if ($resume_current_page < $resume_total_pages) {
                                                 $resumeNextPage = $resume_current_page + 1;
                                             ?>
-                                                <li class="page-item"><a class="page-link" href="?resumepage=<?php echo $resumeNextPage ?>">Next</a></li>
+                                                <li class="page-item"><a class="page-link" href="?resumepage=<?php echo $resumeNextPage ?>&search=<?= $_GET['search'] ?>&search-submit=<?= $_GET['search-submit'] ?>">Next</a></li>
                                             <?php } else { ?>
                                                 <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
                                             <?php } ?>
