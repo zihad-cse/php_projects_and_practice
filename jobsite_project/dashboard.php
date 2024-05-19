@@ -59,21 +59,21 @@ if (isset($_SESSION['phnNumber'])) {
                 <img src="img/logoipsum-248.svg" alt="">
             </a>
             <div class="d-sm-block d-md-block d-lg-none d-block dropdown">
-                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-regular fa-user"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="/dashboard.php">Dashboard</a></li>
-                        <li><a class="dropdown-item" href="/posted_jobs.php">Jobs Posted</a></li>
-                        <li><a class="dropdown-item" href="/php_basics/jobsite_project/php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
-                    </ul>
-                </div>
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-regular fa-user"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="/dashboard.php">Dashboard</a></li>
+                    <li><a class="dropdown-item" href="/posted_jobs.php">Jobs Posted</a></li>
+                    <li><a class="dropdown-item" href="/php_basics/jobsite_project/php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
+                </ul>
+            </div>
         </div>
     </nav>
     <section id="dashboard-main-content">
         <div class="bg-light">
             <div class="row" style="max-width: 1920px;">
-                <div class="d-md-none d-sm-none d-none d-lg-block col-2 p-3 bg-white" >
+                <div class="d-md-none d-sm-none d-none d-lg-block col-2 p-3 bg-white">
                     <ul class="list-unstyled ps-0">
                         <li class="mb-1">
                             <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
@@ -81,10 +81,9 @@ if (isset($_SESSION['phnNumber'])) {
                             </button>
                             <div class="collapse" id="dashboard-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
-                                    <li><a href="#" class="btn btn-secondary-outline">###</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">###</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">###</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">###</a></li>
+                                    <li><a href="#" class="btn btn-secondary-outline">Home</a></li>
+                                    <li><a href="#" class="btn btn-secondary-outline">Applications</a></li>
+                                    <li><a href="#" class="btn btn-secondary-outline">Invitation List</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -107,9 +106,21 @@ if (isset($_SESSION['phnNumber'])) {
                             <div class="collapse" id="account-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
                                     <li><a href="dashboard.php" class="btn btn-secondary-outline">Overview</a></li>
-                                    <li><a href="?edit" class="btn btn-secondary-outline">Edit Profile</a></li>
                                     <li>
-                                        <form action="php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']);?>" method="post" class="btn btn-secondary-outline">
+                                        <div class="dropdown">
+                                            <a class="btn dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Edit
+                                            </a>
+
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="?edit">Edit Account Info</a></li>
+                                                <li><a class="dropdown-item" href="org_profile.php?edit">Edit Org Profile</a></li>
+                                                <li><a class="dropdown-item" href="resume_profile.php?edit">Edit Resume Profile</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <form action="php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" method="post" class="btn btn-secondary-outline">
                                             <input class="btn p-0" type="submit" value="Log Out" id="#logout-button">
                                         </form>
                                     </li>
@@ -118,10 +129,10 @@ if (isset($_SESSION['phnNumber'])) {
                         </li>
                     </ul>
                 </div>
-                <div style="background-color: #eee; min-height: 1000px" class="col-lg-10 col-md-12 col-sm-12 col-12 p-5 border rounded ">       
+                <div style="background-color: #eee; min-height: 1000px" class="col-lg-10 col-md-12 col-sm-12 col-12 p-5 border rounded ">
                     <?php if (!isset($_GET['edit'])) { ?>
                         <div class="mb-4">
-                        <ul class="nav nav-tabs" id="dashboard-tabs">
+                            <ul class="nav nav-tabs" id="dashboard-tabs">
                                 <li class="nav-item">
                                     <a class="nav-link" href="dashboard.php">Home</a>
                                 </li>
@@ -176,7 +187,7 @@ if (isset($_SESSION['phnNumber'])) {
             </div>
         </div>
     </section>
-    <div id="footer" class="bg-dark text-light" >
+    <div id="footer" class="bg-dark text-light">
         <div class="container">
             <footer class="row py-5">
                 <div class="col-6">

@@ -11,7 +11,6 @@ include 'php/db_connection.php';
 
 session_start();
 
-include 'php/pagination.php';
 include 'php/job_search_query.php';
 
 
@@ -43,6 +42,14 @@ include 'php/job_search_query.php';
             border: var(--bs-card-border-width) solid black;
             box-shadow: 4px 4px 8px #999;
         }
+
+
+        #btn-back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: none;
+        }
     </style>
     <title>All Jobs</title>
 </head>
@@ -59,7 +66,9 @@ include 'php/job_search_query.php';
                 ?>
                 <form action="<?= $queryPath; ?>" method="get">
                     <div class="input-group mb-3">
-                        <input value="<?=$search?>" name="search" id="search-field" type="search" class="form-control border-dark" placeholder="Search Job Listings" aria-label="Job Listing Search Bar" aria-describedby="search-button">
+                        <input value="<?php if (isset($search)) {
+                                            echo $search;
+                                        } ?>" name="search" id="search-field" type="search" class="form-control border-dark" placeholder="Search Job Listings" aria-label="Job Listing Search Bar" aria-describedby="search-button">
                         <button name="search-submit" value="Search" class="btn btn-outline-dark" type="submit" id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </div>
                 </form>
@@ -95,11 +104,15 @@ include 'php/job_search_query.php';
         </div>
     </nav>
     <section id="dashboard-main-content">
+        <button type="button" class="btn btn-primary btn-floating btn-lg" id="btn-back-to-top">
+            <i class="fas fa-arrow-up"></i>
+        </button>
         <div class="bg-light">
             <div class="row">
                 <div class="col-12 p-lg-5 p-md-4 p-sm-2 p-2" style="min-height: 1000px; background-color: #ddd;">
                     <div class="">
                         <div class="container">
+
                             <div class="">
                                 <div class="">
                                     <h2 class="text-center mb-5">Available Jobs</h2>
@@ -179,20 +192,20 @@ include 'php/job_search_query.php';
                                             <?php if ($job_current_page > 1) {
                                                 $jobPrevPage = $job_current_page - 1;
                                             ?>
-                                                <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $jobPrevPage; ?>&search=<?= $_GET['search']?>&search-submit=<?= $_GET['search-submit'];?>">Previous</a></li>
+                                                <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $jobPrevPage; ?><?= (isset($_GET['search']) ? "&search=" . $_GET['search'] : "") ?>">Previous</a></li>
                                             <?php } else { ?>
                                                 <li class="page-item disabled"><a class="page-link" href="">Previous</a></li>
                                             <?php } ?>
                                             <?php foreach (range($jobsPagination_rangeFirstNumber, $jobsPagination_rangeLastNumber) as $job_page_number) { ?>
                                                 <li class="page-item <?= ($job_current_page == $job_page_number ? "active" : "");  ?>">
-                                                    <a class="page-link" href="?jobpage=<?php echo $job_page_number ?>&search=<?= $_GET['search']?>&search-submit=<?= $_GET['search-submit'];?>"><?php echo $job_page_number ?></a>
+                                                    <a class="page-link" href="?jobpage=<?php echo $job_page_number ?><?= (isset($_GET['search']) ? "&search=" . $_GET['search'] : "") ?>"><?php echo $job_page_number ?></a>
                                                 </li>
                                             <?php } ?>
 
                                             <?php if ($job_current_page < $job_total_pages) {
                                                 $jobNextPage = $job_current_page + 1;
                                             ?>
-                                                <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $jobNextPage ?>&search=<?= $_GET['search']?>&search-submit=<?= $_GET['search-submit']; ?>">Next</a></li>
+                                                <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $jobNextPage ?><?= (isset($_GET['search']) ? "&search=" . $_GET['search'] : "") ?>">Next</a></li>
                                             <?php } else { ?>
                                                 <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
                                             <?php } ?>
@@ -262,6 +275,33 @@ include 'php/job_search_query.php';
             var selectedPage = this.value;
             window.location.href = '?jobpage=' + selectedPage;
         })
+
+
+        //Get the button
+        let mybutton = document.getElementById("btn-back-to-top");
+
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function() {
+            scrollFunction();
+        };
+
+        function scrollFunction() {
+            if (
+                document.body.scrollTop > 20 ||
+                document.documentElement.scrollTop > 20
+            ) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        }
+        // When the user clicks on the button, scroll to the top of the document
+        mybutton.addEventListener("click", backToTop);
+
+        function backToTop() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

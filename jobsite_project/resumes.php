@@ -42,6 +42,13 @@ include 'php/resume_search_query.php';
             border: var(--bs-card-border-width) solid black;
             box-shadow: 4px 4px 8px #999;
         }
+
+        #btn-back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: none;
+        }
     </style>
     <title>All Resumes</title>
 </head>
@@ -59,13 +66,15 @@ include 'php/resume_search_query.php';
                     ?>
                     <form action="<?= $queryPath; ?>" method="get">
                         <div class="input-group mb-3">
-                            <input name="search" id="search-field" type="search" class="form-control border-dark" placeholder="Search Resumes" aria-label="Recipient's username" aria-describedby="search-button">
+                            <input value="<?php if (isset($search)) {
+                                                echo $search;
+                                            } ?>" name="search" id="search-field" type="search" class="form-control border-dark" placeholder="Search Resumes" aria-label="Recipient's username" aria-describedby="search-button">
                             <button name="search-submit" value="Search" class="btn btn-outline-dark" type="submit" id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
                         </div>
                     </form>
                 </div>
             </div>
-<!--            
+            <!--            
             <div class="d-lg-none d-md-none d-sm-block d-block">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#search-modal">
                     <i class="fa-solid fa-magnifying-glass">
@@ -107,6 +116,9 @@ include 'php/resume_search_query.php';
         </div>
     </nav>
     <section id="dashboard-main-content">
+        <button type="button" class="btn btn-primary btn-floating btn-lg" id="btn-back-to-top">
+            <i class="fas fa-arrow-up"></i>
+        </button>
         <div class="bg-light">
             <div class="row">
                 <div class="col-12 p-lg-5 p-md-4 p-sm-2 p-2" style="min-height: 1000px; background-color: #ddd;">
@@ -187,20 +199,23 @@ include 'php/resume_search_query.php';
                                             <?php if ($resume_current_page > 1) {
                                                 $resumePrevPage = $resume_current_page - 1;
                                             ?>
-                                                <li class="page-item"><a class="page-link" href="?resumepage=<?php echo $resumePrevPage; ?>&search=<?= $_GET['search'] ?>&search-submit=<?= $_GET['search-submit'] ?>">Previous</a></li>
+                                                <li class="page-item"><a class="page-link" href="?resumepage=<?php echo $resumePrevPage; ?><?php if (isset($_GET['search']) && isset($_GET['search-submit'])) { ?>&search=<?= $_GET['search'] ?>&search-submit=<?= $_GET['search-submit'];
+                                                                                                                                                                                                                                                            } ?>">Previous</a></li>
                                             <?php } else { ?>
                                                 <li class="page-item disabled"><a class="page-link" href="">Previous</a></li>
                                             <?php } ?>
                                             <?php foreach (range($resumePagination_rangeFirstNumber, $resumePagination_rangeLastNumber) as $resume_page_number) { ?>
                                                 <li class="page-item <?= ($resume_current_page == $resume_page_number ? "active" : "");  ?>">
-                                                    <a class="page-link" href="?resumepage=<?php echo $resume_page_number ?>&search=<?= $_GET['search'] ?>&search-submit=<?= $_GET['search-submit'] ?>"><?php echo $resume_page_number ?></a>
+                                                    <a class="page-link" href="?resumepage=<?php echo $resume_page_number ?><?php if (isset($_GET['search']) && isset($_GET['search-submit'])) { ?>&search=<?= $_GET['search'] ?>&search-submit=<?= $_GET['search-submit'];
+                                                                                                                                                                                                                                            } ?>"><?php echo $resume_page_number ?></a>
                                                 </li>
                                             <?php } ?>
 
                                             <?php if ($resume_current_page < $resume_total_pages) {
                                                 $resumeNextPage = $resume_current_page + 1;
                                             ?>
-                                                <li class="page-item"><a class="page-link" href="?resumepage=<?php echo $resumeNextPage ?>&search=<?= $_GET['search'] ?>&search-submit=<?= $_GET['search-submit'] ?>">Next</a></li>
+                                                <li class="page-item"><a class="page-link" href="?resumepage=<?php echo $resumeNextPage ?><?php if (isset($_GET['search']) && isset($_GET['search-submit'])) { ?>&search=<?= $_GET['search'];
+                                                                                                                                                                                                                    } ?>&search-submit=<?= $_GET['search-submit'] ?>">Next</a></li>
                                             <?php } else { ?>
                                                 <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
                                             <?php } ?>
@@ -272,6 +287,32 @@ include 'php/resume_search_query.php';
             var selectedPage = this.value;
             window.location.href = '?jobpage=' + selectedPage;
         })
+
+        //Get the button
+        let mybutton = document.getElementById("btn-back-to-top");
+
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function() {
+            scrollFunction();
+        };
+
+        function scrollFunction() {
+            if (
+                document.body.scrollTop > 20 ||
+                document.documentElement.scrollTop > 20
+            ) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        }
+        // When the user clicks on the button, scroll to the top of the document
+        mybutton.addEventListener("click", backToTop);
+
+        function backToTop() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

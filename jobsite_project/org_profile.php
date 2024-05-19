@@ -194,10 +194,9 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
                             </button>
                             <div class="collapse" id="dashboard-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
-                                    <li><a href="#" class="btn btn-secondary-outline">###</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">###</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">###</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">###</a></li>
+                                <li><a href="#" class="btn btn-secondary-outline">Home</a></li>
+                                    <li><a href="#" class="btn btn-secondary-outline">Applications</a></li>
+                                    <li><a href="#" class="btn btn-secondary-outline">Invitation List</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -220,7 +219,19 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
                             <div class="collapse" id="account-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
                                     <li><a href="dashboard.php" class="btn btn-secondary-outline">Overview</a></li>
-                                    <li><a href="?edit" class="btn btn-secondary-outline">Edit Profile</a></li>
+                                    <li>
+                                        <div class="dropdown">
+                                            <a class="btn dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Edit
+                                            </a>
+
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="?edit">Edit Account Info</a></li>
+                                                <li><a class="dropdown-item" href="org_profile.php?edit">Edit Org Profile</a></li>
+                                                <li><a class="dropdown-item" href="resume_profile.php?edit">Edit Resume Profile</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
                                     <li>
                                         <form action="php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" method="post" class="btn btn-secondary-outline">
                                             <input class="btn p-0" type="submit" value="Log Out" id="#logout-button">
@@ -388,7 +399,7 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
             </div>
         </div>
     </section>
-    <div id="footer" class="bg-dark text-light" >
+    <div id="footer" class="bg-dark text-light">
         <div class="container">
             <footer class="row py-5">
                 <div class="col-6">

@@ -17,6 +17,11 @@ if (isset($_SESSION['token'])) {
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <title>Log in</title>
+    <style>
+        #form-card {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+    </style>
 </head>
 
 <body class="bg-dark">
@@ -25,44 +30,73 @@ if (isset($_SESSION['token'])) {
             <a class="navbar-brand" href="index.php">
                 <img src="img/logoipsum-248.svg" alt="">
             </a>
-            <div class="d-lg-block d-md-block d-sm-none d-none btn-group">
-                <div class="btn btn-outline-dark disabled">Not a member?</div>
-                <a href="registration_page.php" class="btn btn-primary">Register</a>
-            </div>
-            <div class="d-lg-none d-md-none d-sm-block d-block">
-                <a href="registration_page.php" class="btn btn-primary">Register</a>
-            </div>
+
         </div>
     </nav>
     <section id="login-form">
-        <div class="container">
-            <div class="card mt-5">
-                <div class="card-header">
-                    <h2 class="text-center">Login</h2>
-                </div>
-                <form id="login" action="" method="post">
-                    <div id="cardBody" class="card-body row" style="padding: 0px 100px;">
-                        <div class="col-lg-4 col-md-4 col-sm-0 col-0"></div>
-                        <div class="col-lg-4 col-md-12 col-sm-12 col-12">
-                            <label class="mt-2 form-label" for="phn">Phone Number</label>
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="addon">+880</span>
-                                <input id="phn" name="phn" type="text" class="form-control" aria-label="phn" aria-describedby="addon">
+        <div class="p-lg-5 p-md-3 p-sm-1 p-1">
+            <div class="container card" id="form-card">
+                <div class="row" id="signincontent">
+                    <div class="col-lg-6 d-md-none d-sm-none d-none d-lg-block d-md-block">
+                        <img class="img-fluid" src="https://preview.colorlib.com/theme/bootstrap/login-form-07/images/undraw_remotely_2j6y.svg" alt="">
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <div class="row m-lg-5 m-md-0 m-sm-0 m-0">
+                            <div class="col p-0">
+                                <div class="mb-5 pt-lg-0 pt-md-0 pt-sm-0 pt-5">
+                                    <h2 class="mb-3">
+                                        Sign In
+                                    </h2>
+                                    <p class="fw-light text-secondary">Lorem ipsum dolor sit amet consectetur adipisicing
+                                        elit. Vero,
+                                        laboriosam. Dolores veritatis vel quisquam vero.</p>
+                                </div>
+                                <form id="login" method="post">
+                                    <label for="phnNumber" class="form-label">Phone Number</label>
+                                    <div class="mb-3 input-group">
+                                        <span class="input-group-text" id="addon">+880</span>
+                                        <input name="phn" type="text" class="form-control" id="phn" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="signInPass" class="form-label">Password</label>
+                                        <input name="pass" type="password" class="form-control" id="pass" placeholder="Password" required>
+                                    </div>
+                                    <span id="passError" class="text-danger"><?php echo $errmsg ?></span>
+                                    <div class="d-flex justify-content-between mb-5">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" id="rememberMeCheck">
+                                            <label for="rememberMeCheck" class="form-label">Remember Me</label>
+                                        </div>
+                                        <div class="fw-light">
+                                            <a href="#" class="link-dark">Forgot Password</a>
+                                        </div>
+                                    </div>
+                                    <div class="mt-lg-5 mt-md-5 mt-sm-3 mt-3 row justify-content-center">
+                                        <button type="submit" class=" col-11 btn p-3 btn-primary">
+                                            <h3>Login</h3>
+                                        </button>
+                                    </div>
+                                </form>
+
+                                <div class="d-flex justify-content-between mt-4">
+                                    <div>
+                                        <p>Don't have an account? <i class="fa-solid fa-arrow-right"></i></p>
+                                    </div>
+                                    <div>
+                                        <a class="link-dark" href="registration_page.php">Sign Up</a>
+                                    </div>
+                                </div>
                             </div>
-                            <div id="phnError" class="text-danger"></div>
-                            <label class="form-label" for="password">Password</label>
-                            <input id="pass" name="pass" class="mb-3 form-control" type="password">
-                            <div id="passError" class="text-danger"><?php echo $errmsg ?></div>
                         </div>
-                        <div class="col-lg-4 col-md-4 col-sm-0 col-0"></div>
                     </div>
-                    <div class="card-footer">
-                        <input type="submit" class="btn btn-primary" value="Login">
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </section>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="js/seeker_login_validation.js"></script>
 </body>
 

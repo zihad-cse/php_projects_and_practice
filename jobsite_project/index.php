@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <?php
@@ -6,9 +7,21 @@ include "php/db_connection.php";
 
 session_start();
 
+$isIndex = true;
 include "php/pagination.php";
-$_SESSION['jobs-pagination-limit'] = 10;
-$_SESSION['resumes-pagination-limit'] = 10;
+
+
+if (!isset($_SESSION['search-filter']) && empty($_SESSION['search-filter'])) {
+    $_SESSION['search-filter'] = 'job';
+}
+
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    if (isset($_POST['search-filter']) && !empty($_POST['search-filter'])) {
+        $_SESSION['search-filter'] = $_POST['search-filter'];
+    }
+}
+
+
 
 ?>
 
@@ -42,6 +55,13 @@ $_SESSION['resumes-pagination-limit'] = 10;
 
         #nav-bar {
             box-shadow: 1px 1px 8px #999;
+        }
+
+        #btn-back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: none;
         }
     </style>
 </head>
@@ -99,17 +119,17 @@ $_SESSION['resumes-pagination-limit'] = 10;
                                         <div class="col-10">
                                             <?php
                                             $queryPath = 'jobs.php';
-                                            if (isset($_GET['search-filter'])) {
-                                                if ($_GET['search-filter'] == 'resume') {
+                                            if (isset($_SESSION['search-filter'])) {
+                                                if ($_SESSION['search-filter'] == 'resume') {
                                                     $queryPath = 'resumes.php';
-                                                } else if ($_GET['search-filter'] == 'job') {
+                                                } else if ($_SESSION['search-filter'] == 'job') {
                                                     $queryPath = 'jobs.php';
                                                 }
                                             } ?>
                                             <form method="get" action="<?php echo $queryPath; ?>">
                                                 <div class="input-group">
                                                     <input id="search-field" type="search" name="search" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-                                                    <input onclick="if(document.getElementById('search-field').value.trim() === '') {event.preventDefault();}" type="submit" name="search-submit" class="btn btn-outline-light" value="Search">
+                                                    <input onclick="if(document.getElementById('search-field').value.trim() === '') {event.preventDefault();}" type="submit" class="btn btn-outline-light" value="Search">
                                                 </div>
                                             </form>
                                         </div>
@@ -120,18 +140,18 @@ $_SESSION['resumes-pagination-limit'] = 10;
                                                 <p class="m-0 text-center pt-lg-2 pt-md-0 pt-sm-0 pt-0">Search among:</p>
                                             </div>
                                             <div class="pt-lg-2 pt-md-0 pt-sm-0 pt-0 col-lg-5 col-sm-8 col-md-8 col-8">
-                                                <form method="get" id="search-filter" action="">
+                                                <form method="post" id="search-filter" action="">
                                                     <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="search-filter" <?php if (isset($_GET['search-filter'])) {
-                                                                                                                                echo $_GET['search-filter'] == 'job' ? 'checked' : '';
+                                                        <input class="form-check-input" type="radio" name="search-filter" <?php if (isset($_SESSION['search-filter'])) {
+                                                                                                                                echo $_SESSION['search-filter'] == 'job' ? 'checked' : '';
                                                                                                                             } ?> id="search-filter-job" value="job">
                                                         <label class="form-check-label" for="search-filter-job">
                                                             Jobs
                                                         </label>
                                                     </div>
                                                     <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="search-filter" <?php if (isset($_GET['search-filter'])) {
-                                                                                                                                echo $_GET['search-filter'] == 'resume' ? 'checked' : '';
+                                                        <input class="form-check-input" type="radio" name="search-filter" <?php if (isset($_SESSION['search-filter'])) {
+                                                                                                                                echo $_SESSION['search-filter'] == 'resume' ? 'checked' : '';
                                                                                                                             } ?> id="search-filter-resume" value="resume">
                                                         <label class="form-check-label" for="search-filter-resume">
                                                             Resumes
@@ -150,6 +170,9 @@ $_SESSION['resumes-pagination-limit'] = 10;
         </div>
     </section>
     <section class="my-5 bg-light" id="jobs-and-resumes">
+        <button type="button" class="btn btn-primary btn-floating btn-lg" id="btn-back-to-top">
+            <i class="fas fa-arrow-up"></i>
+        </button>
         <div class="row">
             <div class="col-lg-1 col-md-0 col-sm-0 col-0">
             </div>
@@ -168,7 +191,7 @@ $_SESSION['resumes-pagination-limit'] = 10;
                             ?>
                                 <div class="container">
                                     <div class="col-12">
-                                        <a id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start m-4 card text-decoration-none">
+                                        <div id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start m-4 card text-decoration-none">
                                             <div class="card-body">
                                                 <div class="row text-sm-center text-md-center text-lg-start text-center">
                                                     <div class="col-lg-4 col-md-12 col-sm-12 col-12">
@@ -183,7 +206,7 @@ $_SESSION['resumes-pagination-limit'] = 10;
                                                         <div class="row">
                                                             <div class="col-12">
                                                                 <div class="p-2">
-                                                                    <p onclick="location.href='#'" class="m-0 btn btn-outline-dark btn-sm"><?php echo $row['categoryName']; ?> </p>
+                                                                    <a href='jobs.php?cat=<?php echo $row['jobcategory']; ?>' class="m-0 btn btn-outline-dark btn-sm"><?php echo $row['categoryName']; ?> </a>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -203,7 +226,7 @@ $_SESSION['resumes-pagination-limit'] = 10;
                                                     </div>
                                                 </div>
                                             </div>
-                                        </a>
+                                        </div>
                                     </div>
                                 </div>
                             <?php } ?>
@@ -306,6 +329,29 @@ $_SESSION['resumes-pagination-limit'] = 10;
                 form.submit();
             });
         });
+
+        let mybutton = document.getElementById("btn-back-to-top");
+
+        window.onscroll = function() {
+            scrollFunction();
+        };
+
+        function scrollFunction() {
+            if (
+                document.body.scrollTop > 20 ||
+                document.documentElement.scrollTop > 20
+            ) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        }
+        mybutton.addEventListener("click", backToTop);
+
+        function backToTop() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

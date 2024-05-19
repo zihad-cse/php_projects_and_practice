@@ -159,7 +159,11 @@ function pageination_alljobrows($pdo, $search = '')
 function pageination_alljobdetails($pdo, $initial_page, $limit, $search = "")
 {
     try {
-        $query = "SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1 LIMIT :limitnumber OFFSET :initialpage";
+        $subQuery = '';
+        if (isset($_GET['cat']) && !empty($_GET['cat'])){
+            $subQuery = " AND job.jobcategory = {$_GET['cat']} ";
+        }
+        $query = "SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1 $subQuery  LIMIT :limitnumber OFFSET :initialpage";
 
         if (isset($search) && !empty($search)) {
             $textSearchQuery = '';
@@ -170,7 +174,7 @@ function pageination_alljobdetails($pdo, $initial_page, $limit, $search = "")
                 $textSearchQuery = $textSearchQuery . "job.jobtitle LIKE '%" . $searchKey . "%' OR ";
             }
             $textSearchQuery = rtrim($textSearchQuery, 'OR ');
-            $query = "SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1 AND $textSearchQuery LIMIT :limitnumber OFFSET :initialpage";
+            $query = "SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1 $subQuery AND $textSearchQuery LIMIT :limitnumber OFFSET :initialpage";
         }
         $stmt = $pdo->prepare($query);
 

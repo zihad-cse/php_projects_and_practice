@@ -4,6 +4,8 @@ $allJobsNumber = postedJobsNumber($pdo);
 
 if (isset($_POST['jobs-pagination-limit'])) {
     $_SESSION['jobs-pagination-limit'] = $_POST['jobs-pagination-limit'];
+} else if (isset($_POST['jobs-pagination-limit'])) {
+    $_POST['jobs-pagination-limit'] = $_SESSION['jobs-pagination-limit'];
 } else if (isset($_SESSION['jobs-pagination-limit'])) {
     $_POST['jobs-pagination-limit'] = $_SESSION['jobs-pagination-limit'];
 } else {
@@ -28,7 +30,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
 
 $job_total_pages = ceil($numberofjobs / $_SESSION['jobs-pagination-limit']);
 
-$landingpage_allJobDetails = pageination_alljobdetails($pdo, $job_initial_page, $_SESSION['jobs-pagination-limit'], $search);
+$landingpage_allJobDetails = pageination_alljobdetails($pdo, $job_initial_page, (isset($isIndex) ? 10 : $_SESSION['jobs-pagination-limit']), $search);
 
 $alljobcategories = getJobCategories($pdo);
 
@@ -94,6 +96,8 @@ if (isset($_POST['resumes-pagination-limit'])) {
     $_SESSION['resumes-pagination-limit'] = $_POST['resumes-pagination-limit'];
 } else if (isset($_POST['resumes-pagination-limit'])) {
     $_POST['resumes-pagination-limit'] = $_SESSION['resumes-pagination-limit'];
+} else if (isset($_SESSION['resumes-pagination-limit'])){
+    $_POST['resumes-pagination-limit'] = $_SESSION['resumes-pagination-limit'];
 } else {
     $_SESSION['resumes-pagination-limit'] = 10;
 }
@@ -114,7 +118,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
 }
 $resume_total_pages = ceil($numberofresumes / $_SESSION['resumes-pagination-limit']);
 
-$allresumedetails = pageination_allresumedetails($pdo, $resume_initial_page, $_SESSION['resumes-pagination-limit'], $search);
+$allresumedetails = pageination_allresumedetails($pdo, $resume_initial_page, (isset($isIndex) ? 10 : $_SESSION['resumes-pagination-limit']), $search);
 
 
 
