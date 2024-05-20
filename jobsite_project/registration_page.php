@@ -38,9 +38,7 @@ if (isset($_SESSION['token'])) {
                                     <h2 class="mb-3">
                                         Sign Up
                                     </h2>
-                                    <p class="fw-light text-secondary">Lorem ipsum dolor sit amet consectetur adipisicing
-                                        elit. Vero,
-                                        laboriosam. Dolores veritatis vel quisquam vero.</p>
+                                    <p class="fw-light text-secondary">Find the perfect employment for you, or the perfect employee!</p>
                                 </div>
                                 <form id="registration" action="" method="post">
                                     <div class="mb-3">

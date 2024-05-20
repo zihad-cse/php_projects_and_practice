@@ -170,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         </div>
     </section>
     <section class="my-5 bg-light" id="jobs-and-resumes">
-        <button type="button" class="btn btn-primary btn-floating btn-lg" id="btn-back-to-top">
+        <button type="button" class="d-sm-none d-none d-md-block d-lg-block btn btn-primary btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>
         </button>
         <div class="row">
@@ -230,16 +230,16 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                     </div>
                                 </div>
                             <?php } ?>
-                            <div class="row">
-                                <div class="col-lg-0 col-md-4 col-sm-4 col-4">
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-0 col-md-4 col-sm-4 col-4">
 
-                                </div>
-                                <a class="col-lg-12 col-md-5 col-sm-5 col-5 btn btn-outline-dark" href="jobs.php">
-                                    <p class="m-0 p-sm-1 p-md-1 p-lg-4 p-1">View all</p>
-                                </a>
-                                <div class="col-lg-0 col-md-3 col-sm-3 col-3">
+                            </div>
+                            <a class="col-lg-12 col-md-4 col-sm-4 col-4 btn btn-outline-dark" href="jobs.php">
+                                <p class="m-0 p-sm-1 p-md-1 p-lg-4 p-1">View all</p>
+                            </a>
+                            <div class="col-lg-0 col-md-4 col-sm-4 col-4">
 
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -289,13 +289,13 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                     </div>
                                 </div>
                             <?php } ?>
-                            <div class="row">
-                                <div class="col-lg-0 col-md-4 col-sm-4 col-4"></div>
-                                <a class="col-lg-12 col-md-5 col-sm-5 col-5 btn btn-outline-dark" href="resumes.php">
-                                    <p class="m-0 p-sm-1 p-md-1 p-lg-4 p-1">View all</p>
-                                </a>
-                                <div class="col-lg-0 col-md-3 col-sm-3 col-3"></div>
-                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-0 col-md-4 col-sm-4 col-4"></div>
+                            <a class="col-lg-12 col-md-4 col-sm-4 col-4 btn btn-outline-dark" href="resumes.php">
+                                <p class="m-0 p-sm-1 p-md-1 p-lg-4 p-1">View all</p>
+                            </a>
+                            <div class="col-lg-0 col-md-4 col-sm-4 col-4"></div>
                         </div>
                     </div>
                 </div>

@@ -113,7 +113,9 @@ if ($resumeData == true) {
     }
 }
 
-$resumePfpPath = "uploads/resumes/" . $resumeData['rindex'] . '.png';
+if (isset($resumeData['rindex']) && !empty($resumeData['rindex'])) {
+    $resumePfpPath = "uploads/resumes/" . $resumeData['rindex'] . '.png';
+}
 
 if (isset($_POST['upload-image'])) {
     if (isset($_FILES['imgUpload']['name']) && !empty($_FILES['imgUpload']['name'])) {
@@ -187,6 +189,11 @@ if (isset($_POST['upload-image'])) {
             height: 100px;
             resize: none;
         }
+
+        .medium-textarea {
+            height: 150px;
+            resize: none;
+        }
     </style>
     <title>Dashboard</title>
 </head>
@@ -220,7 +227,7 @@ if (isset($_POST['upload-image'])) {
                             </button>
                             <div class="collapse" id="dashboard-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
-                                <li><a href="#" class="btn btn-secondary-outline">Home</a></li>
+                                    <li><a href="#" class="btn btn-secondary-outline">Home</a></li>
                                     <li><a href="#" class="btn btn-secondary-outline">Applications</a></li>
                                     <li><a href="#" class="btn btn-secondary-outline">Invitation List</a></li>
                                 </ul>
@@ -285,11 +292,12 @@ if (isset($_POST['upload-image'])) {
 
                         </ul>
                         <div class="row">
+
+                            <hr>
+                            <h4 class="mb-4">Resume</h4>
+                            <hr>
                             <?php if (isset($resumeData['visible']) == true) {
                                 if ($resumeData['visible'] == 1) { ?>
-                                    <hr>
-                                    <h4 class="mb-4">Resume</h4>
-                                    <hr>
                                     <?php if (file_exists($resumePfpPath)) { ?>
                                         <div class="row pb-1">
                                             <div class="col-2">
@@ -367,13 +375,21 @@ if (isset($_POST['upload-image'])) {
                                             <p><?php echo $resumeData['skilleduexp'] ?></p>
                                         </div>
                                     </div>
-                            <?php }
-                            } else {
-                                echo "<b>N/A</b>";
-                            } ?>
+                                <?php }
+                            } else { ?>
+                                <hr class="mb-2">
+                                <b>Not Available</b>
+                                <hr class="my-2">
+                            <?php } ?>
                         </div>
                     <?php } ?>
-                    <?php if (isset($_GET['edit'])) { ?>
+                    <?php if (isset($_GET['edit'])) {
+                        if (isset($resumeData) && !empty($resumeData)) {
+                            $resumePfpPath = "uploads/job/" . $resumeData['rindex'] . '.png';
+                        } else {
+                            $resumePfpPath = '';
+                        } ?>
+
                         <div>
                             <?php if (file_exists($resumePfpPath)) { ?>
                                 <div class="row pb-1">
@@ -382,7 +398,7 @@ if (isset($_POST['upload-image'])) {
                                     </div>
                                     <div class="col-lg-5 col-md-12 col-sm-12 col-12">
                                         <form method="post" action="" enctype="multipart/form-data">
-                                            <div class="row py-3">
+                                            <div class="row py-1">
                                                 <div class="p-lg-0 pb-md-3 pb-sm-3 pb-3 col-lg-3 col-md-12 col-sm-12 col-12">
                                                     <b>Upload An Image</b>
                                                 </div>
@@ -405,7 +421,7 @@ if (isset($_POST['upload-image'])) {
                                     </div>
                                     <div class="col-lg-5 col-md-12 col-sm-12 col-12">
                                         <form method="post" action="" enctype="multipart/form-data">
-                                            <div class="row py-3">
+                                            <div class="row py-1">
                                                 <div class="p-lg-0 pb-md-3 pb-sm-3 pb-3 col-lg-3 col-md-12 col-sm-12 col-12">
                                                     <b>Upload An Image</b>
                                                 </div>
@@ -423,7 +439,7 @@ if (isset($_POST['upload-image'])) {
                                 </div>
                             <?php } ?>
                             <form action="" method="post" enctype="multipart/form-data">
-                                <div class="row py-3">
+                                <div class="row py-1">
                                     <div class="col-lg-3 col-md-12 col-sm-12 col-12">
                                         <b>Full Name</b>
                                     </div>
@@ -433,7 +449,7 @@ if (isset($_POST['upload-image'])) {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row py-3">
+                                <div class="row py-1">
                                     <div class="col-lg-3 col-md-12 col-sm-12 col-12">
                                         <b>Father's Name</b>
                                     </div>
@@ -443,7 +459,7 @@ if (isset($_POST['upload-image'])) {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row py-3">
+                                <div class="row py-1">
                                     <div class="col-lg-3 col-md-12 col-sm-12 col-12">
                                         <b>Mother's Name</b>
                                     </div>
@@ -453,7 +469,7 @@ if (isset($_POST['upload-image'])) {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row py-3">
+                                <div class="row py-1">
                                     <div class="col-lg-3 col-md-12 col-sm-12 col-12">
                                         <b>Date of Birth</b>
                                     </div>
@@ -463,7 +479,7 @@ if (isset($_POST['upload-image'])) {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row py-3">
+                                <div class="row py-1">
                                     <div class="col-lg-3 col-md-12 col-sm-12 col-12">
                                         <b>Religion</b>
                                     </div>
@@ -473,7 +489,7 @@ if (isset($_POST['upload-image'])) {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row py-3">
+                                <div class="row py-1">
                                     <div class="col-lg-3 col-md-12 col-sm-12 col-12">
                                         <b>Address</b>
                                     </div>
@@ -483,7 +499,7 @@ if (isset($_POST['upload-image'])) {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row py-3">
+                                <div class="row py-1">
                                     <div class="col-lg-3 col-md-12 col-sm-12 col-12">
                                         <b>Birth Area</b>
                                     </div>
@@ -493,13 +509,13 @@ if (isset($_POST['upload-image'])) {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row py-3">
+                                <div class="row py-1">
                                     <div class="col-lg-3 col-md-12 col-sm-12 col-12">
                                         <b>Skills</b>
                                     </div>
                                     <div class="col-lg-6 col-md-12 col-sm-12 col-12">
                                         <div>
-                                            <input name="skilleduexp" class="form-control" type="text" value="<?= isset($resumeData['skilleduexp']) == 1 ?  $resumeData['skilleduexp'] : ''; ?>">
+                                            <textarea class="mt-3 medium-textarea form-control" style="resize: none;" name="skilleduexp" id="skilleduexp" cols="30" rows="10"><?= isset($resumeData['skilledexp']) == 1 ?  $resumeData['skilledexp'] : ''; ?></textarea>
                                         </div>
                                     </div>
                                 </div>

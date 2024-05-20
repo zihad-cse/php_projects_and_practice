@@ -194,7 +194,7 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
                             </button>
                             <div class="collapse" id="dashboard-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
-                                <li><a href="#" class="btn btn-secondary-outline">Home</a></li>
+                                    <li><a href="#" class="btn btn-secondary-outline">Home</a></li>
                                     <li><a href="#" class="btn btn-secondary-outline">Applications</a></li>
                                     <li><a href="#" class="btn btn-secondary-outline">Invitation List</a></li>
                                 </ul>
@@ -243,7 +243,6 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
                     </ul>
                 </div>
                 <div style="background-color: #eee; min-height: 1000px" class="col-lg-10 col-md-12 col-sm-12 col-12 p-5 border rounded ">
-
                     <?php if (!isset($_GET['edit'])) { ?>
 
                         <div class="mb-4">
@@ -262,9 +261,10 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
                             <div class="tab-content" id="myTabContent">
                                 <div>
                                     <hr>
-
-                                    <h4 class="mb-4">Company Profile</h5>
-                                        <hr>
+                                    <h4 class="mb-4">Company Profile</h4>
+                                    <hr>
+                                    <?php if($userData['orgnote']) ?>
+                                    <?php if ($userData["displayunote"] == 1) { ?>
                                         <?php $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png' ?>
                                         <?php if (file_exists($orgPfpPath)) { ?>
                                             <div class="row pb-1">
@@ -287,15 +287,16 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
                                                 <p><?php echo $userData['ocategory']; ?></p>
                                             </div>
                                         </div>
-                                        <?php if ($userData["displayunote"] == 1) { ?>
-                                            <div class="row pb-1">
-                                                <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                                    <b>Company Details</b>
-                                                </div>
-                                                <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                                                    <p><?php echo $userData['orgnote'] ?? "N/A"; ?></p>
-                                                </div>
+                                        <div class="row pb-1">
+                                            <div class="col-lg-3 col-md-12 col-sm-12 col-12">
+                                                <b>Company Details</b>
                                             </div>
+                                            <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+                                                <p><?php echo $userData['orgnote'] ?? "N/A"; ?></p>
+                                            </div>
+                                        </div>
+                                    <?php } else { ?>
+                                        <b>Not Available</b>
                                         <?php } ?>
                                 </div>
                             </div>

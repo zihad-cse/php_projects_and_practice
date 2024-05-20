@@ -24,7 +24,7 @@ if (isset($_SESSION['token'])) {
     </style>
 </head>
 
-<body class="bg-dark">
+<body class="">
     <nav class="navbar bg-light sticky-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="index.php">
@@ -44,18 +44,16 @@ if (isset($_SESSION['token'])) {
                         <div class="row m-lg-5 m-md-0 m-sm-0 m-0">
                             <div class="col p-0">
                                 <div class="mb-5 pt-lg-0 pt-md-0 pt-sm-0 pt-5">
-                                    <h2 class="mb-3">
+                                    <h2 class="m-0">
                                         Sign In
                                     </h2>
-                                    <p class="fw-light text-secondary">Lorem ipsum dolor sit amet consectetur adipisicing
-                                        elit. Vero,
-                                        laboriosam. Dolores veritatis vel quisquam vero.</p>
                                 </div>
                                 <form id="login" method="post">
                                     <label for="phnNumber" class="form-label">Phone Number</label>
                                     <div class="mb-3 input-group">
                                         <span class="input-group-text" id="addon">+880</span>
                                         <input name="phn" type="text" class="form-control" id="phn" required>
+                                        <p id="phnError" class="text-danger"></p>
                                     </div>
                                     <div class="mb-3">
                                         <label for="signInPass" class="form-label">Password</label>
@@ -72,9 +70,8 @@ if (isset($_SESSION['token'])) {
                                         </div>
                                     </div>
                                     <div class="mt-lg-5 mt-md-5 mt-sm-3 mt-3 row justify-content-center">
-                                        <button type="submit" class=" col-11 btn p-3 btn-primary">
-                                            <h3>Login</h3>
-                                        </button>
+                                        <input type="submit" value="Log In" class=" col-11 btn p-3 btn-primary">
+
                                     </div>
                                 </form>
 
