@@ -181,7 +181,6 @@ function pageination_alljobdetails($pdo, $initial_page, $limit, $search = "")
         $stmt->bindParam(':initialpage', $initial_page, PDO::PARAM_INT);
         $stmt->bindParam(':limitnumber', $limit, PDO::PARAM_INT);
         $stmt->execute();
-        // $stmt->debugDumpParams();
         $alljobdetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $alljobdetails;
     } catch (PDOException $e) {

@@ -100,7 +100,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     </nav>
     <section style="height: max-content;" id="header">
         <div style="background-image: url('img/vagaro-g6i6NlucLYc-unsplash.jpg'); background-size: cover; background-position: top;" class="row">
-            <div style="background-color: rgba(0, 0, 0, 0.5);" class="col-12">
+            <div style="background-color: rgba(0, 0, 0, 0.75);" class="col-1"></div> 
+            <div style="background-color: rgba(0, 0, 0, 0.5);" class="col-10">
                 <div class="container">
                     <div style="background-color: rgba(0, 0, 0, 0.7);" class="border border-0 rounded m-4 p-4">
                         <div class="row">
@@ -167,6 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     </div>
                 </div>
             </div>
+            <div style="background-color: rgba(0, 0, 0, 0.75);" class="col-1"></div>
         </div>
     </section>
     <section class="my-5 bg-light" id="jobs-and-resumes">

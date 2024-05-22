@@ -13,7 +13,7 @@ session_start();
 
 include 'php/job_search_query.php';
 
-
+$jobCategories = getJobCategories($pdo);
 ?>
 
 <head>
@@ -114,8 +114,34 @@ include 'php/job_search_query.php';
                         <div class="container">
 
                             <div class="">
-                                <div class="">
-                                    <h2 class="text-center mb-5">Available Jobs</h2>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fa-solid fa-filter"></i> Filter
+                                            </button>
+                                            <form action="" class="" method="get">
+                                                <div class="dropdown-menu">
+                                                    <h6 class="dropdown-header">Category</h6>
+                                                    <?php foreach ($jobCategories as $jobcat) { ?>
+                                                        <div class="dropdown-item">
+                                                            <label for="<?= $jobcat['jcategory'] ?>"><?= $jobcat['jcategory'] ?></label>
+                                                            <input name="cat" value="<?= $jobcat['jcatindex'] ?>" type="radio">
+                                                        </div>
+                                                    <?php } ?>
+                                                    <div class="dropdown-divider"></div>
+                                                    <button type="submit" class="dropdown-item btn">Apply</button>
+
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <h2 class="text-center mb-5">Available Jobs</h2>
+                                    </div>
+                                    <div class="col-4">
+
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-0">
@@ -124,54 +150,62 @@ include 'php/job_search_query.php';
                                         <div class="container">
                                             <div class="">
                                                 <div class="row">
-                                                    <?php foreach ($landingpage_allJobDetails as $row) {
-                                                        $job_img_src = "uploads/job/placeholder-company.png";
-                                                        if (file_exists("uploads/job/" . $row['jindex'] . ".png")) {
-                                                            $job_img_src = "uploads/job/" . $row['jindex'] . ".png";
-                                                        }
+
+                                                    <?php if (!empty($landingpage_allJobDetails)) {
+                                                        foreach ($landingpage_allJobDetails as $row) {
+                                                            $job_img_src = "uploads/job/placeholder-company.png";
+                                                            if (file_exists("uploads/job/" . $row['jindex'] . ".png")) {
+                                                                $job_img_src = "uploads/job/" . $row['jindex'] . ".png";
+                                                            }
                                                     ?>
-                                                        <div class="container">
-                                                            <div class="col-12">
-                                                                <a id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start m-4 card text-decoration-none">
-                                                                    <div class="card-body">
-                                                                        <div class="row text-sm-center text-md-center text-lg-start text-center">
-                                                                            <div class="col-lg-4 col-md-12 col-sm-12 col-12">
-                                                                                <img class="img-fluid" style="max-height: 100px;" src="<?php echo $job_img_src ?>" alt="">
-                                                                            </div>
-                                                                            <div class="col-lg-8 col-md-12 col-sm-12 col-12">
-                                                                                <div class="row">
-                                                                                    <div class="col-12">
-                                                                                        <b class="m-0 p-2"><?php echo $row['jobtitle']; ?> </b>
-                                                                                    </div>
+                                                            <div class="container">
+                                                                <div class="col-12">
+                                                                    <a id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start m-4 card text-decoration-none">
+                                                                        <div class="card-body">
+                                                                            <div class="row text-sm-center text-md-center text-lg-start text-center">
+                                                                                <div class="col-lg-4 col-md-12 col-sm-12 col-12">
+                                                                                    <img class="img-fluid" style="max-height: 100px;" src="<?php echo $job_img_src ?>" alt="">
                                                                                 </div>
-                                                                                <div class="row">
-                                                                                    <div class="col-12">
-                                                                                        <div class="p-2">
-                                                                                            <p onclick="location.href='#'" class="m-0 btn btn-outline-dark btn-sm"><?php echo $row['categoryName']; ?> </p>
+                                                                                <div class="col-lg-8 col-md-12 col-sm-12 col-12">
+                                                                                    <div class="row">
+                                                                                        <div class="col-12">
+                                                                                            <b class="m-0 p-2"><?php echo $row['jobtitle']; ?> </b>
                                                                                         </div>
                                                                                     </div>
-                                                                                </div>
-                                                                                <div class="row">
-                                                                                    <div class="col-12">
-                                                                                        <p class="m-0 p-2"><i class="fa-solid fa-dollar-sign"></i> <?php echo $row['salary']; ?> </p>
+                                                                                    <div class="row">
+                                                                                        <div class="col-12">
+                                                                                            <div class="p-2">
+                                                                                                <p onclick="location.href='#'" class="m-0 btn btn-outline-dark btn-sm"><?php echo $row['categoryName']; ?> </p>
+                                                                                            </div>
+                                                                                        </div>
                                                                                     </div>
-                                                                                </div>
-                                                                                <div class=" row">
-                                                                                    <div class="col-6">
-                                                                                        <span class="p-2"><i class="fa-solid fa-location-dot"></i> <?= $row['workarea'] ?></span>
+                                                                                    <div class="row">
+                                                                                        <div class="col-12">
+                                                                                            <p class="m-0 p-2"><i class="fa-solid fa-dollar-sign"></i> <?php echo $row['salary']; ?> </p>
+                                                                                        </div>
                                                                                     </div>
-                                                                                    <div class="col-6">
-                                                                                        <b><i class="fa-solid fa-calendar-day"></i> <?= $row['enddate'] ?></b>
+                                                                                    <div class=" row">
+                                                                                        <div class="col-6">
+                                                                                            <span class="p-2"><i class="fa-solid fa-location-dot"></i> <?= $row['workarea'] ?></span>
+                                                                                        </div>
+                                                                                        <div class="col-6">
+                                                                                            <b><i class="fa-solid fa-calendar-day"></i> <?= $row['enddate'] ?></b>
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
-                                                                </a>
+                                                                    </a>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    <?php } ?>
+                                                        <?php }
+                                                    } else { ?>
 
+                                                        <div class="text-center">
+                                                            <b>None Found, Apply another filter</b>
+                                                        </div>
+
+                                                    <?php } ?>
                                                 </div>
                                             </div>
                                         </div>
