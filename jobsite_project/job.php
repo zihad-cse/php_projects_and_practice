@@ -184,14 +184,14 @@ $jobPicFilePath = "uploads/job/" . $jobData['jindex'] . '.png';
                 <h4></h4>
             </div>
             <div class="row p-3">
-                <h4>Salary</h4>
+                <h4>Salary: <?php echo $jobData['salary'] ?> BDT</h4>
             </div>
             <div class="row p-3">
                 <div class="col-4">
-                    <b>Contact Phone</b>
+                    <b>Contact Phone: <?php echo $jobData['conphone'] ?></b>
                 </div>
                 <div class="col-4">
-                    <b>Contact Email</b>
+                    <b>Contact Email: <?php echo $jobData['conemail'] ?></b>
                 </div>
                 <div class="col-4 text-end">
                     <a href="#" class="btn btn-primary">Apply</a>

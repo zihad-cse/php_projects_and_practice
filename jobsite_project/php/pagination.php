@@ -31,7 +31,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
 $job_total_pages = ceil($numberofjobs / $_SESSION['jobs-pagination-limit']);
 
 $landingpage_allJobDetails = pageination_alljobdetails($pdo, $job_initial_page, (isset($isIndex) ? 10 : $_SESSION['jobs-pagination-limit']), $search);
-
+ 
 $alljobcategories = getJobCategories($pdo);
 
 

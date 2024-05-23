@@ -134,16 +134,29 @@ function getOrgCategories($pdo)
 function pageination_alljobrows($pdo, $search = '')
 {
     try {
-        $query = "SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1";
+        $subQuery = '';
+        if (isset($_GET['cat']) && !empty($_GET['cat'])) {
+            $SelectedCata = $_GET['cat'];
+            // var_dump($SelectedCata);
+            $catagories = '';
+            foreach ($SelectedCata as $cata) {
+                $catagories = $catagories . "job.jobcategory = $cata OR ";
+            }
+            $subQuery = " AND $catagories ";
+        }
+
+        $subQuery = rtrim($subQuery, 'OR ');
+        $query = "SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1 $subQuery";
+
         if (isset($search) && !empty($search)) {
             $textSearchQuery = '';
             $searchKeywordList = explode(' ', trim($search));
 
             foreach ($searchKeywordList as $searchKey) {
-                $textSearchQuery = $textSearchQuery . "job.jobtitle LIKE '%". $searchKey. "%' OR ";
+                $textSearchQuery = $textSearchQuery . "job.jobtitle LIKE '%" . $searchKey . "%' OR ";
             }
             $textSearchQuery = rtrim($textSearchQuery, 'OR ');
-            $query = "SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1 AND $textSearchQuery";
+            $query = "SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1 $subQuery AND $textSearchQuery";
         }
         $stmt = $pdo->prepare($query);
         $stmt->execute();
@@ -160,9 +173,17 @@ function pageination_alljobdetails($pdo, $initial_page, $limit, $search = "")
 {
     try {
         $subQuery = '';
-        if (isset($_GET['cat']) && !empty($_GET['cat'])){
-            $subQuery = " AND job.jobcategory = {$_GET['cat']} ";
+        if (isset($_GET['cat']) && !empty($_GET['cat'])) {
+            $SelectedCata = $_GET['cat'];
+            // var_dump($SelectedCata);
+            $catagories = '';
+            foreach ($SelectedCata as $cata) {
+                $catagories = $catagories . "job.jobcategory = $cata OR ";
+            }
+            $subQuery = " AND $catagories ";
         }
+
+        $subQuery = rtrim($subQuery, 'OR ');
         $query = "SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1 $subQuery  LIMIT :limitnumber OFFSET :initialpage";
 
         if (isset($search) && !empty($search)) {
@@ -189,18 +210,18 @@ function pageination_alljobdetails($pdo, $initial_page, $limit, $search = "")
     }
 }
 
-function pageination_allresumedetails($pdo, $initial_page, $limit, $search="")
+function pageination_allresumedetails($pdo, $initial_page, $limit, $search = "")
 {
     try {
 
         $query = "SELECT * FROM resumes WHERE visible = 1 LIMIT :limitnumber OFFSET :initialpage";
 
-        if(isset($search) && !empty($search)){
+        if (isset($search) && !empty($search)) {
             $textSearchQuery = '';
             $searchKeywordList = explode(' ', trim($search));
 
             foreach ($searchKeywordList as $searchKey) {
-                $textSearchQuery = $textSearchQuery . "resumes.skilleduexp LIKE '%". $searchKey . "%' OR ";
+                $textSearchQuery = $textSearchQuery . "resumes.skilleduexp LIKE '%" . $searchKey . "%' OR ";
             }
             $textSearchQuery = rtrim($textSearchQuery, 'OR ');
             $query = "SELECT * FROM resumes WHERE visible = 1 AND $textSearchQuery LIMIT :limitnumber OFFSET :initialpage";
@@ -228,7 +249,7 @@ function pageination_allresumerows($pdo, $search = '')
             $searchKeywordList = explode(' ', trim($search));
 
             foreach ($searchKeywordList as $searchKey) {
-                $textSearchQuery = $textSearchQuery . "resumes.skilleduexp LIKE '%". $searchKey. "%' OR ";
+                $textSearchQuery = $textSearchQuery . "resumes.skilleduexp LIKE '%" . $searchKey . "%' OR ";
             }
             $textSearchQuery = rtrim($textSearchQuery, 'OR ');
             $query = "SELECT * FROM resumes WHERE visible = 1 AND $textSearchQuery";

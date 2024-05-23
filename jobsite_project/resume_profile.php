@@ -385,7 +385,7 @@ if (isset($_POST['upload-image'])) {
                     <?php } ?>
                     <?php if (isset($_GET['edit'])) {
                         if (isset($resumeData) && !empty($resumeData)) {
-                            $resumePfpPath = "uploads/job/" . $resumeData['rindex'] . '.png';
+                            $resumePfpPath = "uploads/resumes/" . $resumeData['rindex'] . '.png';
                         } else {
                             $resumePfpPath = '';
                         } ?>

@@ -208,7 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                                         <div class="row">
                                                             <div class="col-12">
                                                                 <div class="p-2">
-                                                                    <a href='jobs.php?cat=<?php echo $row['jobcategory']; ?>' class="m-0 btn btn-outline-dark btn-sm"><?php echo $row['categoryName']; ?> </a>
+                                                                    <a href='jobs.php?cat[<?= $row['jobcategory']; ?>]=<?php echo $row['jobcategory']; ?>' class="m-0 btn btn-outline-dark btn-sm"><?php echo $row['categoryName']; ?> </a>
                                                                 </div>
                                                             </div>
                                                         </div>

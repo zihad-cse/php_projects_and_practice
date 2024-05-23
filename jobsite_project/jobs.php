@@ -13,7 +13,9 @@ session_start();
 
 include 'php/job_search_query.php';
 
-$jobCategories = getJobCategories($pdo);
+
+$jobAllRows =
+    $jobCategories = getJobCategories($pdo);
 ?>
 
 <head>
@@ -117,16 +119,24 @@ $jobCategories = getJobCategories($pdo);
                                 <div class="row">
                                     <div class="col-4">
                                         <div class="dropdown">
-                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
                                                 <i class="fa-solid fa-filter"></i> Filter
                                             </button>
                                             <form action="" class="" method="get">
                                                 <div class="dropdown-menu">
                                                     <h6 class="dropdown-header">Category</h6>
-                                                    <?php foreach ($jobCategories as $jobcat) { ?>
-                                                        <div class="dropdown-item">
-                                                            <label for="<?= $jobcat['jcategory'] ?>"><?= $jobcat['jcategory'] ?></label>
-                                                            <input name="cat" value="<?= $jobcat['jcatindex'] ?>" type="radio">
+                                                    <?php foreach ($jobCategories as $jobcat) {
+                                                        $isChecked = "";
+                                                        if (isset($_GET['cat']) && !empty($_GET['cat'])) {
+                                                            if (isset($_GET['cat'][$jobcat['jcatindex']]) && !empty($_GET['cat'][$jobcat['jcatindex']])) {
+                                                                $isChecked = "checked";
+                                                            }
+                                                        } ?>
+
+                                                        <div class=" p-2">
+                                                            <label class="" for="<?= $jobcat['jcategory'] ?>">
+                                                                <input id="<?= $jobcat['jcategory'] ?>" name="cat[<?= $jobcat['jcatindex'] ?>]" value="<?= $jobcat['jcatindex'] ?>" <?= $isChecked ?> type="checkbox"><?= $jobcat['jcategory'] ?>
+                                                            </label>
                                                         </div>
                                                     <?php } ?>
                                                     <div class="dropdown-divider"></div>
@@ -160,7 +170,7 @@ $jobCategories = getJobCategories($pdo);
                                                     ?>
                                                             <div class="container">
                                                                 <div class="col-12">
-                                                                    <a id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start m-4 card text-decoration-none">
+                                                                    <div id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start m-4 card text-decoration-none">
                                                                         <div class="card-body">
                                                                             <div class="row text-sm-center text-md-center text-lg-start text-center">
                                                                                 <div class="col-lg-4 col-md-12 col-sm-12 col-12">
@@ -175,7 +185,7 @@ $jobCategories = getJobCategories($pdo);
                                                                                     <div class="row">
                                                                                         <div class="col-12">
                                                                                             <div class="p-2">
-                                                                                                <p onclick="location.href='#'" class="m-0 btn btn-outline-dark btn-sm"><?php echo $row['categoryName']; ?> </p>
+                                                                                                <a href="?cat[<?= $row['jobcategory'] ?>]=<?= $row['jobcategory'] ?>" class="m-0 btn btn-outline-dark btn-sm"><?php echo $row['categoryName']; ?> </a>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -195,7 +205,7 @@ $jobCategories = getJobCategories($pdo);
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    </a>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         <?php }
@@ -226,20 +236,38 @@ $jobCategories = getJobCategories($pdo);
                                             <?php if ($job_current_page > 1) {
                                                 $jobPrevPage = $job_current_page - 1;
                                             ?>
-                                                <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $jobPrevPage; ?><?= (isset($_GET['search']) ? "&search=" . $_GET['search'] : "") ?>">Previous</a></li>
+                                                <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $jobPrevPage; ?><?= (isset($_GET['search']) ? "&search=" . $_GET['search'] : "") ?><?php if (isset($_GET['cat'])) {
+                                                                                                                                                                                                            foreach ($_GET['cat'] as $cat) {
+                                                                                                                                                                                                                echo "&cat[" . $cat . "]=" . $cat;
+                                                                                                                                                                                                            }
+                                                                                                                                                                                                        } else {
+                                                                                                                                                                                                            '';
+                                                                                                                                                                                                        } ?>">Previous</a></li>
                                             <?php } else { ?>
                                                 <li class="page-item disabled"><a class="page-link" href="">Previous</a></li>
                                             <?php } ?>
                                             <?php foreach (range($jobsPagination_rangeFirstNumber, $jobsPagination_rangeLastNumber) as $job_page_number) { ?>
                                                 <li class="page-item <?= ($job_current_page == $job_page_number ? "active" : "");  ?>">
-                                                    <a class="page-link" href="?jobpage=<?php echo $job_page_number ?><?= (isset($_GET['search']) ? "&search=" . $_GET['search'] : "") ?>"><?php echo $job_page_number ?></a>
+                                                    <a class="page-link" href="?jobpage=<?php echo $job_page_number ?><?= (isset($_GET['search']) ? "&search=" . $_GET['search'] : "") ?><?php if (isset($_GET['cat'])) {
+                                                                                                                                                                                                foreach ($_GET['cat'] as $cat) {
+                                                                                                                                                                                                    echo "&cat[" . $cat . "]=" . $cat;
+                                                                                                                                                                                                }
+                                                                                                                                                                                            } else {
+                                                                                                                                                                                                '';
+                                                                                                                                                                                            } ?>"><?php echo $job_page_number ?></a>
                                                 </li>
                                             <?php } ?>
 
                                             <?php if ($job_current_page < $job_total_pages) {
                                                 $jobNextPage = $job_current_page + 1;
                                             ?>
-                                                <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $jobNextPage ?><?= (isset($_GET['search']) ? "&search=" . $_GET['search'] : "") ?>">Next</a></li>
+                                                <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $jobNextPage ?><?= (isset($_GET['search']) ? "&search=" . $_GET['search'] : "") ?><?php if (isset($_GET['cat'])) {
+                                                                                                                                                                                                            foreach ($_GET['cat'] as $cat) {
+                                                                                                                                                                                                                echo "&cat[" . $cat . "]=" . $cat;
+                                                                                                                                                                                                            }
+                                                                                                                                                                                                        } else {
+                                                                                                                                                                                                            '';
+                                                                                                                                                                                                        } ?>">Next</a></li>
                                             <?php } else { ?>
                                                 <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
                                             <?php } ?>
