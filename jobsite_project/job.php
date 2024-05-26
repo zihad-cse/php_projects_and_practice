@@ -194,7 +194,7 @@ $jobPicFilePath = "uploads/job/" . $jobData['jindex'] . '.png';
                     <b>Contact Email: <?php echo $jobData['conemail'] ?></b>
                 </div>
                 <div class="col-4 text-end">
-                    <a href="#" class="btn btn-primary">Apply</a>
+                    <a href="php/apply.php?id=<?= $jobData['jindex'] ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" class="btn btn-primary">Apply</a>
                 </div>
             </div>
         </div>

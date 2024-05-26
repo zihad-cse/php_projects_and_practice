@@ -146,6 +146,12 @@ function pageination_alljobrows($pdo, $search = '')
         }
 
         $subQuery = rtrim($subQuery, 'OR ');
+        $workArea = '';
+        if (isset($_GET['area']) && !empty($_GET['area'])) {
+            $workArea = " AND job.workarea LIKE '%" . $_GET['area'] . "%'";
+        }
+        $subQuery = $subQuery . $workArea;
+
         $query = "SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1 $subQuery";
 
         if (isset($search) && !empty($search)) {
@@ -156,7 +162,7 @@ function pageination_alljobrows($pdo, $search = '')
                 $textSearchQuery = $textSearchQuery . "job.jobtitle LIKE '%" . $searchKey . "%' OR ";
             }
             $textSearchQuery = rtrim($textSearchQuery, 'OR ');
-            $query = "SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1 $subQuery AND $textSearchQuery";
+            echo $query = "SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1 $subQuery AND $textSearchQuery";
         }
         $stmt = $pdo->prepare($query);
         $stmt->execute();
@@ -168,6 +174,7 @@ function pageination_alljobrows($pdo, $search = '')
         return false;
     }
 }
+
 
 function pageination_alljobdetails($pdo, $initial_page, $limit, $search = "")
 {
@@ -184,6 +191,12 @@ function pageination_alljobdetails($pdo, $initial_page, $limit, $search = "")
         }
 
         $subQuery = rtrim($subQuery, 'OR ');
+        $workArea = '';
+        if (isset($_GET['area']) && !empty($_GET['area'])) {
+            $workArea = " AND job.workarea LIKE '%" . $_GET['area'] . "%'";
+        }
+        $subQuery = $subQuery . $workArea;
+
         $query = "SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1 $subQuery  LIMIT :limitnumber OFFSET :initialpage";
 
         if (isset($search) && !empty($search)) {
@@ -260,6 +273,22 @@ function pageination_allresumerows($pdo, $search = '')
 
         return $countjobrows;
     } catch (PDOException $e) {
+        error_log("Error: " . $e->getMessage());
+        return false;
+    }
+}
+
+function appliedJobs($pdo, $rindex, $jindex)
+{
+    try{
+        $query = "SELECT * FROM applications WHERE rindex = :rindex AND jindex = :jindex";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(':rindex', $rindex, PDO::PARAM_INT);
+        $stmt->bindParam(':jindex', $jindex, PDO::PARAM_INT);
+        $stmt->execute();
+        $appliedJob = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $appliedJob;
+    } catch (PDOException $e){
         error_log("Error: " . $e->getMessage());
         return false;
     }

@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function (){
 
     document.getElementById('registration').addEventListener('submit', function (event) {
         console.log('Form submitted');

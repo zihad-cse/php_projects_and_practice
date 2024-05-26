@@ -64,7 +64,7 @@ include 'php/resume_search_query.php';
                     <?php
                     $queryPath = 'resumes.php'
                     ?>
-                    <form action="<?= $queryPath; ?>" method="get">
+                    <form id="nav_search" action="<?= $queryPath; ?>" method="get">
                         <div class="input-group mb-3">
                             <input value="<?php if (isset($search)) {
                                                 echo $search;
@@ -74,20 +74,6 @@ include 'php/resume_search_query.php';
                     </form>
                 </div>
             </div>
-            <!--            
-            <div class="d-lg-none d-md-none d-sm-block d-block">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#search-modal">
-                    <i class="fa-solid fa-magnifying-glass">
-                </button>
-                <div class="modal fade" id="search-modal" tabindex="-1" aria-labelledby="search-modal-label" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div cl>
-
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
             <?php if (!isset($_SESSION['token']) && !isset($_SESSION['phnNumber'])) { ?>
                 <div>
                     <div class="dropdown">
@@ -132,6 +118,19 @@ include 'php/resume_search_query.php';
                                     <div class="col-12">
                                         <div class="container">
                                             <div class="">
+                                            <div class="dropdown">
+                                            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                                                <i class="fa-solid fa-filter"></i> Filter
+                                            </button>
+                                            <form action="" class="" method="get">
+                                                <div class="dropdown-menu">
+                                                    
+                                                    <div class="dropdown-divider"></div>
+                                                    <button type="submit" class="dropdown-item btn">Apply</button>
+
+                                                </div>
+                                            </form>
+                                        </div>
                                                 <div class="row">
                                                     <?php foreach ($allresumedetails as $row) {
                                                         $resume_img_src = "uploads/resumes/placeholder_pfp.svg";
@@ -288,10 +287,8 @@ include 'php/resume_search_query.php';
             window.location.href = '?jobpage=' + selectedPage;
         })
 
-        //Get the button
         let mybutton = document.getElementById("btn-back-to-top");
 
-        // When the user scrolls down 20px from the top of the document, show the button
         window.onscroll = function() {
             scrollFunction();
         };
@@ -306,7 +303,6 @@ include 'php/resume_search_query.php';
                 mybutton.style.display = "none";
             }
         }
-        // When the user clicks on the button, scroll to the top of the document
         mybutton.addEventListener("click", backToTop);
 
         function backToTop() {

@@ -12,7 +12,9 @@ include 'php/db_connection.php';
 session_start();
 
 include 'php/job_search_query.php';
-
+if (!empty($_GET['area-division']) == true) {
+    exit;
+}
 
 $jobAllRows =
     $jobCategories = getJobCategories($pdo);
@@ -135,10 +137,16 @@ $jobAllRows =
 
                                                         <div class=" p-2">
                                                             <label class="" for="<?= $jobcat['jcategory'] ?>">
-                                                                <input id="<?= $jobcat['jcategory'] ?>" name="cat[<?= $jobcat['jcatindex'] ?>]" value="<?= $jobcat['jcatindex'] ?>" <?= $isChecked ?> type="checkbox"><?= $jobcat['jcategory'] ?>
+                                                                <input class="form-check-input" id="<?= $jobcat['jcategory'] ?>" name="cat[<?= $jobcat['jcatindex'] ?>]" value="<?= $jobcat['jcatindex'] ?>" <?= $isChecked ?> type="checkbox"> <?= $jobcat['jcategory'] ?>
                                                             </label>
                                                         </div>
                                                     <?php } ?>
+                                                    <div class="dropdown-divider"></div>
+                                                    <h6 class="dropdown-header">Work Area</h6>
+                                                    <div class="p-2">
+                                                        <label for="area-division">Division</label>
+                                                        <input class="form-control" id="area-division" name="area" type="text">
+                                                    </div>
                                                     <div class="dropdown-divider"></div>
                                                     <button type="submit" class="dropdown-item btn">Apply</button>
 
@@ -242,7 +250,9 @@ $jobAllRows =
                                                                                                                                                                                                             }
                                                                                                                                                                                                         } else {
                                                                                                                                                                                                             '';
-                                                                                                                                                                                                        } ?>">Previous</a></li>
+                                                                                                                                                                                                        } ?><?php if (isset($_GET['area']) && !empty($_GET['area'])) {
+                                                                                                                                                                                                                echo "&area=" . $_GET['area'];
+                                                                                                                                                                                                            } ?>">Previous</a></li>
                                             <?php } else { ?>
                                                 <li class="page-item disabled"><a class="page-link" href="">Previous</a></li>
                                             <?php } ?>
@@ -254,7 +264,9 @@ $jobAllRows =
                                                                                                                                                                                                 }
                                                                                                                                                                                             } else {
                                                                                                                                                                                                 '';
-                                                                                                                                                                                            } ?>"><?php echo $job_page_number ?></a>
+                                                                                                                                                                                            } ?><?php if (isset($_GET['area']) && !empty($_GET['area'])) {
+                                                                                                                                                                                                    echo "&area=" . $_GET['area'];
+                                                                                                                                                                                                } ?>"><?php echo $job_page_number ?></a>
                                                 </li>
                                             <?php } ?>
 
@@ -267,7 +279,9 @@ $jobAllRows =
                                                                                                                                                                                                             }
                                                                                                                                                                                                         } else {
                                                                                                                                                                                                             '';
-                                                                                                                                                                                                        } ?>">Next</a></li>
+                                                                                                                                                                                                        } ?><?php if (isset($_GET['area']) && !empty($_GET['area'])) {
+                                                                                                                                                                                                                echo "&area=" . $_GET['area'];
+                                                                                                                                                                                                            } ?>">Next</a></li>
                                             <?php } else { ?>
                                                 <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
                                             <?php } ?>
