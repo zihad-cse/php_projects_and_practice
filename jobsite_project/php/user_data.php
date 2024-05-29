@@ -162,7 +162,7 @@ function pageination_alljobrows($pdo, $search = '')
                 $textSearchQuery = $textSearchQuery . "job.jobtitle LIKE '%" . $searchKey . "%' OR ";
             }
             $textSearchQuery = rtrim($textSearchQuery, 'OR ');
-            echo $query = "SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1 $subQuery AND $textSearchQuery";
+            $query = "SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1 $subQuery AND $textSearchQuery";
         }
         $stmt = $pdo->prepare($query);
         $stmt->execute();
@@ -216,6 +216,16 @@ function pageination_alljobdetails($pdo, $initial_page, $limit, $search = "")
         $stmt->bindParam(':limitnumber', $limit, PDO::PARAM_INT);
         $stmt->execute();
         $alljobdetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (!empty($alljobdetails)){
+            foreach ($alljobdetails as $row){
+                $currentDate = date("Y-m-d");
+                if($row['enddate'] < $currentDate){
+                    $updateSql = "UPDATE job SET visibility = 0 WHERE jindex =". $row['jindex'];
+                    $stmt = $pdo->prepare($updateSql);
+                    $stmt->execute();
+                }
+            }
+        }
         return $alljobdetails;
     } catch (PDOException $e) {
         error_log("Error: " . $e->getMessage());
@@ -293,3 +303,4 @@ function appliedJobs($pdo, $rindex, $jindex)
         return false;
     }
 }
+

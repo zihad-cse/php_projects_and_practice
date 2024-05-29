@@ -7,3 +7,4 @@ if (isset($_GET['search'])) {
 }
 include "pagination.php";
 
+$resumeNumber = $numberofresumes;

@@ -521,13 +521,13 @@ if (isset($_POST['upload-image'])) {
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                        <b>Display Resume Details</b>
+                                        <b>Active</b>
                                     </div>
                                     <div class="col-lg-6 col-md-12 col-sm-12 col-12">
                                         <div class="form-check">
                                             <input <?php if (isset($resumeData['visible'])) {
                                                         if ($resumeData['visible'] == 1) {
-                                                            echo "selected";
+                                                            echo "checked";
                                                         } else {
                                                             echo '';
                                                         }
@@ -535,6 +535,7 @@ if (isset($_POST['upload-image'])) {
                                         </div>
                                     </div>
                                 </div>
+                                <hr>
                                 <input type="submit" name="update" class="btn btn-primary" value="Update">
                             </form>
                         </div>

@@ -86,10 +86,9 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
                             </button>
                             <div class="collapse" id="dashboard-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
-                                    <li><a href="#" class="btn btn-secondary-outline">Overview</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">Weekly</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">Monthly</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">Annually</a></li>
+                                    <li><a href="#" class="btn btn-secondary-outline">Home</a></li>
+                                    <li><a href="#" class="btn btn-secondary-outline">Applications</a></li>
+                                    <li><a href="#" class="btn btn-secondary-outline">Invitation List</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -100,12 +99,11 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
                             <div class="collapse" id="orders-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
                                     <li><a href="job_post.php" class="btn btn-secondary-outline">New</a></li>
-                                    <li><a href="posted_jobs.php" class="btn btn-secondary-outline">Posted</a></li>
-
+                                    <li><a href="posted_jobs.php" class="btn btn-secondary-outline">Posted Jobs</a></li>
                                 </ul>
                             </div>
                         </li>
-                        <li class="border-top my-3"></li>
+
                         <li class="mb-1">
                             <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
                                 <i class="fa-solid fa-chevron-down pe-2"></i>Account
@@ -113,6 +111,19 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
                             <div class="collapse" id="account-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
                                     <li><a href="dashboard.php" class="btn btn-secondary-outline">Overview</a></li>
+                                    <li>
+                                        <div class="dropdown">
+                                            <a class="btn dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Edit
+                                            </a>
+
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="dashboard.php?edit">Edit Account Info</a></li>
+                                                <li><a class="dropdown-item" href="org_profile.php?edit">Edit Org Profile</a></li>
+                                                <li><a class="dropdown-item" href="resume_profile.php?edit">Edit Resume Profile</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
                                     <li>
                                         <form action="php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" method="post" class="btn btn-secondary-outline">
                                             <input class="btn p-0" type="submit" value="Log Out" id="#logout-button">
@@ -124,18 +135,24 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
                     </ul>
                 </div>
                 <div class="col-lg-10 col-md-12 col-sm-12 col-12 p-5" style="background-color: #ddd;">
-                    <h3>Posted Jobs</h3>
-                    <div class="row">
-                        <div class="col-2 d-sm-none d-md-block d-none d-lg-block">
-                            <b>Circular ID</b>
+                    <hr>
+                    <div class="row border">
+                        <div class="col-2">
+                            <h3>Posted Jobs</h3>
                         </div>
-                        <div class="col-2 d-sm-block d-md-none d-block d-lg-none">
+                        <div class="col-1 d-flex justify-content-center align-items-center">
+                            <a class="btn btn-primary" href="job_post.php"><i class="fa-solid fa-plus"></i></a>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-2">
                             <b>ID</b>
                         </div>
-                        <div class="col-6">
+                        <div class="col-4 col-lg-6 col-md-6 col-sm-4">
                             <b>Title</b>
                         </div>
-                        <div class="col-2">
+                        <div class="col-4 col-lg-2 col-md-2 col-sm-4">
                             <b>Deadline</b>
                         </div>
                         <div class="col-2">
@@ -162,7 +179,7 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
             </div>
         </div>
     </section>
-    <div id="footer" class="bg-dark text-light" >
+    <div id="footer" class="bg-dark text-light">
         <div class="container">
             <footer class="row py-5">
                 <div class="col-6">

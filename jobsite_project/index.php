@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <?php
@@ -21,6 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     }
 }
 
+if(isset($_SESSION['phnNumber']) && !empty($_SESSION['phnNumber'])){
+    $orgData = getUserData($pdo, $_SESSION['phnNumber']);
+    $_SESSION['orgIndex'] = $orgData['orgindex'];
+}
 
 
 ?>
@@ -63,6 +66,16 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             right: 20px;
             display: none;
         }
+
+        #clear-button {
+            background-color: #fff;
+            border-color: #fff;
+        }
+
+        #clear-button:hover {
+            background-color: #fff;
+            border-color: #fff;
+        }
     </style>
 </head>
 
@@ -100,24 +113,21 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     </nav>
     <section style="height: max-content;" id="header">
         <div style="background-image: url('img/vagaro-g6i6NlucLYc-unsplash.jpg'); background-size: cover; background-position: top;" class="row">
-            <div style="background-color: rgba(0, 0, 0, 0.75);" class="col-1"></div> 
+            <div style="background-color: rgba(0, 0, 0, 0.75);" class="col-1"></div>
             <div style="background-color: rgba(0, 0, 0, 0.5);" class="col-10">
                 <div class="container">
-                    <div style="background-color: rgba(0, 0, 0, 0.7);" class="border border-0 rounded m-4 p-4">
+                    <div style="background-color: rgba(0, 0, 0, 0.7);" class="border border-0 rounded my-4 p-4">
                         <div class="row">
-                            <div class="d-sm-none d-md-none d-lg-block d-none col-0 col-sm-0 col-md-0 col-lg-5">
-                                <img src="img/undraw_stars_re_6je7.svg" alt="">
-                            </div>
-                            <div class="col-lg-7 col-12 col-md-12 col-sm-12 d-flex justify-content-center align-items-center text-light">
+                            <div class="col-lg-12 col-12 col-md-12 col-sm-12 d-flex justify-content-center align-items-center text-light">
                                 <div class="p-md-3 p-sm-2 p-2 p-lg-5">
                                     <div class="row">
 
-                                        <div class="col-12 my-3">
+                                        <div class="col-lg-12 col-md-12 col-sm-0 col-0 d-lg-block d-md-block d-sm-none d-none my-3">
                                             <h3>Find your Next Job Now</h3>
                                             <b>Search among <?php echo $allJobsNumber ?> job listings and </b> </br> <b> <?php echo $allResumesNumber; ?> Potential employees!</b>
                                         </div>
 
-                                        <div class="col-10">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                                             <?php
                                             $queryPath = 'jobs.php';
                                             if (isset($_SESSION['search-filter'])) {
@@ -130,17 +140,13 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                             <form method="get" action="<?php echo $queryPath; ?>">
                                                 <div class="input-group">
                                                     <input id="search-field" type="search" name="search" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                                                    <input id="clear-button" class="btn btn-light" value="&times;" type="button">
                                                     <input onclick="if(document.getElementById('search-field').value.trim() === '') {event.preventDefault();}" type="submit" class="btn btn-outline-light" value="Search">
                                                 </div>
                                             </form>
                                         </div>
                                         <div class="row pt-3">
-                                            <div class="col-lg-2 col-0 col-md-0 col-sm-0">
-                                            </div>
-                                            <div class="col-lg-4 col-sm-4 col-md-4 col-4">
-                                                <p class="m-0 text-center pt-lg-2 pt-md-0 pt-sm-0 pt-0">Search among:</p>
-                                            </div>
-                                            <div class="pt-lg-2 pt-md-0 pt-sm-0 pt-0 col-lg-5 col-sm-8 col-md-8 col-8">
+                                            <div class="pt-lg-2 pt-md-0 pt-sm-0 pt-0 col-12">
                                                 <form method="post" id="search-filter" action="">
                                                     <div class="form-check form-check-inline">
                                                         <input class="form-check-input" type="radio" name="search-filter" <?php if (isset($_SESSION['search-filter'])) {
@@ -175,54 +181,58 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <button type="button" class="d-sm-none d-none d-md-block d-lg-block btn btn-primary btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>
         </button>
-        <div class="row">
-            <div class="col-lg-1 col-md-0 col-sm-0 col-0">
-            </div>
-            <div class="mb-5 col-lg-5 col-md-12 col-sm-12 col-12">
-                <div class="container">
-                    <div class="">
+        <div class="container">
+            <div class="row">
+                <div class="mb-5 col-lg-6 col-md-12 col-sm-12 col-12">
+                    <div class="container">
                         <div class="">
-                            <h2 class="text-center mb-5">Available Jobs</h2>
-                        </div>
-                        <div class="row">
-                            <?php foreach ($landingpage_allJobDetails as $row) {
-                                $job_img_src = "uploads/job/placeholder-company.png";
-                                if (file_exists("uploads/job/" . $row['jindex'] . ".png")) {
-                                    $job_img_src = "uploads/job/" . $row['jindex'] . ".png";
-                                }
-                            ?>
-                                <div class="container">
-                                    <div class="col-12">
-                                        <div id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start m-4 card text-decoration-none">
-                                            <div class="card-body">
-                                                <div class="row text-sm-center text-md-center text-lg-start text-center">
-                                                    <div class="col-lg-4 col-md-12 col-sm-12 col-12">
-                                                        <img class="img-fluid" style="max-height: 100px;" src="<?php echo $job_img_src ?>" alt="">
-                                                    </div>
-                                                    <div class="col-lg-8 col-md-12 col-sm-12 col-12">
-                                                        <div class="row">
-                                                            <div class="col-12">
-                                                                <b class="m-0 p-2"><?php echo $row['jobtitle']; ?> </b>
-                                                            </div>
+                            <div class="">
+                                <h2 class="text-center mb-5"><a class="text-decoration-none text-dark" href="jobs.php">Available Jobs</a></h2>
+                            </div>
+                            <div class="row">
+                                <?php foreach ($landingpage_allJobDetails as $row) {
+                                    $job_img_src = "uploads/job/placeholder-company.png";
+                                    if (file_exists("uploads/job/" . $row['jindex'] . ".png")) {
+                                        $job_img_src = "uploads/job/" . $row['jindex'] . ".png";
+                                    }
+                                ?>
+                                    <div class="container px-0">
+                                        <div class="col-12">
+                                            <div id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 190px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start my-4 card text-decoration-none">
+                                                <div class="card-body">
+                                                    <div class="row text-sm-center text-md-center text-lg-start text-center">
+                                                        <div class="col-lg-4 col-md-12 col-sm-12 col-12">
+                                                            <img class="img-fluid" style="max-height: 100px;" src="<?php echo $job_img_src ?>" alt="">
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-12">
-                                                                <div class="p-2">
-                                                                    <a href='jobs.php?cat[<?= $row['jobcategory']; ?>]=<?php echo $row['jobcategory']; ?>' class="m-0 btn btn-outline-dark btn-sm"><?php echo $row['categoryName']; ?> </a>
+                                                        <div class="col-lg-8 col-md-12 col-sm-12 col-12">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <b class="m-0 p-2"><?php echo $row['jobtitle']; ?> </b>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-12">
-                                                                <p class="m-0 p-2"><i class="fa-solid fa-dollar-sign"></i> <?php echo $row['salary']; ?> </p>
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <div class="p-2">
+                                                                        <?php if (strlen($row['dutyskilleduexp']) > 100) {
+                                                                            $maxLength = 99;
+                                                                            $row['dutyskilleduexp'] = substr($row['dutyskilleduexp'], 0, $maxLength);
+                                                                        } ?>
+                                                                        <p class="mb-0"><?= $row['dutyskilleduexp']; ?>...</p>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class=" row">
-                                                            <div class="col-6">
-                                                                <span class="p-2"><i class="fa-solid fa-location-dot"></i> <?= $row['workarea'] ?></span>
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <p class="m-0 p-2"><i class="fa-solid fa-dollar-sign"></i> <?php echo $row['salary']; ?> </p>
+                                                                </div>
                                                             </div>
-                                                            <div class="col-6">
-                                                                <b><i class="fa-solid fa-calendar-day"></i> <?= $row['enddate'] ?></b>
+                                                            <div class=" row">
+                                                                <div class="col-6">
+                                                                    <span class="p-2"><i class="fa-solid fa-location-dot"></i> <?= $row['workarea'] ?></span>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <b><i class="fa-solid fa-calendar-day"></i> <?= $row['enddate'] ?></b>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -230,79 +240,61 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            <?php } ?>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-0 col-md-4 col-sm-4 col-4">
-
-                            </div>
-                            <a class="col-lg-12 col-md-4 col-sm-4 col-4 btn btn-outline-dark" href="jobs.php">
-                                <p class="m-0 p-sm-1 p-md-1 p-lg-4 p-1">View all</p>
-                            </a>
-                            <div class="col-lg-0 col-md-4 col-sm-4 col-4">
-
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="mb-5 col-lg-5 col-md-12 col-sm-12 col-12">
-                <div class="container">
-                    <div class="">
+                <div class="mb-5 col-lg-6 col-md-12 col-sm-12 col-12">
+                    <div class="container">
                         <div class="">
-                            <h2 class="text-center mb-5">Available Resumes</h2>
-                        </div>
-                        <div class="row">
-                            <?php foreach ($allresumedetails as $row) {
-                                $resume_img_src = "uploads/resumes/placeholder_pfp.svg";
-                                if (file_exists("uploads/resumes/" . $row['rindex'] . ".png")) {
-                                    $resume_img_src = "uploads/resumes/" . $row['rindex'] . ".png";
-                                }
-                            ?>
-                                <div class="container">
-                                    <div class="col-12">
-                                        <a href="resume.php?view&id=<?php echo $row['rindex'] ?>" id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" class="card text-decoration-none text-start m-4">
-                                            <div class="card-body">
-                                                <div class="row text-center text-sm-center text-lg-start text-md-center">
-                                                    <div class="col-12 col-sm-12 col-md-12 col-lg-3">
-                                                        <img class="img-fluid" style="max-height: 100px;" src="<?php echo $resume_img_src; ?>" alt="">
-                                                    </div>
-                                                    <div class="col-12 col-sm-12 col-md-12 col-lg-9">
-                                                        <div class="row py-2 py-sm-2 py-md-2 py-lg-1">
-                                                            <div class="col-12">
-                                                                <b><?php echo $row['fullname']; ?> </b>
-                                                            </div>
+                            <div class="">
+                                <h2 class="text-center mb-5"><a class="text-decoration-none text-dark" href="resumes.php">Available Resumes</a></h2>
+                            </div>
+                            <div class="row">
+                                <?php foreach ($allresumedetails as $row) {
+                                    $resume_img_src = "uploads/resumes/placeholder_pfp.svg";
+                                    if (file_exists("uploads/resumes/" . $row['rindex'] . ".png")) {
+                                        $resume_img_src = "uploads/resumes/" . $row['rindex'] . ".png";
+                                    }
+                                ?>
+                                    <div class="container px-0">
+                                        <div class="col-12">
+                                            <a href="resume.php?view&id=<?php echo $row['rindex'] ?>" id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 190px;" class="card text-decoration-none text-start my-4">
+                                                <div class="card-body">
+                                                    <div class="row text-center text-sm-center text-lg-start text-md-center">
+                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-3">
+                                                            <img class="img-fluid" style="max-height: 100px;" src="<?php echo $resume_img_src; ?>" alt="">
                                                         </div>
-                                                        <div class="row py-2 py-sm-2 py-md-2 py-lg-1">
-                                                            <div class="col-12">
-                                                                <b><i class="fa-solid fa-cake-candles"></i> <?php echo $row['dateofbirth']; ?> </b>
+                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-9">
+                                                            <div class="row py-2 py-sm-2 py-md-2 py-lg-1">
+                                                                <div class="col-12">
+                                                                    <b><?php echo $row['fullname']; ?> </b>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="row py-2 py-sm-2 py-md-2 py-lg-1">
-                                                            <div class="col-12">
-                                                                <p><?php echo $row['skilleduexp']; ?></p>
+                                                            <div class="row py-2 py-sm-2 py-md-2 py-lg-1">
+                                                                <div class="col-12">
+                                                                    <b><i class="fa-solid fa-cake-candles"></i> <?php echo $row['dateofbirth']; ?> </b>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row py-2 py-sm-2 py-md-2 py-lg-1">
+                                                            <?php if (strlen($row['skilleduexp']) > 100) {
+                                                                            $maxLength = 99;
+                                                                            $row['skilleduexp'] = substr($row['skilleduexp'], 0, $maxLength);
+                                                                        } ?>
+                                                                        <p class="mb-0"><?= $row['skilleduexp']; ?>...</p>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </a>
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
-                            <?php } ?>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-0 col-md-4 col-sm-4 col-4"></div>
-                            <a class="col-lg-12 col-md-4 col-sm-4 col-4 btn btn-outline-dark" href="resumes.php">
-                                <p class="m-0 p-sm-1 p-md-1 p-lg-4 p-1">View all</p>
-                            </a>
-                            <div class="col-lg-0 col-md-4 col-sm-4 col-4"></div>
+                                <?php } ?>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-1 col-md-0 col-sm-0 col-0">
             </div>
         </div>
     </section>
@@ -354,6 +346,17 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
         }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var clearButton = document.getElementById('clear-button');
+            var searchField = document.getElementById('search-field');
+
+            clearButton.addEventListener('click', function() {
+                searchField.value = '';
+                searchField.focus();
+            });
+        });
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

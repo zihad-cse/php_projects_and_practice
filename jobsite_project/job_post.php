@@ -163,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </ul>
                 </div>
                 <div class="col-lg-10 col-md-12 col-sm-12 col-12 p-5" style="min-height: 1000px; background-color: #ddd;">
-                    <h4 class="mb-3">Post A Circular</h4>
+                    <h4 class="mb-3">Post A Job</h4>
                     <hr>
                     <form method="post" id="job-post">
                         <div style="display: none;" id="error-message-box" class="row my-4">

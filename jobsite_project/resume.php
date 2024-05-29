@@ -18,6 +18,35 @@ if (isset($_GET['id'])) {
     exit;
 }
 $resumeData = getResumeDataGuest($pdo, $rindex);
+if (isset($_POST['update']) && !empty($_POST['update'])) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $fullname = $_POST['fullname'];
+        $homeaddress = $_POST['homeaddress'];
+        $birtharea = $_POST['birtharea'];
+        $religion = $_POST['religion'];
+        $skilleduexp = $_POST['skilleduexp'];
+        $dateofbirth = $_POST['dateofbirth'];
+        $visible = isset($_POST['visible']) ? 1 : 0;
+        $orgindex = $_SESSION['orgIndex'];
+
+        try {
+            $sql = "UPDATE resumes SET fullname = :fullname, homeaddress = :homeaddress, birtharea = :birtharea, religion = :religion, skilleduexp = :skilleduexp, dateofbirth = :dateofbirth, visible = :visible WHERE orgindex = :orgindex";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':fullname', $fullname, PDO::PARAM_STR);
+            $stmt->bindParam(':homeaddress', $homeaddress, PDO::PARAM_STR);
+            $stmt->bindParam(':birtharea', $birtharea, PDO::PARAM_STR);
+            $stmt->bindParam(':religion', $religion, PDO::PARAM_STR);
+            $stmt->bindParam(':skilleduexp', $skilleduexp, PDO::PARAM_STR);
+            $stmt->bindParam(':dateofbirth', $dateofbirth, PDO::PARAM_STR);
+            $stmt->bindParam(':visible', $visible, PDO::PARAM_INT);
+            $stmt->bindParam(':orgindex', $orgindex, PDO::PARAM_STR);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
+}
+
 ?>
 
 <head>
@@ -68,6 +97,7 @@ $resumeData = getResumeDataGuest($pdo, $rindex);
                 <form action="<?= $queryPath; ?>" method="get">
                     <div class="input-group mb-3">
                         <input name="search" id="search-field" type="search" class="form-control border-dark" placeholder="Search Resumes" aria-label="Recipient's username" aria-describedby="search-button">
+                        <input id="clear-button" class="btn btn-outline-dark" value="&times;" type="button">
                         <button name="search-submit" value="Search" class="btn btn-outline-dark" type="submit" id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </div>
                 </form>
@@ -102,99 +132,117 @@ $resumeData = getResumeDataGuest($pdo, $rindex);
             <?php } ?>
             </dv>
     </nav>
-    <section class="bg-dark" id="dashboard-main-content">
-        <h2 class="text-center text-light">Template</h2>
-        <div class="bg-light p-lg-5 p-md-4 p-sm-3 p-3 container">
-            <div class="row p-3">
-                <div class="col-10">
-                    <div class="row">
-                        <h2><?= $resumeData['fullname'] ?></h2>
+    <section style="min-height: 100vh;" id="dashboard-main-content">
+        <?php if (!isset($_GET['edit'])) { ?>
+            <div class="bg-light px-lg-0 px-md-0 px-sm-0 px-0 p-lg-5 p-md-4 p-sm-3 p-3 container">
+                <div class="row p-3">
+                    <div class="col-10">
+                        <div class="row">
+                            <h2 class="mb-4"><?= $resumeData['fullname'] ?></h2>
+                            <b>Current Address: <br></b>
+                            <p><?= $resumeData['homeaddress'] ?></p>
+                            <b>Permanent Address: <br></b>
+                            <p><?= $resumeData['birtharea'] ?></p>
+                        </div>
+                        <div class="row">
+                            <b>Date of Birth: <br> </b>
+                            <p><?= $resumeData['dateofbirth'] ?></p>
+                            <b>Religion: <br></b>
+                            <p><?= $resumeData['religion']; ?></p>
+                        </div>
+                    </div>
+                    <div class=" col-lg-2 col-md-2 col-sm-12 col-12">
+                        <?php $filePath = "uploads/resumes/" . $rindex . ".png";
+                        if (file_exists($filePath)) { ?>
+                            <button class="btn">
+                                <img class="img-thumbnail img-normal" src="uploads/resumes/<?php echo $rindex ?>.png" alt="">
+                            </button>
+                        <?php } else { ?>
+                            <img class="img-thumbnail img-normal" src="uploads/resumes/placeholder_pfp.svg" alt="">
+                        <?php } ?>
                     </div>
                 </div>
-                <div class=" col-lg-2 col-md-2 col-sm-12 col-12">
-                    <?php $filePath = "uploads/resumes/" . $rindex . ".png";
-                    if (file_exists($filePath)) { ?>
-                        <img class="img-thumbnail img-normal" src="uploads/resumes/<?php echo $rindex ?>.png" alt="">
-                    <?php } else { ?>
-                        <img class="img-thumbnail img-normal" src="uploads/resumes/placeholder_pfp.svg" alt="">
-                    <?php } ?>
+                <div class="row p-3">
+                    <b class="col-12">Availability: <?php if ($resumeData['visible'] == 1) { ?>Active<?php } else { ?> Inactive <?php } ?></b>
                 </div>
+                <div class="row p-3">
+                    <h4 class="text-decoration-underline">Skills/Experiences</h4>
+                    <p><?= $resumeData['skilleduexp']; ?></p>
+                </div>
+                <div class="border border-top border-dark mb-5"></div>
+                <?php if ($resumeData['orgindex'] == $_SESSION['orgIndex']) { ?>
+                    <div class="text-end">
+                        <a href="?view&id=<?= $resumeData['rindex']; ?>&edit" class="btn btn-primary">Edit</a>
+                    </div>
+                <?php } else { ?>
+                    <div class="text-end">
+                        <a href="#" class="btn btn-primary">Invite</a>
+
+                    </div>
+                <?php } ?>
             </div>
-            <div class="row p-3">
-                <b class="col-12">Availability</b>
-            </div>
-            <div class="row p-3">
-                <div class="col-12">
-                    <h4>Skills</h4>
-                    <h5>Education</h5>
-                    <p>Diploma in Mechanical Engineering from any reputed institution.</p>
+        <?php } else if (isset($_GET['edit'])) { ?>
+            <form action="" method="post">
+                <div class="bg-light px-lg-0 px-md-0 px-sm-0 px-0 p-lg-5 p-md-4 p-sm-3 p-3 container">
+                    <div class="row p-3">
+                        <div class="col-10">
+                            <div class="row">
+                                <label for="fullname">Full Name</label>
+                                <input name="fullname" class="form-control-lg mb-4" type="text" value="<?= isset($resumeData['fullname']) == 1 ?  $resumeData['fullname'] : ''; ?>">
+                                <label for="homeaddress">Current Address</label>
+                                <input id="homeaddress" name="homeaddress" type="text" class="form-control" value="<?= $resumeData['homeaddress'] ?>">
+                                <label for="birtharea">Permanent Address</label>
+                                <input id="birtharea" name="birtharea" class="form-control" type="text" value="<?= isset($resumeData['birtharea']) == 1 ?  $resumeData['birtharea'] : ''; ?>">
+                            </div>
+                            <div class="row">
+                                <label for="dateofbirth">Date of Birth</label>
+                                <input id="dateofbirth" name="dateofbirth" class="form-control" type="date" value=<?= isset($resumeData['dateofbirth']) == 1 ?  $resumeData['dateofbirth'] : ''; ?>>
+                                <label for="religion">Religion</label>
+                                <input id="religion" name="religion" class="form-control" type="text" value="<?= isset($resumeData['religion']) == 1 ?  $resumeData['religion'] : ''; ?>">
+                            </div>
+                        </div>
+                        <div class=" col-lg-2 col-md-2 col-sm-12 col-12">
+                            <?php $filePath = "uploads/resumes/" . $rindex . ".png";
+                            if (file_exists($filePath)) { ?>
+                                <button class="btn">
+                                    <img class="img-thumbnail img-normal" src="uploads/resumes/<?php echo $rindex ?>.png" alt="">
+                                </button>
+                            <?php } else { ?>
+                                <img class="img-thumbnail img-normal" src="uploads/resumes/placeholder_pfp.svg" alt="">
+                            <?php } ?>
+                        </div>
+                    </div>
+                    <div class="row p-3">
+                        <label for="visible">Availability</label>
+                        <div class="form-check">
+                            <input <?php if (isset($resumeData['visible'])) {
+                                        if ($resumeData['visible'] == 1) {
+                                            echo "checked";
+                                        } else {
+                                            echo '';
+                                        }
+                                    } ?> class="form-check-input" type="checkbox" value="1" name="visible" id="visible">
+                        </div>
+                    </div>
+                    <div class="row p-3">
+                        <label for="skilleduexp">
+                            <h4>Skills/Experiences</h4>
+                        </label>
+                        <textarea class="mt-3 medium-textarea form-control" style="resize: none;" name="skilleduexp" id="skilleduexp" cols="30" rows="10"><?= isset($resumeData['skilleduexp']) == 1 ?  $resumeData['skilleduexp'] : ''; ?></textarea>
+                    </div>
+                    <div class="row p-3">
+                        <div class="border border-top border-dark"></div>
 
-                    <li>The applicants should have experience in the following business area(s):</li>
-                    <ul>
-                        <li>Manufacturing (Light Engineering and Heavy Industry)</li>
-                        <li>Electronic Equipment/Home Appliances</li>
-                        <li>Research Organization</li>
-                    </ul>
-                    </ul>
+                        <div class="col-6">
 
-                    <h5>Additional Requirements</h5>
-                    <ul>
-                        <li>Age 22 to 30 years</li>
-                        <li>Experience in Injection Mold and Die-casting-related work will be preferred.</li>
-                        <li>Should have experience in Sheet metal, die and mold-related work.</li>
-                        <li>Should have a good understanding of BOM.</li>
-                        <li>Should have good communication Skills.</li>
-                    </ul>
-
-                    <h4>Responsibilities & Context</h4>
-                    <ul>
-                        <li>Upload and Maintain BOM of Kitchen appliance products (iron, cookware, gas stove etc.)</li>
-                        <li>Lab testing and report making; jig, fixture making of iron, cookware, gas stove etc.</li>
-                        <li>Mold & Die trial of Iron, Cookware, Gas Stove etc.</li>
-                        <li>Product prototype preparation.</li>
-                        <li>Manage & distribute all work among technicians.</li>
-                        <li>Software (Oracle/EBS) related work assigned by supervisor.</li>
-                        <li>Day-to-day tasks assigned by Supervisor.</li>
-                    </ul>
-
-                    <h4>Skills & Expertise</h4>
-
-
-                    <h4>Compensation & Other Benefits</h4>
-                    <ul>
-                        <li>Mobile bill, Provident fund, Profit share, Insurance</li>
-                        <li>Lunch Facilities: Partially Subsidized</li>
-                        <li>Salary Review: Yearly</li>
-                        <li>Festival Bonus: 2</li>
-                        <li>As per company policy.</li>
-                    </ul>
-
-                    <h4>Employment Status</h4>
-                    <p>Full Time</p>
-
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <input name="update" type="submit" value="Update" class="btn btn-primary">
+                    </div>
                 </div>
-            </div>
-            <div class="row p-3">
-                <div class="border border-top border-dark"></div>
-                <div class="col-6">
-                    <h4><?php $resumeData['homeaddress'] ?></h4>
-                </div>
-                <div class="col-6">
-                    <h4><?php $resumeData['birtharea'] ?></h4>
-                </div>
-            </div>
-            <div class="row p-3">
-                <div class="col-4">
-                    <b>Contact Phone</b>
-                </div>
-                <div class="col-4">
-                    <b>Contact Email</b>
-                </div>
-                <div class="col-4 text-end">
-                    <a href="#" class="btn btn-primary">Invite</a>
-                </div>
-            </div>
-        </div>
+            </form>
+        <?php } ?>
     </section>
     <div id="footer" class="bg-dark text-light">
         <div class="container">
@@ -212,6 +260,17 @@ $resumeData = getResumeDataGuest($pdo, $rindex);
             </footer>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var clearButton = document.getElementById('clear-button');
+            var searchField = document.getElementById('search-field');
+
+            clearButton.addEventListener('click', function() {
+                searchField.value = '';
+                searchField.focus();
+            });
+        });
+    </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

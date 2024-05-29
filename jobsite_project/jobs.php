@@ -16,8 +16,13 @@ if (!empty($_GET['area-division']) == true) {
     exit;
 }
 
-$jobAllRows =
-    $jobCategories = getJobCategories($pdo);
+$jobAllRows = $jobCategories = getJobCategories($pdo);
+
+if ($jobNumber <= 10) {
+    $pag_invis = true;
+} else {
+    $pag_invis = false;
+}
 ?>
 
 <head>
@@ -54,13 +59,21 @@ $jobAllRows =
             right: 20px;
             display: none;
         }
+
+        #secondary-nav {
+            top: 55px;
+        }
+
+        #primary-nav {
+            top: 0px;
+        }
     </style>
     <title>All Jobs</title>
 </head>
 
 <body class="bg-light">
-    <nav class="navbar p-3 bg-light sticky-top">
-        <div class="container">
+    <nav id="primary-nav" class="navbar p-3 bg-light sticky-top">
+        <div class="container d-flex justify-content-between">
             <a class="navbar-brand" href="index.php">
                 <img src="img/logoipsum-248.svg" alt="">
             </a>
@@ -73,12 +86,10 @@ $jobAllRows =
                         <input value="<?php if (isset($search)) {
                                             echo $search;
                                         } ?>" name="search" id="search-field" type="search" class="form-control border-dark" placeholder="Search Job Listings" aria-label="Job Listing Search Bar" aria-describedby="search-button">
+                        <input id="clear-button" class="btn btn-outline-dark" value="&times;" type="button">
                         <button name="search-submit" value="Search" class="btn btn-outline-dark" type="submit" id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </div>
                 </form>
-            </div>
-            <div class="d-lg-none d-md-none d-sm-block d-block btn btn-primary">
-                <i class="fa-solid fa-magnifying-glass"></i>
             </div>
             <?php if (!isset($_SESSION['token']) && !isset($_SESSION['phnNumber'])) { ?>
                 <div>
@@ -107,6 +118,21 @@ $jobAllRows =
             <?php } ?>
         </div>
     </nav>
+    <nav id="secondary-nav" class="d-block d-lg-none d-md-none d-sm-block navbar sticky-top p-3 bg-light">
+        <div class="container d-flex justify-content-center">
+            <?php
+            $queryPath = 'jobs.php'
+            ?>
+            <form action="<?= $queryPath; ?>" method="get">
+                <div class="input-group mb-3">
+                    <input value="<?php if (isset($search)) {
+                                        echo $search;
+                                    } ?>" name="search" id="search-field" type="search" class="form-control border-dark" placeholder="Search Job Listings" aria-label="Job Listing Search Bar" aria-describedby="search-button">
+                    <button name="search-submit" value="Search" class="btn btn-outline-dark" type="submit" id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </form>
+        </div>
+    </nav>
     <section id="dashboard-main-content">
         <button type="button" class="btn btn-primary btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>
@@ -118,54 +144,49 @@ $jobAllRows =
                         <div class="container">
 
                             <div class="">
-                                <div class="row">
-                                    <div class="col-4">
-                                        <div class="dropdown">
-                                            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-                                                <i class="fa-solid fa-filter"></i> Filter
-                                            </button>
-                                            <form action="" class="" method="get">
-                                                <div class="dropdown-menu">
-                                                    <h6 class="dropdown-header">Category</h6>
-                                                    <?php foreach ($jobCategories as $jobcat) {
-                                                        $isChecked = "";
-                                                        if (isset($_GET['cat']) && !empty($_GET['cat'])) {
-                                                            if (isset($_GET['cat'][$jobcat['jcatindex']]) && !empty($_GET['cat'][$jobcat['jcatindex']])) {
-                                                                $isChecked = "checked";
-                                                            }
-                                                        } ?>
+                                <div class="mb-5">
+                                    <div class="text-center">
+                                        <h2>Available Jobs</h2>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <div class="dropdown">
+                                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                                            <i class="fa-solid fa-filter"></i> Filter
+                                        </button>
+                                        <form action="" class="" method="get">
+                                            <div class="dropdown-menu">
+                                                <h6 class="dropdown-header">Category</h6>
+                                                <?php foreach ($jobCategories as $jobcat) {
+                                                    $isChecked = "";
+                                                    if (isset($_GET['cat']) && !empty($_GET['cat'])) {
+                                                        if (isset($_GET['cat'][$jobcat['jcatindex']]) && !empty($_GET['cat'][$jobcat['jcatindex']])) {
+                                                            $isChecked = "checked";
+                                                        }
+                                                    } ?>
 
-                                                        <div class=" p-2">
-                                                            <label class="" for="<?= $jobcat['jcategory'] ?>">
-                                                                <input class="form-check-input" id="<?= $jobcat['jcategory'] ?>" name="cat[<?= $jobcat['jcatindex'] ?>]" value="<?= $jobcat['jcatindex'] ?>" <?= $isChecked ?> type="checkbox"> <?= $jobcat['jcategory'] ?>
-                                                            </label>
-                                                        </div>
-                                                    <?php } ?>
-                                                    <div class="dropdown-divider"></div>
-                                                    <h6 class="dropdown-header">Work Area</h6>
-                                                    <div class="p-2">
-                                                        <label for="area-division">Division</label>
-                                                        <input class="form-control" id="area-division" name="area" type="text">
+                                                    <div class=" p-2">
+                                                        <label class="" for="<?= $jobcat['jcategory'] ?>">
+                                                            <input class="form-check-input" id="<?= $jobcat['jcategory'] ?>" name="cat[<?= $jobcat['jcatindex'] ?>]" value="<?= $jobcat['jcatindex'] ?>" <?= $isChecked ?> type="checkbox"> <?= $jobcat['jcategory'] ?>
+                                                        </label>
                                                     </div>
-                                                    <div class="dropdown-divider"></div>
-                                                    <button type="submit" class="dropdown-item btn">Apply</button>
-
+                                                <?php } ?>
+                                                <div class="dropdown-divider"></div>
+                                                <h6 class="dropdown-header">Work Area</h6>
+                                                <div class="p-2">
+                                                    <label for="area-division">Division</label>
+                                                    <input class="form-control" id="area-division" name="area" type="text">
                                                 </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <h2 class="text-center mb-5">Available Jobs</h2>
-                                    </div>
-                                    <div class="col-4">
+                                                <div class="dropdown-divider"></div>
+                                                <button type="submit" class="dropdown-item btn">Apply</button>
 
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-0">
-                                    </div>
                                     <div class="col-12">
-                                        <div class="container">
+                                        <div class="px-0 container">
                                             <div class="">
                                                 <div class="row">
 
@@ -177,8 +198,8 @@ $jobAllRows =
                                                             }
                                                     ?>
                                                             <div class="container">
-                                                                <div class="col-12">
-                                                                    <div id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start m-4 card text-decoration-none">
+                                                                <div class="col-12 mx-0">
+                                                                    <div id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start my-4 mx-0 card text-decoration-none">
                                                                         <div class="card-body">
                                                                             <div class="row text-sm-center text-md-center text-lg-start text-center">
                                                                                 <div class="col-lg-4 col-md-12 col-sm-12 col-12">
@@ -193,7 +214,11 @@ $jobAllRows =
                                                                                     <div class="row">
                                                                                         <div class="col-12">
                                                                                             <div class="p-2">
-                                                                                                <a href="?cat[<?= $row['jobcategory'] ?>]=<?= $row['jobcategory'] ?>" class="m-0 btn btn-outline-dark btn-sm"><?php echo $row['categoryName']; ?> </a>
+                                                                                                <?php if (strlen($row['dutyskilleduexp']) > 100) {
+                                                                                                    $maxLength = 99;
+                                                                                                    $row['dutyskilleduexp'] = substr($row['dutyskilleduexp'], 0, $maxLength);
+                                                                                                } ?>
+                                                                                                <p class="mb-0"><?= $row['dutyskilleduexp']; ?>...</p>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -220,7 +245,7 @@ $jobAllRows =
                                                     } else { ?>
 
                                                         <div class="text-center">
-                                                            <b>None Found, Apply another filter</b>
+                                                            <b>None Found</b>
                                                         </div>
 
                                                     <?php } ?>
@@ -228,101 +253,103 @@ $jobAllRows =
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-0">
-                                    </div>
                                 </div>
-                                <div class="d-lg-block d-md-block d-sm-none d-none">
-                                    <nav aria-label="Page navigation">
-                                        <ul class="pagination mt-3 justify-content-center">
-                                            <form method="post">
-                                                <select onchange="this.form.submit()" class="form-select bg-primary text-light" name="jobs-pagination-limit" id="">
-                                                    <option <?= ($_SESSION["jobs-pagination-limit"] == 10 ? "selected" : "") ?> value="10">10</option>
-                                                    <option <?= ($_SESSION["jobs-pagination-limit"] == 20 ? "selected" : "") ?> value="20">20</option>
-                                                    <option <?= ($_SESSION["jobs-pagination-limit"] == 50 ? "selected" : "") ?> value="50">50</option>
-                                                </select>
-                                            </form>
-                                            <?php if ($job_current_page > 1) {
-                                                $jobPrevPage = $job_current_page - 1;
-                                            ?>
-                                                <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $jobPrevPage; ?><?= (isset($_GET['search']) ? "&search=" . $_GET['search'] : "") ?><?php if (isset($_GET['cat'])) {
-                                                                                                                                                                                                            foreach ($_GET['cat'] as $cat) {
-                                                                                                                                                                                                                echo "&cat[" . $cat . "]=" . $cat;
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                        } else {
-                                                                                                                                                                                                            '';
-                                                                                                                                                                                                        } ?><?php if (isset($_GET['area']) && !empty($_GET['area'])) {
-                                                                                                                                                                                                                echo "&area=" . $_GET['area'];
-                                                                                                                                                                                                            } ?>">Previous</a></li>
-                                            <?php } else { ?>
-                                                <li class="page-item disabled"><a class="page-link" href="">Previous</a></li>
-                                            <?php } ?>
-                                            <?php foreach (range($jobsPagination_rangeFirstNumber, $jobsPagination_rangeLastNumber) as $job_page_number) { ?>
-                                                <li class="page-item <?= ($job_current_page == $job_page_number ? "active" : "");  ?>">
-                                                    <a class="page-link" href="?jobpage=<?php echo $job_page_number ?><?= (isset($_GET['search']) ? "&search=" . $_GET['search'] : "") ?><?php if (isset($_GET['cat'])) {
-                                                                                                                                                                                                foreach ($_GET['cat'] as $cat) {
-                                                                                                                                                                                                    echo "&cat[" . $cat . "]=" . $cat;
-                                                                                                                                                                                                }
-                                                                                                                                                                                            } else {
-                                                                                                                                                                                                '';
-                                                                                                                                                                                            } ?><?php if (isset($_GET['area']) && !empty($_GET['area'])) {
-                                                                                                                                                                                                    echo "&area=" . $_GET['area'];
-                                                                                                                                                                                                } ?>"><?php echo $job_page_number ?></a>
-                                                </li>
-                                            <?php } ?>
+                                <?php if ($pag_invis == false) { ?>
+                                    <div class="d-lg-block d-md-block d-sm-none d-none">
+                                        <nav aria-label="Page navigation">
+                                            <ul class="pagination mt-3 justify-content-center">
+                                                <form method="post">
+                                                    <select onchange="this.form.submit()" class="form-select bg-primary text-light" name="jobs-pagination-limit" id="">
+                                                        <option <?= ($_SESSION["jobs-pagination-limit"] == 10 ? "selected" : "") ?> value="10">10</option>
+                                                        <option <?= ($_SESSION["jobs-pagination-limit"] == 20 ? "selected" : "") ?> value="20">20</option>
+                                                        <option <?= ($_SESSION["jobs-pagination-limit"] == 50 ? "selected" : "") ?> value="50">50</option>
+                                                    </select>
+                                                </form>
+                                                <?php if ($job_current_page > 1) {
+                                                    $jobPrevPage = $job_current_page - 1;
+                                                ?>
+                                                    <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $jobPrevPage; ?><?= (isset($_GET['search']) ? "&search=" . $_GET['search'] : "") ?><?php if (isset($_GET['cat'])) {
+                                                                                                                                                                                                                foreach ($_GET['cat'] as $cat) {
+                                                                                                                                                                                                                    echo "&cat[" . $cat . "]=" . $cat;
+                                                                                                                                                                                                                }
+                                                                                                                                                                                                            } else {
+                                                                                                                                                                                                                '';
+                                                                                                                                                                                                            } ?><?php if (isset($_GET['area']) && !empty($_GET['area'])) {
+                                                                                                                                                                                                                    echo "&area=" . $_GET['area'];
+                                                                                                                                                                                                                } ?>">Previous</a></li>
+                                                <?php } else { ?>
+                                                    <li class="page-item disabled"><a class="page-link" href="">Previous</a></li>
+                                                <?php } ?>
+                                                <?php foreach (range($jobsPagination_rangeFirstNumber, $jobsPagination_rangeLastNumber) as $job_page_number) { ?>
+                                                    <li class="page-item <?= ($job_current_page == $job_page_number ? "active" : "");  ?>">
+                                                        <a class="page-link" href="?jobpage=<?php echo $job_page_number ?><?= (isset($_GET['search']) ? "&search=" . $_GET['search'] : "") ?><?php if (isset($_GET['cat'])) {
+                                                                                                                                                                                                    foreach ($_GET['cat'] as $cat) {
+                                                                                                                                                                                                        echo "&cat[" . $cat . "]=" . $cat;
+                                                                                                                                                                                                    }
+                                                                                                                                                                                                } else {
+                                                                                                                                                                                                    '';
+                                                                                                                                                                                                } ?><?php if (isset($_GET['area']) && !empty($_GET['area'])) {
+                                                                                                                                                                                                        echo "&area=" . $_GET['area'];
+                                                                                                                                                                                                    } ?>"><?php echo $job_page_number ?></a>
+                                                    </li>
+                                                <?php } ?>
 
-                                            <?php if ($job_current_page < $job_total_pages) {
-                                                $jobNextPage = $job_current_page + 1;
-                                            ?>
-                                                <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $jobNextPage ?><?= (isset($_GET['search']) ? "&search=" . $_GET['search'] : "") ?><?php if (isset($_GET['cat'])) {
-                                                                                                                                                                                                            foreach ($_GET['cat'] as $cat) {
-                                                                                                                                                                                                                echo "&cat[" . $cat . "]=" . $cat;
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                        } else {
-                                                                                                                                                                                                            '';
-                                                                                                                                                                                                        } ?><?php if (isset($_GET['area']) && !empty($_GET['area'])) {
-                                                                                                                                                                                                                echo "&area=" . $_GET['area'];
-                                                                                                                                                                                                            } ?>">Next</a></li>
-                                            <?php } else { ?>
-                                                <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
-                                            <?php } ?>
-                                        </ul>
-                                    </nav>
-                                </div>
-                                <div class="my-3 d-lg-none d-md-none d-sm-block d-block">
-                                    <div class="row">
-                                        <div class="col-1"></div>
-                                        <div class="col-10">
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <form method="post">
-                                                        <select onchange="this.form.submit()" class="form-select bg-primary text-light" name="jobs-pagination-limit" id="">
-                                                            <option <?= ($_SESSION["jobs-pagination-limit"] == 10 ? "selected" : "") ?> value="10">10</option>
-                                                            <option <?= ($_SESSION["jobs-pagination-limit"] == 20 ? "selected" : "") ?> value="20">20</option>
-                                                            <option <?= ($_SESSION["jobs-pagination-limit"] == 50 ? "selected" : "") ?> value="50">50</option>
-                                                        </select>
-                                                    </form>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="input-group">
-                                                        <label for="pageSelect" class="input-group-text">Page</label>
-                                                        <select class="p-2 form-select" name="" id="pageSelect">
-                                                            <?php foreach (range($jobsPagination_rangeFirstNumber, $jobsPagination_rangeLastNumber) as $job_page_number) { ?>
-                                                                <option <?php if (isset($_GET['jobpage'])) {
-                                                                            if ($_GET['jobpage'] == $job_page_number) {
-                                                                                echo 'selected';
-                                                                            } else {
-                                                                                echo '';
-                                                                            }
-                                                                        } ?> value="<?= $job_page_number; ?>"><?= $job_page_number; ?></option>
-                                                            <?php } ?>
-                                                        </select>
+                                                <?php if ($job_current_page < $job_total_pages) {
+                                                    $jobNextPage = $job_current_page + 1;
+                                                ?>
+                                                    <li class="page-item"><a class="page-link" href="?jobpage=<?php echo $jobNextPage ?><?= (isset($_GET['search']) ? "&search=" . $_GET['search'] : "") ?><?php if (isset($_GET['cat'])) {
+                                                                                                                                                                                                                foreach ($_GET['cat'] as $cat) {
+                                                                                                                                                                                                                    echo "&cat[" . $cat . "]=" . $cat;
+                                                                                                                                                                                                                }
+                                                                                                                                                                                                            } else {
+                                                                                                                                                                                                                '';
+                                                                                                                                                                                                            } ?><?php if (isset($_GET['area']) && !empty($_GET['area'])) {
+                                                                                                                                                                                                                    echo "&area=" . $_GET['area'];
+                                                                                                                                                                                                                } ?>">Next</a></li>
+                                                <?php } else { ?>
+                                                    <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
+                                                <?php } ?>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                    <div class="my-3 d-lg-none d-md-none d-sm-block d-block">
+                                        <div class="row">
+                                            <div class="col-1"></div>
+                                            <div class="col-10">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <form method="post">
+                                                            <select onchange="this.form.submit()" class="form-select bg-primary text-light" name="jobs-pagination-limit" id="">
+                                                                <option <?= ($_SESSION["jobs-pagination-limit"] == 10 ? "selected" : "") ?> value="10">10</option>
+                                                                <option <?= ($_SESSION["jobs-pagination-limit"] == 20 ? "selected" : "") ?> value="20">20</option>
+                                                                <option <?= ($_SESSION["jobs-pagination-limit"] == 50 ? "selected" : "") ?> value="50">50</option>
+                                                            </select>
+                                                        </form>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="input-group">
+                                                            <label for="pageSelect" class="input-group-text">Page</label>
+                                                            <select class="p-2 form-select" name="" id="pageSelect">
+                                                                <?php foreach (range($jobsPagination_rangeFirstNumber, $jobsPagination_rangeLastNumber) as $job_page_number) { ?>
+                                                                    <option <?php if (isset($_GET['jobpage'])) {
+                                                                                if ($_GET['jobpage'] == $job_page_number) {
+                                                                                    echo 'selected';
+                                                                                } else {
+                                                                                    echo '';
+                                                                                }
+                                                                            } ?> value="<?= $job_page_number; ?>"><?= $job_page_number; ?></option>
+                                                                <?php } ?>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-1"></div>
                                         </div>
-                                        <div class="col-1"></div>
                                     </div>
-                                </div>
+                                <?php } else if ($pag_invis == true) {
+                                    echo '';
+                                } ?>
                             </div>
                         </div>
                     </div>
@@ -378,6 +405,17 @@ $jobAllRows =
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
         }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var clearButton = document.getElementById('clear-button');
+            var searchField = document.getElementById('search-field');
+
+            clearButton.addEventListener('click', function() {
+                searchField.value = '';
+                searchField.focus();
+            });
+        });
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

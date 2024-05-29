@@ -71,6 +71,7 @@ $jobPicFilePath = "uploads/job/" . $jobData['jindex'] . '.png';
                 <form action="<?= $queryPath; ?>" method="get">
                     <div class="input-group mb-3">
                         <input name="search" id="search-field" type="search" class="form-control border-dark" placeholder="Search Job Listings" aria-label="Job Listing Search Bar" aria-describedby="search-button">
+                        <input id="clear-button" class="btn btn-outline-dark" value="&times;" type="button">
                         <button name="search-submit" value="Search" class="btn btn-outline-dark" type="submit" id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </div>
                 </form>
@@ -105,8 +106,7 @@ $jobPicFilePath = "uploads/job/" . $jobData['jindex'] . '.png';
             <?php } ?>
         </div>
     </nav>
-    <section class="bg-dark" id="dashboard-main-content">
-        <h2 class="text-center text-light">Template</h2>
+    <section style="min-height: 100vh;" class="" id="dashboard-main-content">
         <div class="bg-light p-lg-5 p-md-4 p-sm-3 p-3 container">
             <div class="row p-3">
                 <div class="col-10">
@@ -128,63 +128,15 @@ $jobPicFilePath = "uploads/job/" . $jobData['jindex'] . '.png';
             <div class="row p-3">
                 <b class="col-12">Deadline: <?php echo $jobData['enddate'] ?></b>
             </div>
-            <div class="row p-3">
-                <div class="col-12">
-                    <h4>Requirements</h4>
-                    <h5>Education</h5>
-                    <p>Diploma in Mechanical Engineering from any reputed institution.</p>
-
-                    <li>The applicants should have experience in the following business area(s):</li>
-                    <ul>
-                        <li>Manufacturing (Light Engineering and Heavy Industry)</li>
-                        <li>Electronic Equipment/Home Appliances</li>
-                        <li>Research Organization</li>
-                    </ul>
-                    </ul>
-
-                    <h5>Additional Requirements</h5>
-                    <ul>
-                        <li>Age 22 to 30 years</li>
-                        <li>Experience in Injection Mold and Die-casting-related work will be preferred.</li>
-                        <li>Should have experience in Sheet metal, die and mold-related work.</li>
-                        <li>Should have a good understanding of BOM.</li>
-                        <li>Should have good communication Skills.</li>
-                    </ul>
-
-                    <h4>Responsibilities & Context</h4>
-                    <ul>
-                        <li>Upload and Maintain BOM of Kitchen appliance products (iron, cookware, gas stove etc.)</li>
-                        <li>Lab testing and report making; jig, fixture making of iron, cookware, gas stove etc.</li>
-                        <li>Mold & Die trial of Iron, Cookware, Gas Stove etc.</li>
-                        <li>Product prototype preparation.</li>
-                        <li>Manage & distribute all work among technicians.</li>
-                        <li>Software (Oracle/EBS) related work assigned by supervisor.</li>
-                        <li>Day-to-day tasks assigned by Supervisor.</li>
-                    </ul>
-
-                    <h4>Skills & Expertise</h4>
-
-
-                    <h4>Compensation & Other Benefits</h4>
-                    <ul>
-                        <li>Mobile bill, Provident fund, Profit share, Insurance</li>
-                        <li>Lunch Facilities: Partially Subsidized</li>
-                        <li>Salary Review: Yearly</li>
-                        <li>Festival Bonus: 2</li>
-                        <li>As per company policy.</li>
-                    </ul>
-
-                    <h4>Employment Status</h4>
-                    <p>Full Time</p>
-
-                </div>
+            <div>
+                <h3>Responsibilities</h3>
+                <p><?= $jobData['dutyskilleduexp'] ?></p>
             </div>
             <div class="row p-3">
                 <div class="border border-top border-dark"></div>
-                <h4></h4>
             </div>
             <div class="row p-3">
-                <h4>Salary: <?php echo $jobData['salary'] ?> BDT</h4>
+                <h4>Salary: <?php echo $jobData['salary'] ?></h4>
             </div>
             <div class="row p-3">
                 <div class="col-4">
@@ -215,6 +167,17 @@ $jobPicFilePath = "uploads/job/" . $jobData['jindex'] . '.png';
             </footer>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var clearButton = document.getElementById('clear-button');
+            var searchField = document.getElementById('search-field');
+
+            clearButton.addEventListener('click', function() {
+                searchField.value = '';
+                searchField.focus();
+            });
+        });
+    </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

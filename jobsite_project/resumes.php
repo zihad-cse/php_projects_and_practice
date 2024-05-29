@@ -14,6 +14,13 @@ session_start();
 include 'php/pagination.php';
 include 'php/resume_search_query.php';
 
+
+
+if ($resumeNumber <= 10) {
+    $pag_invis = true;
+} else {
+    $pag_invis = false;
+}
 ?>
 
 <head>
@@ -49,12 +56,20 @@ include 'php/resume_search_query.php';
             right: 20px;
             display: none;
         }
+
+        #secondary-nav {
+            top: 55px;
+        }
+
+        #primary-nav {
+            top: 0px;
+        }
     </style>
     <title>All Resumes</title>
 </head>
 
 <body class="bg-light">
-    <nav class="navbar p-3 bg-light sticky-top">
+    <nav id="primary-nav" class="navbar p-3 bg-light sticky-top">
         <div class="container">
             <a class="navbar-brand" href="index.php">
                 <img src="img/logoipsum-248.svg" alt="">
@@ -69,6 +84,7 @@ include 'php/resume_search_query.php';
                             <input value="<?php if (isset($search)) {
                                                 echo $search;
                                             } ?>" name="search" id="search-field" type="search" class="form-control border-dark" placeholder="Search Resumes" aria-label="Recipient's username" aria-describedby="search-button">
+                            <input id="clear-button" class="btn btn-outline-dark" value="&times;" type="button">
                             <button name="search-submit" value="Search" class="btn btn-outline-dark" type="submit" id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
                         </div>
                     </form>
@@ -101,6 +117,21 @@ include 'php/resume_search_query.php';
             <?php } ?>
         </div>
     </nav>
+    <nav id="secondary-nav" class="d-block d-lg-none d-md-none d-sm-block navbar sticky-top p-3 bg-light">
+        <div class="container d-flex justify-content-center">
+            <?php
+            $queryPath = 'jobs.php'
+            ?>
+            <form action="<?= $queryPath; ?>" method="get">
+                <div class="input-group mb-3">
+                    <input value="<?php if (isset($search)) {
+                                        echo $search;
+                                    } ?>" name="search" id="search-field" type="search" class="form-control border-dark" placeholder="Search Job Listings" aria-label="Job Listing Search Bar" aria-describedby="search-button">
+                    <button name="search-submit" value="Search" class="btn btn-outline-dark" type="submit" id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </form>
+        </div>
+    </nav>
     <section id="dashboard-main-content">
         <button type="button" class="btn btn-primary btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>
@@ -116,21 +147,21 @@ include 'php/resume_search_query.php';
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="container">
+                                        <div class="container px-0 ">
                                             <div class="">
-                                            <div class="dropdown">
-                                            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-                                                <i class="fa-solid fa-filter"></i> Filter
-                                            </button>
-                                            <form action="" class="" method="get">
-                                                <div class="dropdown-menu">
-                                                    
-                                                    <div class="dropdown-divider"></div>
-                                                    <button type="submit" class="dropdown-item btn">Apply</button>
+                                                <div class="text-end dropdown">
+                                                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                                                        <i class="fa-solid fa-filter"></i> Filter
+                                                    </button>
+                                                    <form action="" class="" method="get">
+                                                        <div class="dropdown-menu">
 
+                                                            <div class="dropdown-divider"></div>
+                                                            <button type="submit" class="dropdown-item btn">Apply</button>
+
+                                                        </div>
+                                                    </form>
                                                 </div>
-                                            </form>
-                                        </div>
                                                 <div class="row">
                                                     <?php foreach ($allresumedetails as $row) {
                                                         $resume_img_src = "uploads/resumes/placeholder_pfp.svg";
@@ -140,7 +171,7 @@ include 'php/resume_search_query.php';
                                                     ?>
                                                         <div class="container">
                                                             <div class="col-12">
-                                                                <a id="landing-page-mouse-hover-card" style="max-height: 400px;" href="resume.php?view&id=<?php echo $row['rindex'] ?>" class="text-start m-4 card text-decoration-none">
+                                                                <a id="landing-page-mouse-hover-card" style="max-height: 400px;" href="resume.php?view&id=<?php echo $row['rindex'] ?>" class="text-start my-4 mx-0 card text-decoration-none">
                                                                     <div class="card-body">
                                                                         <div class="row text-lg-start text-md-start text-sm-center text-center">
                                                                             <div class="col-lg-4 col-md-4 col-sm-12 col-12">
@@ -185,79 +216,83 @@ include 'php/resume_search_query.php';
                                         </div>
                                     </div>
                                 </div>
-                                <div class="d-lg-block d-md-block d-sm-none d-none">
-                                    <nav aria-label="Page navigation">
-                                        <ul class="pagination mt-3 justify-content-center">
-                                            <form method="post">
-                                                <select onchange="this.form.submit()" class="form-select bg-primary text-light" name="resumes-pagination-limit" id="">
-                                                    <option <?= ($_SESSION["resumes-pagination-limit"] == 10 ? "selected" : "") ?> value="10">10</option>
-                                                    <option <?= ($_SESSION["resumes-pagination-limit"] == 20 ? "selected" : "") ?> value="20">20</option>
-                                                    <option <?= ($_SESSION["resumes-pagination-limit"] == 50 ? "selected" : "") ?> value="50">50</option>
-                                                </select>
-                                            </form>
-                                            <?php if ($resume_current_page > 1) {
-                                                $resumePrevPage = $resume_current_page - 1;
-                                            ?>
-                                                <li class="page-item"><a class="page-link" href="?resumepage=<?php echo $resumePrevPage; ?><?php if (isset($_GET['search']) && isset($_GET['search-submit'])) { ?>&search=<?= $_GET['search'] ?>&search-submit=<?= $_GET['search-submit'];
-                                                                                                                                                                                                                                                            } ?>">Previous</a></li>
-                                            <?php } else { ?>
-                                                <li class="page-item disabled"><a class="page-link" href="">Previous</a></li>
-                                            <?php } ?>
-                                            <?php foreach (range($resumePagination_rangeFirstNumber, $resumePagination_rangeLastNumber) as $resume_page_number) { ?>
-                                                <li class="page-item <?= ($resume_current_page == $resume_page_number ? "active" : "");  ?>">
-                                                    <a class="page-link" href="?resumepage=<?php echo $resume_page_number ?><?php if (isset($_GET['search']) && isset($_GET['search-submit'])) { ?>&search=<?= $_GET['search'] ?>&search-submit=<?= $_GET['search-submit'];
-                                                                                                                                                                                                                                            } ?>"><?php echo $resume_page_number ?></a>
-                                                </li>
-                                            <?php } ?>
+                                <?php if ($pag_invis == false) { ?>
+                                    <div class="d-lg-block d-md-block d-sm-none d-none">
+                                        <nav aria-label="Page navigation">
+                                            <ul class="pagination mt-3 justify-content-center">
+                                                <form method="post">
+                                                    <select onchange="this.form.submit()" class="form-select bg-primary text-light" name="resumes-pagination-limit" id="">
+                                                        <option <?= ($_SESSION["resumes-pagination-limit"] == 10 ? "selected" : "") ?> value="10">10</option>
+                                                        <option <?= ($_SESSION["resumes-pagination-limit"] == 20 ? "selected" : "") ?> value="20">20</option>
+                                                        <option <?= ($_SESSION["resumes-pagination-limit"] == 50 ? "selected" : "") ?> value="50">50</option>
+                                                    </select>
+                                                </form>
+                                                <?php if ($resume_current_page > 1) {
+                                                    $resumePrevPage = $resume_current_page - 1;
+                                                ?>
+                                                    <li class="page-item"><a class="page-link" href="?resumepage=<?php echo $resumePrevPage; ?><?php if (isset($_GET['search']) && isset($_GET['search-submit'])) { ?>&search=<?= $_GET['search'] ?>&search-submit=<?= $_GET['search-submit'];
+                                                                                                                                                                                                                                                                } ?>">Previous</a></li>
+                                                <?php } else { ?>
+                                                    <li class="page-item disabled"><a class="page-link" href="">Previous</a></li>
+                                                <?php } ?>
+                                                <?php foreach (range($resumePagination_rangeFirstNumber, $resumePagination_rangeLastNumber) as $resume_page_number) { ?>
+                                                    <li class="page-item <?= ($resume_current_page == $resume_page_number ? "active" : "");  ?>">
+                                                        <a class="page-link" href="?resumepage=<?php echo $resume_page_number ?><?php if (isset($_GET['search']) && isset($_GET['search-submit'])) { ?>&search=<?= $_GET['search'] ?>&search-submit=<?= $_GET['search-submit'];
+                                                                                                                                                                                                                                                } ?>"><?php echo $resume_page_number ?></a>
+                                                    </li>
+                                                <?php } ?>
 
-                                            <?php if ($resume_current_page < $resume_total_pages) {
-                                                $resumeNextPage = $resume_current_page + 1;
-                                            ?>
-                                                <li class="page-item"><a class="page-link" href="?resumepage=<?php echo $resumeNextPage ?><?php if (isset($_GET['search']) && isset($_GET['search-submit'])) { ?>&search=<?= $_GET['search'];
-                                                                                                                                                                                                                    } ?>&search-submit=<?= $_GET['search-submit'] ?>">Next</a></li>
-                                            <?php } else { ?>
-                                                <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
-                                            <?php } ?>
-                                        </ul>
-                                    </nav>
-                                </div>
-                                <div class="my-3 d-lg-none d-md-none d-sm-block d-block">
-                                    <div class="row">
-                                        <div class="col-1"></div>
-                                        <div class="col-10">
-                                            <div class="row">
-                                                <div class="col-6 ">
-                                                    <form method="post">
-                                                        <div class="col-6">
-                                                            <select onchange="this.form.submit()" class="form-select bg-primary text-light" name="resumes-pagination-limit" id="pageLimit">
-                                                                <option <?= ($_SESSION["resumes-pagination-limit"] == 10 ? "selected" : "") ?> value="10">10 Per Page</option>
-                                                                <option <?= ($_SESSION["resumes-pagination-limit"] == 20 ? "selected" : "") ?> value="20">20 Per Page</option>
-                                                                <option <?= ($_SESSION["resumes-pagination-limit"] == 50 ? "selected" : "") ?> value="50">50 Per Page</option>
+                                                <?php if ($resume_current_page < $resume_total_pages) {
+                                                    $resumeNextPage = $resume_current_page + 1;
+                                                ?>
+                                                    <li class="page-item"><a class="page-link" href="?resumepage=<?php echo $resumeNextPage ?><?php if (isset($_GET['search']) && isset($_GET['search-submit'])) { ?>&search=<?= $_GET['search'];
+                                                                                                                                                                                                                            } ?>&search-submit=<?= $_GET['search-submit'] ?>">Next</a></li>
+                                                <?php } else { ?>
+                                                    <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
+                                                <?php } ?>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                    <div class="my-3 d-lg-none d-md-none d-sm-block d-block">
+                                        <div class="row">
+                                            <div class="col-1"></div>
+                                            <div class="col-10">
+                                                <div class="row">
+                                                    <div class="col-6 ">
+                                                        <form method="post">
+                                                            <div class="col-6">
+                                                                <select onchange="this.form.submit()" class="form-select bg-primary text-light" name="resumes-pagination-limit" id="pageLimit">
+                                                                    <option <?= ($_SESSION["resumes-pagination-limit"] == 10 ? "selected" : "") ?> value="10">10 Per Page</option>
+                                                                    <option <?= ($_SESSION["resumes-pagination-limit"] == 20 ? "selected" : "") ?> value="20">20 Per Page</option>
+                                                                    <option <?= ($_SESSION["resumes-pagination-limit"] == 50 ? "selected" : "") ?> value="50">50 Per Page</option>
+                                                                </select>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="input-group">
+                                                            <label for="pageSelect" class="input-group-text">Page</label>
+                                                            <select class="p-2 form-select" name="" id="pageSelect">
+                                                                <?php foreach (range($resumePagination_rangeFirstNumber, $resumePagination_rangeLastNumber) as $resume_page_number) { ?>
+                                                                    <option <?php if (isset($_GET['resumepage'])) {
+                                                                                if ($_GET['resumepage'] == $resume_page_number) {
+                                                                                    echo 'selected';
+                                                                                } else {
+                                                                                    echo '';
+                                                                                }
+                                                                            } ?> value="<?= $resume_page_number; ?>"><?= $resume_page_number; ?></option>
+                                                                <?php } ?>
                                                             </select>
                                                         </div>
-                                                    </form>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="input-group">
-                                                        <label for="pageSelect" class="input-group-text">Page</label>
-                                                        <select class="p-2 form-select" name="" id="pageSelect">
-                                                            <?php foreach (range($resumePagination_rangeFirstNumber, $resumePagination_rangeLastNumber) as $resume_page_number) { ?>
-                                                                <option <?php if (isset($_GET['resumepage'])) {
-                                                                            if ($_GET['resumepage'] == $resume_page_number) {
-                                                                                echo 'selected';
-                                                                            } else {
-                                                                                echo '';
-                                                                            }
-                                                                        } ?> value="<?= $resume_page_number; ?>"><?= $resume_page_number; ?></option>
-                                                            <?php } ?>
-                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-1"></div>
                                         </div>
-                                        <div class="col-1"></div>
                                     </div>
-                                </div>
+                                <?php } else if ($pag_invis == true) {
+                                    echo '';
+                                } ?>
                             </div>
                         </div>
                     </div>
@@ -309,6 +344,17 @@ include 'php/resume_search_query.php';
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
         }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var clearButton = document.getElementById('clear-button');
+            var searchField = document.getElementById('search-field');
+
+            clearButton.addEventListener('click', function() {
+                searchField.value = '';
+                searchField.focus();
+            });
+        });
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
