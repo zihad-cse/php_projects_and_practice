@@ -70,7 +70,7 @@ if ($resumeData == true) {
             $stmt->execute();
 
             if ($stmt->execute()) {
-                header("Location: dashboard.php");
+                header("Location: resume_profile.php");
             }
         } catch (PDOException $e) {
             echo 'Error: ' . $e->getMessage();
@@ -105,7 +105,7 @@ if ($resumeData == true) {
             $stmt->execute();
 
             if ($stmt->execute()) {
-                header("Location: dashboard.php");
+                header("Location: resume_profile.php");
             }
         } catch (PDOException $e) {
             echo 'Error: ' . $e->getMessage();
@@ -119,40 +119,31 @@ if (isset($resumeData['rindex']) && !empty($resumeData['rindex'])) {
 
 if (isset($_POST['upload-image'])) {
     if (isset($_FILES['imgUpload']['name']) && !empty($_FILES['imgUpload']['name'])) {
-        // echo "Start";
         $target_dir = "uploads/resumes/";
         $imgName = $resumeData['rindex'] . ".png";
         $target_file = $target_dir . $imgName;
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-        //Check if file is image
         if (isset($_POST["upload-image"])) {
-            // echo '<pre>';
-            // var_dump($_FILES["imgUpload"]);
             $check = getimagesize($_FILES["imgUpload"]["tmp_name"]);
             if ($check !== false) {
-                // echo "File is an Image - " . $check["mime"] . ".";
                 $uploadOk = 1;
             } else {
                 echo "File is not an image. ";
-                // var_dump($_POST['img-upload']);
                 $uploadOk = 0;
             }
         }
 
-        // Same File existance check
         if (file_exists($target_file)) {
             unlink($target_file);
         }
 
-        // File size check
         if ($_FILES["imgUpload"]["size"] > 500000000) {
             echo "Sorry, your file is too large.";
             $uploadOk = 0;
         }
 
-        //Allowing only a few formats
         if (
             $imageFileType != "png"
         ) {
@@ -164,7 +155,6 @@ if (isset($_POST['upload-image'])) {
             echo "Sorry, your file was not uploaded.";
         } else {
             if (move_uploaded_file($_FILES["imgUpload"]["tmp_name"], $target_file)) {
-                // echo "Image Uploaded";
             }
         }
     }
@@ -180,6 +170,7 @@ if (isset($_POST['upload-image'])) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="css/account_dashboard.css">
+    <script src="js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
     <style>
         #logout-button:hover {
             color: #dc3545;
@@ -505,7 +496,7 @@ if (isset($_POST['upload-image'])) {
                                     </div>
                                     <div class="col-lg-6 col-md-12 col-sm-12 col-12">
                                         <div>
-                                            <input name="birtharea" class="form-control" type="text" value="<?= isset($resumeData['birtharea']) == 1 ?  $resumeData['birtharea'] : ''; ?>">
+                                            <textarea class="small-textarea form-control" name="birtharea" id="birtharea"><?= isset($resumeData['birtharea']) == 1 ?  $resumeData['birtharea'] : ''; ?></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -513,9 +504,14 @@ if (isset($_POST['upload-image'])) {
                                     <div class="col-lg-3 col-md-12 col-sm-12 col-12">
                                         <b>Skills</b>
                                     </div>
+                                    <script>
+                                        tinymce.init({
+                                            selector: 'textarea.rte'
+                                        });
+                                    </script>
                                     <div class="col-lg-6 col-md-12 col-sm-12 col-12">
                                         <div>
-                                            <textarea class="mt-3 medium-textarea form-control" style="resize: none;" name="skilleduexp" id="skilleduexp" cols="30" rows="10"><?= isset($resumeData['skilledexp']) == 1 ?  $resumeData['skilledexp'] : ''; ?></textarea>
+                                            <textarea class="rte mt-3 medium-textarea form-control" style="resize: none;" name="skilleduexp" id="skilleduexp" cols="30" rows="10"><?= isset($resumeData['skilleduexp']) == 1 ?  $resumeData['skilleduexp'] : ''; ?></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -541,7 +537,7 @@ if (isset($_POST['upload-image'])) {
                         </div>
                     <?php } else { ?>
                         <div>
-                            <a href="?edit" class="btn btn-primary">Edit</a>
+                            <a href="resume.php?view&id=<?= $resumeData['rindex']; ?>&edit" class="btn btn-primary">Edit</a>
                         </div>
                     <?php } ?>
                 </div>

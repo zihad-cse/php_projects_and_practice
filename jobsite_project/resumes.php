@@ -201,7 +201,11 @@ if ($resumeNumber <= 10) {
                                                                                         <b>Skills</b>
                                                                                     </div>
                                                                                     <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-                                                                                        <p><?php echo $row['skilleduexp']; ?></p>
+                                                                                        <?php if (strlen($row['skilleduexp']) > 100) {
+                                                                                            $maxLength = 99;
+                                                                                            $row['skilleduexp'] = substr($row['skilleduexp'], 0, $maxLength);
+                                                                                        } ?>
+                                                                                        <p class="mb-0"><?= $row['skilleduexp']; ?>...</p>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -246,7 +250,7 @@ if ($resumeNumber <= 10) {
                                                     $resumeNextPage = $resume_current_page + 1;
                                                 ?>
                                                     <li class="page-item"><a class="page-link" href="?resumepage=<?php echo $resumeNextPage ?><?php if (isset($_GET['search']) && isset($_GET['search-submit'])) { ?>&search=<?= $_GET['search'];
-                                                                                                                                                                                                                            } ?>&search-submit=<?= $_GET['search-submit'] ?>">Next</a></li>
+                                                                                                                                                                                                                             ?>&search-submit=<?= $_GET['search-submit']; }?>">Next</a></li>
                                                 <?php } else { ?>
                                                     <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
                                                 <?php } ?>

@@ -56,7 +56,7 @@ function getResumeDataGuest($pdo, $rindex)
 function getAllPostedJobs($pdo, $orgIndex)
 {
     try {
-        $stmt = $pdo->prepare("SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE orgindex = :orgIndex");
+        $stmt = $pdo->prepare("SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE orgindex = :orgIndex  ORDER BY `job`.`jindex` DESC");
         $stmt->bindParam(':orgIndex', $orgIndex, PDO::PARAM_STR);
         $stmt->execute();
         $allJobs = $stmt->fetchAll(PDO::FETCH_ASSOC);

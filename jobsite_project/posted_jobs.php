@@ -141,7 +141,7 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
                             <h3>Posted Jobs</h3>
                         </div>
                         <div class="col-1 d-flex justify-content-center align-items-center">
-                            <a class="btn btn-primary" href="job_post.php"><i class="fa-solid fa-plus"></i></a>
+                            <a class="btn btn-primary" href="job.php?new-post"><i class="fa-solid fa-plus"></i></a>
                         </div>
                     </div>
                     <hr>

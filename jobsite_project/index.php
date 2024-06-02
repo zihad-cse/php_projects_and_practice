@@ -198,7 +198,7 @@ if(isset($_SESSION['phnNumber']) && !empty($_SESSION['phnNumber'])){
                                 ?>
                                     <div class="container px-0">
                                         <div class="col-12">
-                                            <div id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 190px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start my-4 card text-decoration-none">
+                                            <div id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 220px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start my-4 card text-decoration-none">
                                                 <div class="card-body">
                                                     <div class="row text-sm-center text-md-center text-lg-start text-center">
                                                         <div class="col-lg-4 col-md-12 col-sm-12 col-12">
@@ -260,7 +260,7 @@ if(isset($_SESSION['phnNumber']) && !empty($_SESSION['phnNumber'])){
                                 ?>
                                     <div class="container px-0">
                                         <div class="col-12">
-                                            <a href="resume.php?view&id=<?php echo $row['rindex'] ?>" id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 190px;" class="card text-decoration-none text-start my-4">
+                                            <a href="resume.php?view&id=<?php echo $row['rindex'] ?>" id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 220px;" class="card text-decoration-none text-start my-4">
                                                 <div class="card-body">
                                                     <div class="row text-center text-sm-center text-lg-start text-md-center">
                                                         <div class="col-12 col-sm-12 col-md-12 col-lg-3">

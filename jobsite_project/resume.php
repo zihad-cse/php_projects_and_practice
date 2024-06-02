@@ -41,6 +41,9 @@ if (isset($_POST['update']) && !empty($_POST['update'])) {
             $stmt->bindParam(':visible', $visible, PDO::PARAM_INT);
             $stmt->bindParam(':orgindex', $orgindex, PDO::PARAM_STR);
             $stmt->execute();
+            if ($stmt->execute()) {
+                header("location: ?view&id=" . $rindex);
+            }
         } catch (PDOException $e) {
             echo 'Error: ' . $e->getMessage();
         }
@@ -56,6 +59,7 @@ if (isset($_POST['update']) && !empty($_POST['update'])) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="css/account_dashboard.css">
+    <script src="js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
     <style>
         #logout-button:hover {
             color: #dc3545;
@@ -186,13 +190,19 @@ if (isset($_POST['update']) && !empty($_POST['update'])) {
                 <div class="bg-light px-lg-0 px-md-0 px-sm-0 px-0 p-lg-5 p-md-4 p-sm-3 p-3 container">
                     <div class="row p-3">
                         <div class="col-10">
+                            <script>
+                                tinymce.init({
+                                    selector: 'textarea.rte'
+                                });
+                            </script>
                             <div class="row">
+
                                 <label for="fullname">Full Name</label>
                                 <input name="fullname" class="form-control-lg mb-4" type="text" value="<?= isset($resumeData['fullname']) == 1 ?  $resumeData['fullname'] : ''; ?>">
                                 <label for="homeaddress">Current Address</label>
-                                <input id="homeaddress" name="homeaddress" type="text" class="form-control" value="<?= $resumeData['homeaddress'] ?>">
+                                <textarea class="form-control mt-3 small-textarea" style="resize: none;" name="homeaddress" id="homeaddress" cols="30" rows="10"><?= isset($resumeData['homeaddress']) == 1 ?  $resumeData['homeaddress'] : ''; ?></textarea>
                                 <label for="birtharea">Permanent Address</label>
-                                <input id="birtharea" name="birtharea" class="form-control" type="text" value="<?= isset($resumeData['birtharea']) == 1 ?  $resumeData['birtharea'] : ''; ?>">
+                                <textarea class="form-control mt-3 small-textarea" style="resize: none;" name="birtharea" id="birtharea" cols="30" rows="10"><?= isset($resumeData['birtharea']) == 1 ?  $resumeData['birtharea'] : ''; ?></textarea>
                             </div>
                             <div class="row">
                                 <label for="dateofbirth">Date of Birth</label>
@@ -225,10 +235,11 @@ if (isset($_POST['update']) && !empty($_POST['update'])) {
                         </div>
                     </div>
                     <div class="row p-3">
+
                         <label for="skilleduexp">
                             <h4>Skills/Experiences</h4>
                         </label>
-                        <textarea class="mt-3 medium-textarea form-control" style="resize: none;" name="skilleduexp" id="skilleduexp" cols="30" rows="10"><?= isset($resumeData['skilleduexp']) == 1 ?  $resumeData['skilleduexp'] : ''; ?></textarea>
+                        <textarea class="rte mt-3 medium-textarea" style="resize: none;" name="skilleduexp" id="skilleduexp" cols="30" rows="10"><?= isset($resumeData['skilleduexp']) == 1 ?  $resumeData['skilleduexp'] : ''; ?></textarea>
                     </div>
                     <div class="row p-3">
                         <div class="border border-top border-dark"></div>

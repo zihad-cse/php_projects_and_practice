@@ -44,10 +44,6 @@ if (isset($_SESSION['phnNumber'])) {
             color: #dc3545;
         }
 
-        .small-textarea {
-            height: 100px;
-            resize: none;
-        }
     </style>
     <title>Dashboard</title>
 </head>
