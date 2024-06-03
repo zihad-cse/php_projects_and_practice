@@ -102,10 +102,9 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="css/account_dashboard.css">
-    <script src="js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 
     <style>
         #logout-button:hover {
@@ -190,6 +189,9 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
     <section style="min-height: 100vh;" class="" id="dashboard-main-content">
         <?php if (!isset($_GET['edit']) && !isset($_GET['new-post'])) { ?>
             <div class="bg-light py-lg-5 py-md-4 py-sm-3 py-3 container">
+                <div>
+                    <button id="goBackButton" class="mb-3 btn btn-danger"><i class="fa-solid fa-arrow-left-long"></i></button>
+                </div>
                 <div class="row py-3">
                     <div class="col-10">
                         <div class="row">
@@ -250,6 +252,9 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
         <?php if (isset($_GET['edit'])) { ?>
             <form action="" method="post">
                 <div class="bg-light py-lg-5 py-md-4 py-sm-3 py-3 container">
+                    <div class="mb-3">
+                        <button id="goBackButton" class=" btn btn-danger"><i class="fa-solid fa-arrow-left-long"></i></button>
+                    </div>
                     <div class="row py-3">
                         <div class="col-10">
                             <div class="row">
@@ -271,14 +276,10 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
                         <label for="enddate">Deadline:</label>
                         <input id="enddate" name="enddate" type="date" class="form-control" value="<?= $jobData['enddate'] ?>">
                     </div>
-                    <script>
-                        tinymce.init({
-                            selector: 'textarea#dutyskilleduexp'
-                        });
-                    </script>
+
                     <div class="row py-3">
                         <h3>Responsibilities/Roles/Requirements</h3>
-                        <textarea id="dutyskilleduexp" style="resize: none;" name="dutyskilleduexp" class="form-control" cols="30" rows="10"><?= $jobData['dutyskilleduexp'] ?></textarea>
+                        <textarea id="dutyskilleduexp" style="resize: none;" name="dutyskilleduexp" class="rte form-control" cols="30" rows="10"><?= $jobData['dutyskilleduexp'] ?></textarea>
 
                     </div>
                     <div class="row py-3">
@@ -367,14 +368,10 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
                         <label for="enddate">Deadline:</label>
                         <input id="enddate" name="enddate" type="date" class="form-control">
                     </div>
-                    <script>
-                        tinymce.init({
-                            selector: 'textarea#dutyskilleduexp'
-                        });
-                    </script>
+
                     <div class="row py-3">
                         <h3>Responsibilities/Roles/Requirements</h3>
-                        <textarea id="dutyskilleduexp" style="resize: none;" name="dutyskilleduexp" class="form-control" cols="30" rows="10"></textarea>
+                        <textarea id="dutyskilleduexp" style="resize: none;" name="dutyskilleduexp" class="rte form-control" cols="30" rows="10"></textarea>
 
                     </div>
                     <div class="row py-3">
@@ -450,7 +447,18 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
             });
         });
     </script>
+    <script>
+        document.getElementById('goBackButton').addEventListener('click', function() {
+            window.history.back();
+        });
+    </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.rte').summernote();
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>

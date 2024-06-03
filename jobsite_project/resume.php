@@ -50,16 +50,58 @@ if (isset($_POST['update']) && !empty($_POST['update'])) {
     }
 }
 
+if (isset($_POST['update'])) {
+    if (isset($_FILES['imgUpload']['name']) && !empty($_FILES['imgUpload']['name'])) {
+        $target_dir = "uploads/resumes/";
+        $imgName = $resumeData['rindex'] . ".png";
+        $target_file = $target_dir . $imgName;
+        $uploadOk = 1;
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        echo "YES";
+        $check = getimagesize($_FILES["imgUpload"]["tmp_name"]);
+        if ($check !== false) {
+            $uploadOk = 1;
+        } else {
+            echo "File is not an image. ";
+            $uploadOk = 0;
+        }
+
+
+        if (file_exists($target_file)) {
+            unlink($target_file);
+        }
+
+        if ($_FILES["imgUpload"]["size"] > 500000000) {
+            echo "Sorry, your file is too large.";
+            $uploadOk = 0;
+        }
+
+        if (
+            $imageFileType != "png"
+        ) {
+            echo "Sorry, only PNG files are allowed.";
+            $uploadOk = 0;
+        }
+
+        if ($uploadOk == 0) {
+            echo "Sorry, your file was not uploaded.";
+        } else {
+            if (move_uploaded_file($_FILES["imgUpload"]["tmp_name"], $target_file)) {
+            }
+        }
+    }
+}
+
 ?>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="css/account_dashboard.css">
-    <script src="js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+
     <style>
         #logout-button:hover {
             color: #dc3545;
@@ -136,10 +178,13 @@ if (isset($_POST['update']) && !empty($_POST['update'])) {
             <?php } ?>
             </dv>
     </nav>
-    <section style="min-height: 100vh;" id="dashboard-main-content">
+    <section style="min-height: 100vh; " id="dashboard-main-content">
         <?php if (!isset($_GET['edit'])) { ?>
             <div class="bg-light px-lg-0 px-md-0 px-sm-0 px-0 p-lg-5 p-md-4 p-sm-3 p-3 container">
                 <div class="row p-3">
+                    <div class="mb-3">
+                        <button id="goBackButton" class=" btn btn-danger"><i class="fa-solid fa-arrow-left-long"></i></button>
+                    </div>
                     <div class="col-10">
                         <div class="row">
                             <h2 class="mb-4"><?= $resumeData['fullname'] ?></h2>
@@ -174,6 +219,9 @@ if (isset($_POST['update']) && !empty($_POST['update'])) {
                     <p><?= $resumeData['skilleduexp']; ?></p>
                 </div>
                 <div class="border border-top border-dark mb-5"></div>
+                <?php if (!isset($_SESSION['orgIndex'])) {
+                    $_SESSION['orgIndex'] = '';
+                } ?>
                 <?php if ($resumeData['orgindex'] == $_SESSION['orgIndex']) { ?>
                     <div class="text-end">
                         <a href="?view&id=<?= $resumeData['rindex']; ?>&edit" class="btn btn-primary">Edit</a>
@@ -186,17 +234,11 @@ if (isset($_POST['update']) && !empty($_POST['update'])) {
                 <?php } ?>
             </div>
         <?php } else if (isset($_GET['edit'])) { ?>
-            <form action="" method="post">
+            <form action="" method="post" enctype="multipart/form-data">
                 <div class="bg-light px-lg-0 px-md-0 px-sm-0 px-0 p-lg-5 p-md-4 p-sm-3 p-3 container">
                     <div class="row p-3">
-                        <div class="col-10">
-                            <script>
-                                tinymce.init({
-                                    selector: 'textarea.rte'
-                                });
-                            </script>
+                        <div class="col-8">
                             <div class="row">
-
                                 <label for="fullname">Full Name</label>
                                 <input name="fullname" class="form-control-lg mb-4" type="text" value="<?= isset($resumeData['fullname']) == 1 ?  $resumeData['fullname'] : ''; ?>">
                                 <label for="homeaddress">Current Address</label>
@@ -211,41 +253,87 @@ if (isset($_POST['update']) && !empty($_POST['update'])) {
                                 <input id="religion" name="religion" class="form-control" type="text" value="<?= isset($resumeData['religion']) == 1 ?  $resumeData['religion'] : ''; ?>">
                             </div>
                         </div>
-                        <div class=" col-lg-2 col-md-2 col-sm-12 col-12">
-                            <?php $filePath = "uploads/resumes/" . $rindex . ".png";
-                            if (file_exists($filePath)) { ?>
-                                <button class="btn">
-                                    <img class="img-thumbnail img-normal" src="uploads/resumes/<?php echo $rindex ?>.png" alt="">
-                                </button>
+                        <div class=" col-lg-4 col-md-2 col-sm-12 col-12">
+                            <?php if (isset($resumeData) && !empty($resumeData)) {
+                                $resumePfpPath = "uploads/resumes/" . $resumeData['rindex'] . '.png';
+                            } else {
+                                $resumePfpPath = '';
+                            }  ?>
+                            <?php if (file_exists($resumePfpPath)) { ?>
+                                <div class="row pb-1">
+                                    <div class="col-12 row">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                                            <img style="height:100px; width:100px;" src="<?php echo $resumePfpPath; ?>" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 row">
+                                        <div class="col-lg-5 col-md-12 col-sm-12 col-12">
+                                            <div class="row py-1">
+                                                <div class="p-lg-0 pb-md-3 pb-sm-3 pb-3 col-lg-3 col-md-12 col-sm-12 col-12">
+                                                    <b>Upload An Image</b>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                                    <div>
+                                                        <input name="imgUpload" class="form-control" type="file">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-6 col-sm-6 col-6">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             <?php } else { ?>
-                                <img class="img-thumbnail img-normal" src="uploads/resumes/placeholder_pfp.svg" alt="">
+                                <div class="row pb-1">
+                                    <div class="col-12 row">
+                                        <div class="col-lg-2 col-md-12 col-sm-12 col-12">
+                                            <img style="height: 100px; width: 100px;" src="uploads/resumes/placeholder_pfp.svg" alt="">
+                                        </div>
+                                        <div class="col-2">
+
+                                        </div>
+                                        <div class="d-flex align-items-center col-lg-8 col-md-6 col-sm-6 col-6">
+                                            <div>
+                                                <input name="imgUpload" class="form-control" type="file">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 row">
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+                                            <div class="row py-1">
+                                                <div class="col-10 row">
+                                                </div>
+                                                <div class="col-lg-2 col-md-6 col-sm-6 col-6">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
                             <?php } ?>
                         </div>
                     </div>
+                    <div class="p-3 form-check">
+                        <input <?php if (isset($resumeData['visible'])) {
+                                    if ($resumeData['visible'] == 1) {
+                                        echo "checked";
+                                    } else {
+                                        echo '';
+                                    }
+                                } ?> class="form-check-input" type="checkbox" value="1" name="visible" id="visible">
+                        <label class="form-check-label" for="visible">Availability</label>
+                    </div>
                     <div class="row p-3">
-                        <label for="visible">Availability</label>
-                        <div class="form-check">
-                            <input <?php if (isset($resumeData['visible'])) {
-                                        if ($resumeData['visible'] == 1) {
-                                            echo "checked";
-                                        } else {
-                                            echo '';
-                                        }
-                                    } ?> class="form-check-input" type="checkbox" value="1" name="visible" id="visible">
+                        <div>
+                            <label for="skilleduexp">
+                                <h4>Skills/Experiences</h4>
+                            </label>
+                            <textarea class="rte mt-3 medium-textarea" style="resize: none;" name="skilleduexp" id="skilleduexp" cols="30" rows="10"><?= isset($resumeData['skilleduexp']) == 1 ?  $resumeData['skilleduexp'] : ''; ?></textarea>
                         </div>
                     </div>
                     <div class="row p-3">
-
-                        <label for="skilleduexp">
-                            <h4>Skills/Experiences</h4>
-                        </label>
-                        <textarea class="rte mt-3 medium-textarea" style="resize: none;" name="skilleduexp" id="skilleduexp" cols="30" rows="10"><?= isset($resumeData['skilleduexp']) == 1 ?  $resumeData['skilleduexp'] : ''; ?></textarea>
-                    </div>
-                    <div class="row p-3">
                         <div class="border border-top border-dark"></div>
-
                         <div class="col-6">
-
                         </div>
                     </div>
                     <div class="text-end">
@@ -283,6 +371,12 @@ if (isset($_POST['update']) && !empty($_POST['update'])) {
         });
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.rte').summernote();
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>

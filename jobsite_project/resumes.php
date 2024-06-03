@@ -27,7 +27,6 @@ if ($resumeNumber <= 10) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="css/account_dashboard.css">
     <style>
@@ -142,26 +141,32 @@ if ($resumeNumber <= 10) {
                     <div class="">
                         <div class="container">
                             <div class="">
-                                <div class="">
-                                    <h2 class="text-center mb-5">Available Resumes</h2>
+                                <div class="d-flex justify-content-between">
+                                    <div class="">
+
+                                    </div>
+                                    <div class="">
+                                        <h2 class="text-center mb-5">Available Resumes</h2>
+                                    </div>
+                                    <div class="text-end dropdown">
+                                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                                            <i class="fa-solid fa-filter"></i> Filter
+                                        </button>
+                                        <form action="" class="" method="get">
+                                            <div class="dropdown-menu">
+    
+                                                <div class="dropdown-divider"></div>
+                                                <button type="submit" class="dropdown-item btn">Apply</button>
+    
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="container px-0 ">
                                             <div class="">
-                                                <div class="text-end dropdown">
-                                                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-                                                        <i class="fa-solid fa-filter"></i> Filter
-                                                    </button>
-                                                    <form action="" class="" method="get">
-                                                        <div class="dropdown-menu">
 
-                                                            <div class="dropdown-divider"></div>
-                                                            <button type="submit" class="dropdown-item btn">Apply</button>
-
-                                                        </div>
-                                                    </form>
-                                                </div>
                                                 <div class="row">
                                                     <?php foreach ($allresumedetails as $row) {
                                                         $resume_img_src = "uploads/resumes/placeholder_pfp.svg";
@@ -250,7 +255,8 @@ if ($resumeNumber <= 10) {
                                                     $resumeNextPage = $resume_current_page + 1;
                                                 ?>
                                                     <li class="page-item"><a class="page-link" href="?resumepage=<?php echo $resumeNextPage ?><?php if (isset($_GET['search']) && isset($_GET['search-submit'])) { ?>&search=<?= $_GET['search'];
-                                                                                                                                                                                                                             ?>&search-submit=<?= $_GET['search-submit']; }?>">Next</a></li>
+                                                                                                                                                                                                                                ?>&search-submit=<?= $_GET['search-submit'];
+                                                                                                                                                                                                                                            } ?>">Next</a></li>
                                                 <?php } else { ?>
                                                     <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
                                                 <?php } ?>

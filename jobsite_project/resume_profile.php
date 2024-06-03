@@ -117,6 +117,8 @@ if (isset($resumeData['rindex']) && !empty($resumeData['rindex'])) {
     $resumePfpPath = "uploads/resumes/" . $resumeData['rindex'] . '.png';
 }
 
+var_dump($resumeData['rindex']);
+
 if (isset($_POST['upload-image'])) {
     if (isset($_FILES['imgUpload']['name']) && !empty($_FILES['imgUpload']['name'])) {
         $target_dir = "uploads/resumes/";
@@ -167,7 +169,6 @@ if (isset($_POST['upload-image'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="css/account_dashboard.css">
     <script src="js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
@@ -272,6 +273,11 @@ if (isset($_POST['upload-image'])) {
 
                         <ul class="nav nav-tabs" id="dashboard-tabs">
                             <li class="nav-item">
+                                <div class="mb-3">
+                                    <button id="goBackButton" class="nav-link"><i class="fa-solid fa-arrow-left-long"></i></button>
+                                </div>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="dashboard.php">Home</a>
                             </li>
                             <li class="nav-item">
@@ -288,7 +294,7 @@ if (isset($_POST['upload-image'])) {
                             <h4 class="mb-4">Resume</h4>
                             <hr>
                             <?php if (isset($resumeData['visible']) == true) {
-                                if ($resumeData['visible'] == 1) { ?>
+                                if (isset($resumeData['rindex']) && !empty($resumeData['rindex'])) { ?>
                                     <?php if (file_exists($resumePfpPath)) { ?>
                                         <div class="row pb-1">
                                             <div class="col-2">
@@ -368,9 +374,9 @@ if (isset($_POST['upload-image'])) {
                                     </div>
                                 <?php }
                             } else { ?>
-                                <hr class="mb-2">
-                                <b>Not Available</b>
-                                <hr class="my-2">
+                                <div>
+                                    <a href="?edit" class="btn btn-primary">Set up</a>
+                                </div>
                             <?php } ?>
                         </div>
                     <?php } ?>
@@ -535,11 +541,15 @@ if (isset($_POST['upload-image'])) {
                                 <input type="submit" name="update" class="btn btn-primary" value="Update">
                             </form>
                         </div>
-                    <?php } else { ?>
-                        <div>
-                            <a href="resume.php?view&id=<?= $resumeData['rindex']; ?>&edit" class="btn btn-primary">Edit</a>
-                        </div>
-                    <?php } ?>
+                        <?php } else {
+                        if (!isset($resumeData['rindex']) && empty($resumeData['rindex'])) {
+                            echo '';
+                        } else { ?>
+                            <div>
+                                <a href="resume.php?view&id=<?= $resumeData['rindex']; ?>&edit" class="btn btn-primary">Edit</a>
+                            </div>
+                    <?php }
+                    } ?>
                 </div>
             </div>
         </div>
@@ -561,6 +571,11 @@ if (isset($_POST['upload-image'])) {
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script>
+        document.getElementById('goBackButton').addEventListener('click', function() {
+            window.history.back();
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>

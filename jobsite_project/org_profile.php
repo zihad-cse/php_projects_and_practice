@@ -38,7 +38,6 @@ if (isset($reumeData) == true) {
 $formatteddob = date("Y-d-m", strtotime($dob));
 
 //Updates company details (table: org)
-if ($userData == true) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
         $companyCategory = $_POST['companyCategory'];
         $companyDetails = $_POST['companyDetails'];
@@ -61,31 +60,35 @@ if ($userData == true) {
             echo 'Error: ' . $e->getMessage();
         }
     }
-} else if ($userData == false) {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
-        $companyCategory = $_POST['companyCategory'];
-        $companyDetails = $_POST['companyDetails'];
-        $companyDetailsShow = isset($_POST['companyDetailsShow']) ? 1 : 0;
-        $phnNumber = $_SESSION['phnNumber'];
+//else if (isset($userData['orgnote']) && !empty($userData['orgnote'])) {
+//     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
 
-        try {
-            $sql = "INSERT INTO org (ocatindex, orgnote, displayunote) VALUES (:orgCat, :orgNote, :displayuNote) WHERE prphone = :phnSession";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(":orgCat", $companyCategory, PDO::PARAM_STR);
-            $stmt->bindParam(":orgNote", $companyDetails, PDO::PARAM_STR);
-            $stmt->bindParam(":displayuNote", $companyDetailsShow, PDO::PARAM_BOOL);
-            $stmt->bindParam(":phnSession", $phnNumber, PDO::PARAM_STR);
-            $stmt->execute();
+//         $companyCategory = $_POST['companyCategory'];
+//         $companyDetails = $_POST['companyDetails'];
+//         $companyDetailsShow = isset($_POST['companyDetailsShow']) ? 1 : 0;
+//         $phnNumber = $_SESSION['phnNumber'];
 
-            if ($stmt->execute()) {
-                header("Location: dashboard.php");
-            }
-        } catch (PDOException $e) {
-            echo 'Error: ' . $e->getMessage();
-        }
-    }
+//         try {
+//             $sql = "INSERT INTO org (ocatindex, orgnote, displayunote) VALUES (:orgCat, :orgNote, :displayuNote) WHERE prphone = :phnSession";
+//             $stmt = $pdo->prepare($sql);
+//             $stmt->bindParam(":orgCat", $companyCategory, PDO::PARAM_STR);
+//             $stmt->bindParam(":orgNote", $companyDetails, PDO::PARAM_STR);
+//             $stmt->bindParam(":displayuNote", $companyDetailsShow, PDO::PARAM_BOOL);
+//             $stmt->bindParam(":phnSession", $phnNumber, PDO::PARAM_STR);
+//             $stmt->execute();
+
+//             if ($stmt->execute()) {
+//                 header("Location: dashboard.php");
+//             }
+//         } catch (PDOException $e) {
+//             echo 'Error: ' . $e->getMessage();
+//         }
+//     }
+// }
+$debug_var = '';
+if (isset($_POST['update'])) {
+    $debug_var = "Update is posting";
 }
-
 
 if (isset($_POST['upload-image'])) {
     if (isset($_FILES['imgUpload']['name']) && !empty($_FILES['imgUpload']['name'])) {
@@ -117,7 +120,7 @@ if (isset($_POST['upload-image'])) {
         }
 
         // File size check
-        if ($_FILES["imgUpload"]["size"] > 500000000) {
+        if ($_FILES["imgUpload"]["size"] > 700000000) {
             echo "Sorry, your file is too large.";
             $uploadOk = 0;
         }
@@ -149,9 +152,9 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="css/account_dashboard.css">
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
     <style>
         #logout-button:hover {
             color: #dc3545;
@@ -248,6 +251,11 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
                         <div class="mb-4">
                             <ul class="nav nav-tabs" id="dashboard-tabs">
                                 <li class="nav-item">
+                                    <div class="mb-3">
+                                        <button id="goBackButton" class="nav-link"><i class="fa-solid fa-arrow-left-long"></i></button>
+                                    </div>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link" href="dashboard.php">Home</a>
                                 </li>
                                 <li class="nav-item">
@@ -260,11 +268,12 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
 
                             <div class="tab-content" id="myTabContent">
                                 <div>
+                                    <?= $debug_var; ?>
                                     <hr>
                                     <h4 class="mb-4">Company Profile</h4>
                                     <hr>
-                                    <?php if($userData['orgnote']) ?>
-                                    <?php if ($userData["displayunote"] == 1) { ?>
+
+                                    <?php if (isset($userData['orgnote']) && isset($userData['ocatindex'])) { ?>
                                         <?php $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png' ?>
                                         <?php if (file_exists($orgPfpPath)) { ?>
                                             <div class="row pb-1">
@@ -296,65 +305,67 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
                                             </div>
                                         </div>
                                     <?php } else { ?>
-                                        <b>Not Available</b>
-                                        <?php } ?>
+                                        <a href="?edit" class="btn btn-primary">Set up</a>
+                                    <?php } ?>
                                 </div>
                             </div>
                         </div>
                     <?php } ?>
                     <?php if (isset($_GET['edit'])) { ?>
                         <div>
-                            <form action="" method="post" enctype="multipart/form-data">
+                            <div class="row">
+                                <div>
+                                    <?php if (file_exists($orgPfpPath)) { ?>
+                                        <div class="row pb-1">
+                                            <div class="col-lg-2 col-md-12 col-sm-12 col-12">
+                                                <img class="img-fluid" style="max-height:100px; max-width:100px;" src="<?php echo $orgPfpPath; ?>" alt="">
+                                            </div>
+                                            <div class="py-lg-0 py-md-2 py-sm-2 py-2 col-lg-5 col-md-12 col-sm-12 col-12">
+                                                <form method="post" action="" enctype="multipart/form-data">
+                                                    <div class="row py-3">
+                                                        <div class="col-lg-3 col-md-12 col-sm-12 col-12">
+                                                            <b>Upload An Image</b>
+                                                        </div>
+                                                        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+                                                            <div>
+                                                                <input name="imgUpload" class="form-control" type="file">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-12 col-sm-12 col-12">
+                                                            <input name="upload-image" type="submit" class="btn btn-primary" value="Upload">
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    <?php } else { ?>
+                                        <div class="row pb-1">
+                                            <div class="col-lg-2 col-md-12 col-sm-12 col-12">
+                                                <img class="img-fluid" style="max-height:100px; max-width:100px;" src="uploads/resumes/placeholder_pfp.svg" alt="">
+                                            </div>
+                                            <div class="col-lg-5 col-md-12 col-sm-12 col-12">
+                                                <form method="post" action="" enctype="multipart/form-data">
+                                                    <div class="row py-3">
+                                                        <div class="py-lg-0 py-md-2 py-sm-2 py-2 col-lg-3 col-md-12 col-sm-12 col-12">
+                                                            <b>Upload An Image</b>
+                                                        </div>
+                                                        <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                                            <div>
+                                                                <input name="imgUpload" class="form-control" type="file">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-6 col-sm-6 col-6">
+                                                            <input name="upload-image" type="submit" class="btn btn-primary" value="Upload">
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <form action="" method="post">
                                 <div class="row">
-                                    <div>
-                                        <?php if (file_exists($orgPfpPath)) { ?>
-                                            <div class="row pb-1">
-                                                <div class="col-lg-2 col-md-12 col-sm-12 col-12">
-                                                    <img class="img-fluid" style="max-height:100px; max-width:100px;" src="<?php echo $orgPfpPath; ?>" alt="">
-                                                </div>
-                                                <div class="py-lg-0 py-md-2 py-sm-2 py-2 col-lg-5 col-md-12 col-sm-12 col-12">
-                                                    <form method="post" action="" enctype="multipart/form-data">
-                                                        <div class="row py-3">
-                                                            <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                                                <b>Upload An Image</b>
-                                                            </div>
-                                                            <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                                                                <div>
-                                                                    <input name="imgUpload" class="form-control" type="file">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                                                <input name="upload-image" type="submit" class="btn btn-primary" value="Upload">
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        <?php } else { ?>
-                                            <div class="row pb-1">
-                                                <div class="col-lg-2 col-md-12 col-sm-12 col-12">
-                                                    <img class="img-fluid" style="max-height:100px; max-width:100px;" src="uploads/resumes/placeholder_pfp.svg" alt="">
-                                                </div>
-                                                <div class="col-lg-5 col-md-12 col-sm-12 col-12">
-                                                    <form method="post" action="" enctype="multipart/form-data">
-                                                        <div class="row py-3">
-                                                            <div class="py-lg-0 py-md-2 py-sm-2 py-2 col-lg-3 col-md-12 col-sm-12 col-12">
-                                                                <b>Upload An Image</b>
-                                                            </div>
-                                                            <div class="col-lg-6 col-md-6 col-sm-6 col-6">
-                                                                <div>
-                                                                    <input name="imgUpload" class="form-control" type="file">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-lg-3 col-md-6 col-sm-6 col-6">
-                                                                <input name="upload-image" type="submit" class="btn btn-primary" value="Upload">
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        <?php } ?>
-                                    </div>
                                     <div class="py-lg-0 py-md-2 py-sm-2 py-2 col-lg-3 col-md-12 col-sm-12 col-12">
                                         <b>Company Category</b>
                                     </div>
@@ -367,7 +378,6 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
                                             }
                                             ?>
                                         </select>
-
                                     </div>
                                 </div>
                                 <div class="row">
@@ -375,7 +385,7 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
                                         <b>Company Details</b>
                                     </div>
                                     <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                                        <textarea class="mt-3 form-control" style="resize: none;" name="companyDetails" id="companyAddDetails" cols="30" rows="10"><?php echo $userData['orgnote'] ?></textarea>
+                                        <textarea class="rte mt-3 form-control" style="resize: none;" name="companyDetails" id="companyAddDetails" cols="30" rows="10"><?php echo $userData['orgnote'] ?></textarea>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -391,11 +401,16 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
                                 <hr>
                                 <input type="submit" name="update" class="btn btn-primary" value="Update">
                             </form>
+
                         </div>
                     <?php } else { ?>
                         <hr>
-                        <a href="?edit" class="btn btn-primary">Edit</a>
-                    <?php } ?>
+                        <?php if (!isset($userData['orgnote']) && !isset($userData['ocatindex'])) {
+                            echo '';
+                        } else {  ?>
+                            <a href="?edit" class="btn btn-primary">Edit</a>
+                    <?php }
+                    } ?>
                 </div>
             </div>
         </div>
@@ -416,8 +431,14 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
             </footer>
         </div>
     </div>
+    <!-- <script>
+        document.getElementById('goBackButton').addEventListener('click', function() {
+            window.history.back();
+        });
+    </script> -->
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>

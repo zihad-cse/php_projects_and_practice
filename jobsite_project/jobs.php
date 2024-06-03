@@ -29,7 +29,6 @@ if ($jobNumber <= 10) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="css/account_dashboard.css">
     <style>
@@ -144,44 +143,48 @@ if ($jobNumber <= 10) {
                         <div class="container">
 
                             <div class="">
-                                <div class="mb-5">
-                                    <div class="text-center">
-                                        <h2>Available Jobs</h2>
+                                <div class="d-flex justify-content-between">
+                                    <div class="mb-5">
+                                        <button id="goBackButton" class=" btn btn-danger"><i class="fa-solid fa-arrow-left-long"></i></button>
                                     </div>
-                                </div>
-                                <div class="text-end">
-                                    <div class="dropdown">
-                                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-                                            <i class="fa-solid fa-filter"></i> Filter
-                                        </button>
-                                        <form action="" class="" method="get">
-                                            <div class="dropdown-menu">
-                                                <h6 class="dropdown-header">Category</h6>
-                                                <?php foreach ($jobCategories as $jobcat) {
-                                                    $isChecked = "";
-                                                    if (isset($_GET['cat']) && !empty($_GET['cat'])) {
-                                                        if (isset($_GET['cat'][$jobcat['jcatindex']]) && !empty($_GET['cat'][$jobcat['jcatindex']])) {
-                                                            $isChecked = "checked";
-                                                        }
-                                                    } ?>
+                                    <div class="mb-5">
+                                        <div class="text-center">
+                                            <h2>Available Jobs</h2>
+                                        </div>
+                                    </div>
+                                    <div class="mb-5">
+                                        <div class="dropdown">
+                                            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                                                <i class="fa-solid fa-filter"></i> Filter
+                                            </button>
+                                            <form action="" class="" method="get">
+                                                <div class="dropdown-menu">
+                                                    <h6 class="dropdown-header">Category</h6>
+                                                    <?php foreach ($jobCategories as $jobcat) {
+                                                        $isChecked = "";
+                                                        if (isset($_GET['cat']) && !empty($_GET['cat'])) {
+                                                            if (isset($_GET['cat'][$jobcat['jcatindex']]) && !empty($_GET['cat'][$jobcat['jcatindex']])) {
+                                                                $isChecked = "checked";
+                                                            }
+                                                        } ?>
 
-                                                    <div class=" p-2">
-                                                        <label class="" for="<?= $jobcat['jcategory'] ?>">
-                                                            <input class="form-check-input" id="<?= $jobcat['jcategory'] ?>" name="cat[<?= $jobcat['jcatindex'] ?>]" value="<?= $jobcat['jcatindex'] ?>" <?= $isChecked ?> type="checkbox"> <?= $jobcat['jcategory'] ?>
-                                                        </label>
+                                                        <div class=" p-2">
+                                                            <label class="" for="<?= $jobcat['jcategory'] ?>">
+                                                                <input class="form-check-input" id="<?= $jobcat['jcategory'] ?>" name="cat[<?= $jobcat['jcatindex'] ?>]" value="<?= $jobcat['jcatindex'] ?>" <?= $isChecked ?> type="checkbox"> <?= $jobcat['jcategory'] ?>
+                                                            </label>
+                                                        </div>
+                                                    <?php } ?>
+                                                    <div class="dropdown-divider"></div>
+                                                    <h6 class="dropdown-header">Work Area</h6>
+                                                    <div class="p-2">
+                                                        <label for="area-division">Division</label>
+                                                        <input class="form-control" id="area-division" name="area" type="text">
                                                     </div>
-                                                <?php } ?>
-                                                <div class="dropdown-divider"></div>
-                                                <h6 class="dropdown-header">Work Area</h6>
-                                                <div class="p-2">
-                                                    <label for="area-division">Division</label>
-                                                    <input class="form-control" id="area-division" name="area" type="text">
+                                                    <div class="dropdown-divider"></div>
+                                                    <button type="submit" class="dropdown-item btn">Apply</button>
                                                 </div>
-                                                <div class="dropdown-divider"></div>
-                                                <button type="submit" class="dropdown-item btn">Apply</button>
-
-                                            </div>
-                                        </form>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -415,6 +418,12 @@ if ($jobNumber <= 10) {
                 searchField.value = '';
                 searchField.focus();
             });
+        });
+    </script>
+
+    <script>
+        document.getElementById('goBackButton').addEventListener('click', function() {
+            window.history.back();
         });
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
