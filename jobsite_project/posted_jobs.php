@@ -144,7 +144,7 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
                         </li>
                     </ul>
                 </div>
-                <div class="col-lg-10 col-md-12 col-sm-12 col-12 p-5" style="background-color: #ddd;">
+                <div  class="col-lg-10 col-md-12 col-sm-12 col-12 p-5" style="background-color: #ddd;">
                     <hr>
                     <div class="row border">
                         <div class="col-2">

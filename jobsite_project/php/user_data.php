@@ -224,6 +224,7 @@ function pageination_alljobdetails($pdo, $initial_page, $limit, $search = "")
                     $stmt = $pdo->prepare($updateSql);
                     $stmt->execute();
                 }
+                
             }
         }
         return $alljobdetails;

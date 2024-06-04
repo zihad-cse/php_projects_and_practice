@@ -67,7 +67,6 @@ if ($resumeData == true) {
             $stmt->bindParam(":skills", $skills, PDO::PARAM_STR);
             $stmt->bindParam(":resumeDataShow", $resumeDetailsShow, PDO::PARAM_BOOL);
             $stmt->bindParam(":userIndex", $userIndex, PDO::PARAM_STR);
-            $stmt->execute();
 
             if ($stmt->execute()) {
                 header("Location: resume_profile.php");
@@ -102,8 +101,6 @@ if ($resumeData == true) {
             $stmt->bindParam(":skills", $skills, PDO::PARAM_STR);
             $stmt->bindParam(":resumeDataShow", $resumeDetailsShow, PDO::PARAM_BOOL);
             $stmt->bindParam(":userIndex", $userIndex, PDO::PARAM_STR);
-            $stmt->execute();
-
             if ($stmt->execute()) {
                 header("Location: resume_profile.php");
             }
@@ -117,25 +114,23 @@ if (isset($resumeData['rindex']) && !empty($resumeData['rindex'])) {
     $resumePfpPath = "uploads/resumes/" . $resumeData['rindex'] . '.png';
 }
 
-var_dump($resumeData['rindex']);
 
-if (isset($_POST['upload-image'])) {
+
+if (isset($_POST['update'])) {
     if (isset($_FILES['imgUpload']['name']) && !empty($_FILES['imgUpload']['name'])) {
         $target_dir = "uploads/resumes/";
         $imgName = $resumeData['rindex'] . ".png";
         $target_file = $target_dir . $imgName;
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-
-        if (isset($_POST["upload-image"])) {
-            $check = getimagesize($_FILES["imgUpload"]["tmp_name"]);
-            if ($check !== false) {
-                $uploadOk = 1;
-            } else {
-                echo "File is not an image. ";
-                $uploadOk = 0;
-            }
+        $check = getimagesize($_FILES["imgUpload"]["tmp_name"]);
+        if ($check !== false) {
+            $uploadOk = 1;
+        } else {
+            echo "File is not an image. ";
+            $uploadOk = 0;
         }
+
 
         if (file_exists($target_file)) {
             unlink($target_file);
@@ -386,29 +381,23 @@ if (isset($_POST['upload-image'])) {
                         } else {
                             $resumePfpPath = '';
                         } ?>
-
-                        <div>
+                        <form method="post" enctype="multipart/form-data">
                             <?php if (file_exists($resumePfpPath)) { ?>
                                 <div class="row pb-1">
                                     <div class="col-lg-2 col-md-12 col-sm-12 col-12">
                                         <img style="height:100px; width:100px;" src="<?php echo $resumePfpPath; ?>" alt="">
                                     </div>
                                     <div class="col-lg-5 col-md-12 col-sm-12 col-12">
-                                        <form method="post" action="" enctype="multipart/form-data">
-                                            <div class="row py-1">
-                                                <div class="p-lg-0 pb-md-3 pb-sm-3 pb-3 col-lg-3 col-md-12 col-sm-12 col-12">
-                                                    <b>Upload An Image</b>
-                                                </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
-                                                    <div>
-                                                        <input name="imgUpload" class="form-control" type="file">
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-3 col-md-6 col-sm-6 col-6">
-                                                    <input name="upload-image" type="submit" class="btn btn-primary" value="Upload">
+                                        <div class="row py-1">
+                                            <div class="p-lg-0 pb-md-3 pb-sm-3 pb-3 col-lg-3 col-md-12 col-sm-12 col-12">
+                                                <b>Upload An Image</b>
+                                            </div>
+                                            <div class="col-lg-8 col-md-6 col-sm-6 col-6">
+                                                <div>
+                                                    <input name="imgUpload" class="form-control" type="file">
                                                 </div>
                                             </div>
-                                        </form>
+                                        </div>
                                     </div>
                                 </div>
                             <?php } else { ?>
@@ -417,21 +406,16 @@ if (isset($_POST['upload-image'])) {
                                         <img style="height: 100px; width: 100px;" src="uploads/resumes/placeholder_pfp.svg" alt="">
                                     </div>
                                     <div class="col-lg-5 col-md-12 col-sm-12 col-12">
-                                        <form method="post" action="" enctype="multipart/form-data">
-                                            <div class="row py-1">
-                                                <div class="p-lg-0 pb-md-3 pb-sm-3 pb-3 col-lg-3 col-md-12 col-sm-12 col-12">
-                                                    <b>Upload An Image</b>
-                                                </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
-                                                    <div>
-                                                        <input name="imgUpload" class="form-control" type="file">
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-3 col-md-6 col-sm-6 col-6">
-                                                    <input name="upload-image" type="submit" class="btn btn-primary" value="Upload">
+                                        <div class="row py-1">
+                                            <div class="p-lg-0 pb-md-3 pb-sm-3 pb-3 col-lg-3 col-md-12 col-sm-12 col-12">
+                                                <b>Upload An Image</b>
+                                            </div>
+                                            <div class="col-lg-8 col-md-6 col-sm-6 col-6">
+                                                <div>
+                                                    <input name="imgUpload" class="form-control" type="file">
                                                 </div>
                                             </div>
-                                        </form>
+                                        </div>
                                     </div>
                                 </div>
                             <?php } ?>
@@ -540,16 +524,16 @@ if (isset($_POST['upload-image'])) {
                                 <hr>
                                 <input type="submit" name="update" class="btn btn-primary" value="Update">
                             </form>
-                        </div>
-                        <?php } else {
-                        if (!isset($resumeData['rindex']) && empty($resumeData['rindex'])) {
-                            echo '';
-                        } else { ?>
-                            <div>
-                                <a href="resume.php?view&id=<?= $resumeData['rindex']; ?>&edit" class="btn btn-primary">Edit</a>
-                            </div>
-                    <?php }
-                    } ?>
+                            <?php } else {
+                            if (!isset($resumeData['rindex']) && empty($resumeData['rindex'])) {
+                                echo '';
+                            } else { ?>
+                                <div>
+                                    <a href="resume.php?view&id=<?= $resumeData['rindex']; ?>&edit" class="btn btn-primary">Edit</a>
+                                </div>
+                        <?php }
+                        } ?>
+
                 </div>
             </div>
         </div>
