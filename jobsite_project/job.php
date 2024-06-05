@@ -49,7 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bindParam(':conphone', $conphone, PDO::PARAM_STR);
             $stmt->bindParam(':conemail', $conemail, PDO::PARAM_STR);
             $stmt->bindParam(':jindex', $jindex, PDO::PARAM_STR);
-            $stmt->execute();
             if ($stmt->execute()) {
                 header("location: job.php?view&id=" . $jobData['jindex']);
             }
@@ -84,7 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bindParam(':conemail', $conemail, PDO::PARAM_STR);
             $stmt->bindParam(':orgindex', $orgindex, PDO::PARAM_STR);
             $stmt->bindParam(':visibility', $visibility, PDO::PARAM_STR);
-
             if ($stmt->execute()) {
                 header("location: posted_jobs.php");
             }
@@ -130,6 +128,9 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
             height: 100px;
             width: 100px;
         }
+        #nav-bar {
+            box-shadow: 1px 1px 8px #999;
+        }
     </style>
     <title><?php if (isset($jobData)) {
                 echo $jobData['jobtitle'];
@@ -139,7 +140,7 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
 </head>
 
 <body class="bg-light">
-    <nav class="navbar p-3 bg-light sticky-top">
+    <nav id="nav-bar" class="navbar p-3 bg-light sticky-top">
         <div class="container">
             <a class="navbar-brand" href="index.php">
                 <img src="img/logoipsum-248.svg" alt="">
@@ -155,9 +156,6 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
                         <button name="search-submit" value="Search" class="btn btn-outline-dark" type="submit" id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </div>
                 </form>
-            </div>
-            <div class="d-lg-none d-md-none d-sm-block d-block btn btn-primary">
-                <i class="fa-solid fa-magnifying-glass"></i>
             </div>
             <?php if (!isset($_SESSION['token']) && !isset($_SESSION['phnNumber'])) { ?>
                 <div>
@@ -178,12 +176,26 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/dashboard.php">Dashboard</a></li>
-                        <li><a class="dropdown-item" href="/posted_jobs.php">Jobs Posted</a></li>
+                        <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
+                        <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
                         <li><a class="dropdown-item" href="php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
             <?php } ?>
+        </div>
+        <div class="d-lg-none d-md-none d-sm-block d-block container d-flex justify-content-center mt-4">
+            <?php
+            $queryPath = 'jobs.php'
+            ?>
+            <form action="<?= $queryPath; ?>" method="get">
+                <div class="input-group mb-3">
+                    <input value="<?php if (isset($search)) {
+                                        echo $search;
+                                    } ?>" name="search" id="second-search-field" type="search" class="form-control border-dark" placeholder="Search Job Listings" aria-label="Job Listing Search Bar" aria-describedby="search-button">
+                    <input id="second-clear-button" class="btn btn-outline-dark" value="&times;" type="button">
+                    <button name="search-submit" value="Search" class="btn btn-outline-dark" type="submit" id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </form>
         </div>
     </nav>
     <section style="min-height: 100vh;" class="" id="dashboard-main-content">
@@ -193,12 +205,19 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
                     <button id="goBackButton" class="mb-3 btn btn-danger"><i class="fa-solid fa-arrow-left-long"></i></button>
                 </div>
                 <div class="row py-3">
-                    <div class="col-10">
+                    <div class="text-start d-lg-none d-md-none d-sm-block d-block col-lg-2 col-md-2 col-sm-12 col-12">
+                        <?php if (file_exists($jobPicFilePath)) { ?>
+                            <img class="img-normal" src="<?php echo $jobPicFilePath ?>" alt="">
+                        <?php } else { ?>
+                            <img class="img-normal" src="uploads/job/placeholder-company.png" alt="">
+                        <?php } ?>
+                    </div>
+                    <div class="col-lg-10 col-md-10 col-sm-12 col-12 mt-4">
                         <div class="row">
                             <h2 class="text-primary"><?php echo $jobData['jobtitle'] ?></h2>
                         </div>
                     </div>
-                    <div class="text-end col-lg-2 col-md-2 col-sm-12 col-12">
+                    <div class="text-end d-lg-block d-md-block d-sm-none d-none col-lg-2 col-md-2">
                         <?php if (file_exists($jobPicFilePath)) { ?>
                             <img class="img-normal" src="<?php echo $jobPicFilePath ?>" alt="">
                         <?php } else { ?>
@@ -218,31 +237,31 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
                     <div class="border border-top border-dark"></div>
                 </div>
                 <div class="row py-3">
-                    <div class="col-4">
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-12">
                         <h5>Salary: <br></h5>
                         <p><?php echo $jobData['salary'] ?></p>
                     </div>
-                    <div class="col-4">
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-12">
                         <h5>Location: <br></h5>
                         <p> <?= $jobData['workarea'] ?></p>
                     </div>
                 </div>
                 <div class="row py-3">
-                    <div class="col-4">
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-12">
                         <b>Contact Phone: <br></b>
                         <p><?php echo $jobData['conphone'] ?></p>
                     </div>
-                    <div class="col-4">
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-12">
                         <b>Contact Email: <br></b>
                         <p><?= $jobData['conemail'] ?></p>
                     </div>
 
                     <?php if ($_SESSION['orgIndex'] !== $jobData['orgindex']) { ?>
-                        <div class="col-4 text-end">
+                        <div class="col-lg-3 col-md-3 col-sm-12 col-12 pe-lg-0 pe-md-0 pe-sm-2 pe-2 mb-sm-2 mb-2 text-end">
                             <a href="php/apply.php?id=<?= $jobData['jindex'] ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" class="btn btn-primary">Apply</a>
                         </div>
                     <?php } else if ($_SESSION['orgIndex'] == $jobData['orgindex']) { ?>
-                        <div class="col-4 text-end">
+                        <div class="col-lg-3 col-md-3 col-sm-12 col-12 pe-lg-0 pe-md-0 pe-sm-2 pe-2 mb-sm-2 mb-2 text-end">
                             <a href="?view&id=<?= $jobData['jindex'] ?>&edit" class="btn btn-primary">Edit</a>
                         </div>
                     <?php } ?>
@@ -256,7 +275,14 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
                         <button id="goBackButton" class=" btn btn-danger"><i class="fa-solid fa-arrow-left-long"></i></button>
                     </div>
                     <div class="row py-3">
-                        <div class="col-10">
+                        <div class="text-start d-lg-none d-md-none d-sm-block d-block col-lg-2 col-md-2 col-sm-12 col-12">
+                            <?php if (file_exists($jobPicFilePath)) { ?>
+                                <img class="img-normal" src="<?php echo $jobPicFilePath ?>" alt="">
+                            <?php } else { ?>
+                                <img class="img-normal" src="uploads/job/placeholder-company.png" alt="">
+                            <?php } ?>
+                        </div>
+                        <div class="col-lg-10 col-md-10 col-sm-12 col-12">
                             <div class="row">
                                 <label for="jobtitle">
                                     <h4>Job Title</h4>
@@ -264,7 +290,7 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
                                 <input id="jobtitle" name="jobtitle" type="text" class="form-control" value="<?= $jobData['jobtitle'] ?>">
                             </div>
                         </div>
-                        <div class="text-end col-lg-2 col-md-2 col-sm-12 col-12">
+                        <div class="text-end d-lg-block d-md-block d-sm-none d-none col-lg-2 col-md-2 col-sm-12 col-12">
                             <?php if (file_exists($jobPicFilePath)) { ?>
                                 <img class="img-normal" src="<?php echo $jobPicFilePath ?>" alt="">
                             <?php } else { ?>
@@ -286,13 +312,13 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
                         <div class="border border-top border-dark"></div>
                     </div>
                     <div class="row py-3">
-                        <div class="col-4">
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-12">
                             <label for="salary">
                                 <h5>Salary</h5>
                             </label>
                             <input id="salary" name="salary" type="text" class="form-control" value="<?= $jobData['salary'] ?>">
                         </div>
-                        <div class="col-4">
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-12">
                             <label for="workarea">
                                 <h5>Location</h5>
                             </label>
@@ -300,27 +326,27 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
                         </div>
                     </div>
                     <div class="row py-3">
-                        <div class="col-4">
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-12">
                             <label for="conphone">
                                 <h5>Contact Phone</h5>
                             </label>
                             <input id="conphone" name="conphone" type="text" class="form-control" value="<?= $jobData['conphone'] ?>">
                         </div>
-                        <div class="col-4">
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-12">
                             <label for="">
                                 <h5>Contact Email</h5>
                             </label>
                             <input id="conemail" name="conemail" type="email" class="form-control" value="<?= $jobData['conemail'] ?>">
                         </div>
-                        <div class="col-4 pe-0 me-0 row">
-                            <div class="col-6">
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-12 pe-0 me-0 mt-sm-3 mt-3 row">
+                            <div class="col-lg-6 col-md-6 col-sm-0 col-0">
 
                             </div>
-                            <div class="col-3">
-                                <a class="btn btn-danger" href="?view&id=<?= $jobData['jindex'] ?>">Cancel</a>
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-12 pe-0 mb-sm-2 mb-2 text-end">
+                                <input type="submit" value="Post" class="btn btn-primary" name="post">
                             </div>
-                            <div class="col-3 pe-0 text-end">
-                                <input type="submit" value="Update" class="btn btn-primary" name="update">
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-12 text-end pe-sm-0 pe-0">
+                                <a class="btn btn-danger" href="?view&id=<?= $jobData['jindex'] ?>">Cancel</a>
                             </div>
                         </div>
                     </div>
@@ -378,13 +404,13 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
                         <div class="border border-top border-dark"></div>
                     </div>
                     <div class="row py-3">
-                        <div class="col-4">
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-12">
                             <label for="salary">
                                 <h5>Salary</h5>
                             </label>
                             <input id="salary" name="salary" type="text" class="form-control">
                         </div>
-                        <div class="col-4">
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-12">
                             <label for="workarea">
                                 <h5>Location</h5>
                             </label>
@@ -392,26 +418,26 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
                         </div>
                     </div>
                     <div class="row py-3">
-                        <div class="col-4">
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-12">
                             <label for="conphone">
                                 <h5>Contact Phone</h5>
                             </label>
                             <input id="conphone" name="conphone" type="text" class="form-control">
                         </div>
-                        <div class="col-4">
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-12">
                             <label for="">
                                 <h5>Contact Email</h5>
                             </label>
                             <input id="conemail" name="conemail" type="email" class="form-control">
                         </div>
                         <div class="col-4 pe-0 me-0 row">
-                            <div class="col-6">
+                            <div class="col-lg-6 col-md-6 col-sm-0 col-0">
 
                             </div>
-                            <div class="col-3">
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-6">
                                 <a class="btn btn-danger" href="posted_jobs.php">Cancel</a>
                             </div>
-                            <div class="col-3 pe-0 text-end">
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-6 pe-0 text-end">
                                 <input type="submit" value="Post" class="btn btn-primary" name="post">
                             </div>
                         </div>
@@ -440,6 +466,17 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
         document.addEventListener('DOMContentLoaded', function() {
             var clearButton = document.getElementById('clear-button');
             var searchField = document.getElementById('search-field');
+
+            clearButton.addEventListener('click', function() {
+                searchField.value = '';
+                searchField.focus();
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var clearButton = document.getElementById('second-clear-button');
+            var searchField = document.getElementById('second-search-field');
 
             clearButton.addEventListener('click', function() {
                 searchField.value = '';

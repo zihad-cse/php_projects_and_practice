@@ -14,10 +14,10 @@ session_start();
 if (isset($_GET['id'])) {
     $rindex = $_GET['id'];
 } else {
-    echo "Could Not Get Resume Data";
-    exit;
+    $rindex = '';
 }
 $resumeData = getResumeDataGuest($pdo, $rindex);
+
 if (isset($_POST['update']) && !empty($_POST['update'])) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $fullname = $_POST['fullname'];
@@ -40,9 +40,40 @@ if (isset($_POST['update']) && !empty($_POST['update'])) {
             $stmt->bindParam(':dateofbirth', $dateofbirth, PDO::PARAM_STR);
             $stmt->bindParam(':visible', $visible, PDO::PARAM_INT);
             $stmt->bindParam(':orgindex', $orgindex, PDO::PARAM_STR);
-            $stmt->execute();
             if ($stmt->execute()) {
                 header("location: ?view&id=" . $rindex);
+            }
+        } catch (PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
+}
+// echo "<pre>";
+// var_dump($_SESSION);
+// echo "</pre>";
+if (isset($_GET['new-resume'])) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['new-resume'])) {
+        $fullname = $_POST['fullname'];
+        $homeaddress = $_POST['homeaddress'];
+        $birtharea = $_POST['birtharea'];
+        $religion = $_POST['religion'];
+        $skilleduexp = $_POST['skilleduexp'];
+        $dateofbirth = $_POST['dateofbirth'];
+        $visible = isset($_POST['visible']) ? 1 : 0;
+        $orgindex = $_SESSION['orgIndex'];
+        try {
+            $sql = "INSERT INTO resumes (fullname, homeaddress, birtharea, religion, skilleduexp, dateofbirth, visible, orgindex) VALUES (:fullname, :homeaddress, :birtharea, :religion, :skilleduexp, :dateofbirth, :visible, :orgindex)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':fullname', $fullname, PDO::PARAM_STR);
+            $stmt->bindParam(':homeaddress', $homeaddress, PDO::PARAM_STR);
+            $stmt->bindParam(':birtharea', $birtharea, PDO::PARAM_STR);
+            $stmt->bindParam(':religion', $religion, PDO::PARAM_STR);
+            $stmt->bindParam(':skilleduexp', $skilleduexp, PDO::PARAM_STR);
+            $stmt->bindParam(':dateofbirth', $dateofbirth, PDO::PARAM_STR);
+            $stmt->bindParam(':visible', $visible, PDO::PARAM_INT);
+            $stmt->bindParam(':orgindex', $orgindex, PDO::PARAM_STR);
+            if ($stmt->execute()) {
+                header("location: resume_profile.php");
             }
         } catch (PDOException $e) {
             echo 'Error: ' . $e->getMessage();
@@ -107,6 +138,10 @@ if (isset($_POST['update'])) {
             color: #dc3545;
         }
 
+        #nav-bar {
+            box-shadow: 1px 1px 8px #999;
+        }
+
         .small-textarea {
             height: 100px;
             resize: none;
@@ -127,11 +162,15 @@ if (isset($_POST['update'])) {
             width: 100px;
         }
     </style>
-    <title><?= $resumeData['fullname'] ?></title>
+    <title><?php if (!isset($_GET['new-resume'])) {
+                echo $resumeData['fullname'];
+            } else if (isset($_GET['new-resume'])) {
+                echo "Post a Resume";
+            } ?></title>
 </head>
 
 <body class="bg-light">
-    <nav class="navbar p-3 bg-light sticky-top">
+    <nav id="nav-bar" class="navbar p-3 bg-light sticky-top">
         <div class="container">
             <a class="navbar-brand" href="index.php">
                 <img src="img/logoipsum-248.svg" alt="">
@@ -147,9 +186,6 @@ if (isset($_POST['update'])) {
                         <button name="search-submit" value="Search" class="btn btn-outline-dark" type="submit" id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </div>
                 </form>
-            </div>
-            <div class="d-lg-none d-md-none d-sm-block d-block btn btn-primary">
-                <i class="fa-solid fa-magnifying-glass"></i>
             </div>
             <?php if (!isset($_SESSION['token']) && !isset($_SESSION['phnNumber'])) { ?>
                 <div>
@@ -176,10 +212,25 @@ if (isset($_POST['update'])) {
                     </ul>
                 </div>
             <?php } ?>
-            </dv>
+        </div>
+        <div class="d-block d-lg-none d-md-none d-sm-block">
+            <div class="container d-flex justify-content-center">
+                <?php
+                $queryPath = 'resumes.php'
+                ?>
+                <form action="<?= $queryPath; ?>" method="get">
+                    <div class="input-group mb-3">
+                        <input value="<?php if (isset($search)) {
+                                            echo $search;
+                                        } ?>" name="search" id="search-field" type="search" class="form-control border-dark" placeholder="Search Resumes" aria-label="Job Listing Search Bar" aria-describedby="search-button">
+                        <button name="search-submit" value="Search" class="btn btn-outline-dark" type="submit" id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </nav>
     <section style="min-height: 100vh; " id="dashboard-main-content">
-        <?php if (!isset($_GET['edit'])) { ?>
+        <?php if (!isset($_GET['edit']) && !isset($_GET['new-resume'])) { ?>
             <div class="bg-light px-lg-0 px-md-0 px-sm-0 px-0 p-lg-5 p-md-4 p-sm-3 p-3 container">
                 <div class="row p-3">
                     <div class="mb-3">
@@ -192,6 +243,10 @@ if (isset($_POST['update'])) {
                             <p><?= $resumeData['homeaddress'] ?></p>
                             <b>Permanent Address: <br></b>
                             <p><?= $resumeData['birtharea'] ?></p>
+                            <b>Contact Number: <br></b>
+                            <p><?= $resumeData['prphone'] ?></p>
+                            <b>Contact Email Address: <br></b>
+                            <p><?= $resumeData['premail'] ?></p>
                         </div>
                         <div class="row">
                             <b>Date of Birth: <br> </b>
@@ -200,19 +255,20 @@ if (isset($_POST['update'])) {
                             <p><?= $resumeData['religion']; ?></p>
                         </div>
                     </div>
-                    <div class=" col-lg-2 col-md-2 col-sm-12 col-12">
+                    <div class="text-end col-lg-2 col-md-2 col-sm-12 col-12">
                         <?php $filePath = "uploads/resumes/" . $rindex . ".png";
                         if (file_exists($filePath)) { ?>
                             <button class="btn">
-                                <img class="img-thumbnail img-normal" src="uploads/resumes/<?php echo $rindex ?>.png" alt="">
+                                <img style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" class="img-thumbnail img-normal" src="uploads/resumes/<?php echo $rindex ?>.png" alt="">
                             </button>
                         <?php } else { ?>
-                            <img class="img-thumbnail img-normal" src="uploads/resumes/placeholder_pfp.svg" alt="">
+                            <img style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" class="img-thumbnail img-normal" src="uploads/resumes/placeholder_pfp.svg" alt="">
                         <?php } ?>
                     </div>
                 </div>
                 <div class="row p-3">
-                    <b class="col-12">Availability: <?php if ($resumeData['visible'] == 1) { ?>Active<?php } else { ?> Inactive <?php } ?></b>
+                    <b class="col-12">Availability:</b>
+                    <p class="<?= $resumeData['visible'] == 1 ? 'text-success' : 'text-danger' ?>"> <?php if ($resumeData['visible'] == 1) { ?>Active<?php } else { ?> Inactive <?php } ?></p>
                 </div>
                 <div class="row p-3">
                     <h4 class="text-decoration-underline">Skills/Experiences</h4>
@@ -262,23 +318,19 @@ if (isset($_POST['update'])) {
                             <?php if (file_exists($resumePfpPath)) { ?>
                                 <div class="row pb-1">
                                     <div class="col-12 row">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-12">
-                                            <img style="height:100px; width:100px;" src="<?php echo $resumePfpPath; ?>" alt="">
+                                        <div class="text-start col-lg-12 col-md-12 col-sm-12 col-12">
+                                            <img style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" src="<?php echo $resumePfpPath; ?>" alt="">
                                         </div>
                                     </div>
                                     <div class="col-12 row">
-                                        <div class="col-lg-5 col-md-12 col-sm-12 col-12">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                                             <div class="row py-1">
-                                                <div class="p-lg-0 pb-md-3 pb-sm-3 pb-3 col-lg-3 col-md-12 col-sm-12 col-12">
-                                                    <b>Upload An Image</b>
-                                                </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
+                                                <div class="col-lg-9 col-md-6 col-sm-6 col-6">
                                                     <div>
                                                         <input name="imgUpload" class="form-control" type="file">
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-3 col-md-6 col-sm-6 col-6">
-                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -287,7 +339,7 @@ if (isset($_POST['update'])) {
                                 <div class="row pb-1">
                                     <div class="col-12 row">
                                         <div class="col-lg-2 col-md-12 col-sm-12 col-12">
-                                            <img style="height: 100px; width: 100px;" src="uploads/resumes/placeholder_pfp.svg" alt="">
+                                            <img style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" src="uploads/resumes/placeholder_pfp.svg" alt="">
                                         </div>
                                         <div class="col-2">
 
@@ -341,6 +393,110 @@ if (isset($_POST['update'])) {
                     </div>
                 </div>
             </form>
+        <?php } else if (isset($_GET['new-resume'])) { ?>
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="bg-light px-lg-0 px-md-0 px-sm-0 px-0 p-lg-5 p-md-4 p-sm-3 p-3 container">
+                    <div class="row p-3">
+                        <div class="col-8">
+                            <div class="row">
+                                <label for="fullname">Full Name</label>
+                                <input name="fullname" class="form-control-lg mb-4" type="text" value="">
+                                <label for="homeaddress">Current Address</label>
+                                <textarea class="form-control mt-3 small-textarea" style="resize: none;" name="homeaddress" id="homeaddress" cols="30" rows="10"></textarea>
+                                <label for="birtharea">Permanent Address</label>
+                                <textarea class="form-control mt-3 small-textarea" style="resize: none;" name="birtharea" id="birtharea" cols="30" rows="10"></textarea>
+                            </div>
+                            <div class="row">
+                                <label for="dateofbirth">Date of Birth</label>
+                                <input id="dateofbirth" name="dateofbirth" class="form-control" type="date">
+                                <label for="religion">Religion</label>
+                                <input id="religion" name="religion" class="form-control" type="text" value="">
+                            </div>
+                        </div>
+                        <!-- <div class=" col-lg-4 col-md-2 col-sm-12 col-12">
+                            <?php if (isset($resumeData) && !empty($resumeData)) {
+                                $resumePfpPath = "uploads/resumes/" . $resumeData['rindex'] . '.png';
+                            } else {
+                                $resumePfpPath = '';
+                            }  ?>
+                            <?php if (file_exists($resumePfpPath)) { ?>
+                                <div class="row pb-1">
+                                    <div class="col-12 row">
+                                        <div class="text-start col-lg-12 col-md-12 col-sm-12 col-12">
+                                            <img style="height:100px; width:100px;" src="<?php echo $resumePfpPath; ?>" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 row">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                                            <div class="row py-1">
+                                                <div class="col-lg-9 col-md-6 col-sm-6 col-6">
+                                                    <div>
+                                                        <input name="imgUpload" class="form-control" type="file">
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php } else { ?>
+                                <div class="row pb-1">
+                                    <div class="col-12 row">
+                                        <div class="col-lg-2 col-md-12 col-sm-12 col-12">
+                                            <img style="height: 100px; width: 100px;" src="uploads/resumes/placeholder_pfp.svg" alt="">
+                                        </div>
+                                        <div class="col-2">
+
+                                        </div>
+                                        <div class="d-flex align-items-center col-lg-8 col-md-6 col-sm-6 col-6">
+                                            <div>
+                                                <input name="imgUpload" class="form-control" type="file">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 row">
+                                        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+                                            <div class="row py-1">
+                                                <div class="col-10 row">
+                                                </div>
+                                                <div class="col-lg-2 col-md-6 col-sm-6 col-6">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            <?php } ?>
+                        </div> -->
+                    </div>
+                    <div class="p-3 form-check">
+                        <input <?php if (isset($resumeData['visible'])) {
+                                    if ($resumeData['visible'] == 1) {
+                                        echo "checked";
+                                    } else {
+                                        echo '';
+                                    }
+                                } ?> class="form-check-input" type="checkbox" value="1" name="visible" id="visible">
+                        <label class="form-check-label" for="visible">Availability</label>
+                    </div>
+                    <div class="row p-3">
+                        <div>
+                            <label for="skilleduexp">
+                                <h4>Skills/Experiences</h4>
+                            </label>
+                            <textarea class="rte mt-3 medium-textarea" style="resize: none;" name="skilleduexp" id="skilleduexp" cols="30" rows="10"></textarea>
+                        </div>
+                    </div>
+                    <div class="row p-3">
+                        <div class="border border-top border-dark"></div>
+                        <div class="col-6">
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <input name="new-resume" type="submit" value="Update" class="btn btn-primary">
+                    </div>
+                </div>
+            </form>
         <?php } ?>
     </section>
     <div id="footer" class="bg-dark text-light">
@@ -368,6 +524,11 @@ if (isset($_POST['update'])) {
                 searchField.value = '';
                 searchField.focus();
             });
+        });
+    </script>
+    <script>
+        document.getElementById('goBackButton').addEventListener('click', function() {
+            window.history.back();
         });
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

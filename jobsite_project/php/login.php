@@ -14,7 +14,12 @@
         $auth = new Auth($pdo);
 
         if ($auth->login($phnNumber, $pass)) {
-            header("location: dashboard.php");
+            if(isset($_GET['return_url'])){
+                $return_url = urldecode($_GET['return_url']);
+                header("location: ". $return_url);
+            } else {
+                header("location: ./dashboard.php");
+            }
             exit();
         } else {
             $errmsg = "<p class='text-danger'>Incorrect credentials. Please try again.</p>";

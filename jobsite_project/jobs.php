@@ -59,6 +59,10 @@ if ($jobNumber <= 10) {
             display: none;
         }
 
+        .nav-bar-shadow {
+            box-shadow: 1px 1px 8px #999;
+        }
+
         #secondary-nav {
             top: 55px;
         }
@@ -71,7 +75,7 @@ if ($jobNumber <= 10) {
 </head>
 
 <body class="bg-light">
-    <nav id="primary-nav" class="navbar p-3 bg-light sticky-top">
+    <nav id="primary-nav" class="navbar nav-bar-shadow p-3 bg-light sticky-top">
         <div class="container d-flex justify-content-between">
             <a class="navbar-brand" href="index.php">
                 <img src="img/logoipsum-248.svg" alt="">
@@ -116,24 +120,24 @@ if ($jobNumber <= 10) {
                 </div>
             <?php } ?>
         </div>
-    </nav>
-    <nav id="secondary-nav" class="d-block d-lg-none d-md-none d-sm-block navbar sticky-top p-3 bg-light">
-        <div class="container d-flex justify-content-center">
-            <?php
-            $queryPath = 'jobs.php'
-            ?>
-            <form action="<?= $queryPath; ?>" method="get">
-                <div class="input-group mb-3">
-                    <input value="<?php if (isset($search)) {
-                                        echo $search;
-                                    } ?>" name="search" id="search-field" type="search" class="form-control border-dark" placeholder="Search Job Listings" aria-label="Job Listing Search Bar" aria-describedby="search-button">
-                    <button name="search-submit" value="Search" class="btn btn-outline-dark" type="submit" id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
-                </div>
-            </form>
+        <div class="d-block d-lg-none d-md-none d-sm-block">
+            <div class="container d-flex justify-content-center">
+                <?php
+                $queryPath = 'jobs.php'
+                ?>
+                <form action="<?= $queryPath; ?>" method="get">
+                    <div class="input-group mb-3">
+                        <input value="<?php if (isset($search)) {
+                                            echo $search;
+                                        } ?>" name="search" id="search-field" type="search" class="form-control border-dark" placeholder="Search Job Listings" aria-label="Job Listing Search Bar" aria-describedby="search-button">
+                        <button name="search-submit" value="Search" class="btn btn-outline-dark" type="submit" id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </div>
+                </form>
+            </div>
         </div>
     </nav>
     <section id="dashboard-main-content">
-        <button type="button" class="btn btn-primary btn-floating btn-lg" id="btn-back-to-top">
+        <button type="button" class="d-lg-block d-md-none d-sm-none d-none btn btn-primary btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>
         </button>
         <div class="bg-light">

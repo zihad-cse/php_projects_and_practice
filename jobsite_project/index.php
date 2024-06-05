@@ -92,7 +92,7 @@ if(isset($_SESSION['phnNumber']) && !empty($_SESSION['phnNumber'])){
                             Log in or Sign up
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="login_page.php">Log In</a></li>
+                            <li><a class="dropdown-item" href="login_page.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Log In</a></li>
                             <li><a class="dropdown-item" href="registration_page.php">Sign Up</a></li>
                         </ul>
                     </div>
@@ -202,7 +202,7 @@ if(isset($_SESSION['phnNumber']) && !empty($_SESSION['phnNumber'])){
                                                 <div class="card-body">
                                                     <div class="row text-sm-center text-md-center text-lg-start text-center">
                                                         <div class="col-lg-4 col-md-12 col-sm-12 col-12">
-                                                            <img class="img-fluid" style="max-height: 100px;" src="<?php echo $job_img_src ?>" alt="">
+                                                            <img class="img-fluid" style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" src="<?php echo $job_img_src ?>" alt="">
                                                         </div>
                                                         <div class="col-lg-8 col-md-12 col-sm-12 col-12">
                                                             <div class="row">
@@ -264,7 +264,7 @@ if(isset($_SESSION['phnNumber']) && !empty($_SESSION['phnNumber'])){
                                                 <div class="card-body">
                                                     <div class="row text-center text-sm-center text-lg-start text-md-center">
                                                         <div class="col-12 col-sm-12 col-md-12 col-lg-3">
-                                                            <img class="img-fluid" style="max-height: 100px;" src="<?php echo $resume_img_src; ?>" alt="">
+                                                            <img class="img-fluid" style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" src="<?php echo $resume_img_src; ?>" alt="">
                                                         </div>
                                                         <div class="col-12 col-sm-12 col-md-12 col-lg-9">
                                                             <div class="row py-2 py-sm-2 py-md-2 py-lg-1">

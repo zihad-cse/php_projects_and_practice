@@ -3,8 +3,8 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 $dsn = 'mysql:host=localhost;dbname=jobsite';
-$username = 'root';
-$password = '';
+$username = 'huda';
+$password = 'huda123';
 
 try {
     $pdo = new PDO($dsn, $username, $password);

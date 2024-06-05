@@ -38,56 +38,27 @@ if (isset($reumeData) == true) {
 $formatteddob = date("Y-d-m", strtotime($dob));
 
 //Updates company details (table: org)
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
-        $companyCategory = $_POST['companyCategory'];
-        $companyDetails = $_POST['companyDetails'];
-        $companyDetailsShow = isset($_POST['companyDetailsShow']) ? 1 : 0;
-        $phnNumber = $_SESSION['phnNumber'];
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
+    $companyCategory = $_POST['companyCategory'];
+    $companyDetails = $_POST['companyDetails'];
+    $companyDetailsShow = isset($_POST['companyDetailsShow']) ? 1 : 0;
+    $phnNumber = $_SESSION['phnNumber'];
 
-        try {
-            $sql = "UPDATE org SET ocatindex = :orgCat, orgnote = :orgNote, displayunote = :displayuNote WHERE prphone = :phnSession";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(":orgCat", $companyCategory, PDO::PARAM_STR);
-            $stmt->bindParam(":orgNote", $companyDetails, PDO::PARAM_STR);
-            $stmt->bindParam(":displayuNote", $companyDetailsShow, PDO::PARAM_BOOL);
-            $stmt->bindParam(":phnSession", $phnNumber, PDO::PARAM_STR);
-            $stmt->execute();
+    try {
+        $sql = "UPDATE org SET ocatindex = :orgCat, orgnote = :orgNote, displayunote = :displayuNote WHERE prphone = :phnSession";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(":orgCat", $companyCategory, PDO::PARAM_STR);
+        $stmt->bindParam(":orgNote", $companyDetails, PDO::PARAM_STR);
+        $stmt->bindParam(":displayuNote", $companyDetailsShow, PDO::PARAM_BOOL);
+        $stmt->bindParam(":phnSession", $phnNumber, PDO::PARAM_STR);
+        $stmt->execute();
 
-            if ($stmt->execute()) {
-                header("Location: dashboard.php");
-            }
-        } catch (PDOException $e) {
-            echo 'Error: ' . $e->getMessage();
+        if ($stmt->execute()) {
+            header("Location: dashboard.php");
         }
+    } catch (PDOException $e) {
+        echo 'Error: ' . $e->getMessage();
     }
-//else if (isset($userData['orgnote']) && !empty($userData['orgnote'])) {
-//     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST["update"])) {
-
-//         $companyCategory = $_POST['companyCategory'];
-//         $companyDetails = $_POST['companyDetails'];
-//         $companyDetailsShow = isset($_POST['companyDetailsShow']) ? 1 : 0;
-//         $phnNumber = $_SESSION['phnNumber'];
-
-//         try {
-//             $sql = "INSERT INTO org (ocatindex, orgnote, displayunote) VALUES (:orgCat, :orgNote, :displayuNote) WHERE prphone = :phnSession";
-//             $stmt = $pdo->prepare($sql);
-//             $stmt->bindParam(":orgCat", $companyCategory, PDO::PARAM_STR);
-//             $stmt->bindParam(":orgNote", $companyDetails, PDO::PARAM_STR);
-//             $stmt->bindParam(":displayuNote", $companyDetailsShow, PDO::PARAM_BOOL);
-//             $stmt->bindParam(":phnSession", $phnNumber, PDO::PARAM_STR);
-//             $stmt->execute();
-
-//             if ($stmt->execute()) {
-//                 header("Location: dashboard.php");
-//             }
-//         } catch (PDOException $e) {
-//             echo 'Error: ' . $e->getMessage();
-//         }
-//     }
-// }
-$debug_var = '';
-if (isset($_POST['update'])) {
-    $debug_var = "Update is posting";
 }
 
 if (isset($_POST['upload-image'])) {
@@ -438,6 +409,11 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
     </script> -->
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.rte').summernote();
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

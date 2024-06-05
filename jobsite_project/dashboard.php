@@ -21,6 +21,7 @@ if (!isset($_SESSION['token'])) {
 if (isset($_SESSION['phnNumber'])) {
     $phnNumber = $_SESSION['phnNumber'];
     $userData = getUserData($pdo, $phnNumber);
+    $_SESSION['orgIndex'] = $userData['orgindex'];
 }
 
 //Fetches Resume Data (table: resumes)

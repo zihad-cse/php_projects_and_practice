@@ -63,12 +63,16 @@ if ($resumeNumber <= 10) {
         #primary-nav {
             top: 0px;
         }
+
+        .nav-bar-shadow {
+            box-shadow: 1px 1px 8px #999;
+        }
     </style>
     <title>All Resumes</title>
 </head>
 
 <body class="bg-light">
-    <nav id="primary-nav" class="navbar p-3 bg-light sticky-top">
+    <nav id="primary-nav" class="navbar nav-bar-shadow p-3 bg-light sticky-top">
         <div class="container">
             <a class="navbar-brand" href="index.php">
                 <img src="img/logoipsum-248.svg" alt="">
@@ -115,24 +119,24 @@ if ($resumeNumber <= 10) {
                 </div>
             <?php } ?>
         </div>
-    </nav>
-    <nav id="secondary-nav" class="d-block d-lg-none d-md-none d-sm-block navbar sticky-top p-3 bg-light">
-        <div class="container d-flex justify-content-center">
-            <?php
-            $queryPath = 'jobs.php'
-            ?>
-            <form action="<?= $queryPath; ?>" method="get">
-                <div class="input-group mb-3">
-                    <input value="<?php if (isset($search)) {
-                                        echo $search;
-                                    } ?>" name="search" id="search-field" type="search" class="form-control border-dark" placeholder="Search Job Listings" aria-label="Job Listing Search Bar" aria-describedby="search-button">
-                    <button name="search-submit" value="Search" class="btn btn-outline-dark" type="submit" id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
-                </div>
-            </form>
+        <div class="d-block d-lg-none d-md-none d-sm-block">
+            <div class="container d-flex justify-content-center">
+                <?php
+                $queryPath = 'resumes.php'
+                ?>
+                <form action="<?= $queryPath; ?>" method="get">
+                    <div class="input-group mb-3">
+                        <input value="<?php if (isset($search)) {
+                                            echo $search;
+                                        } ?>" name="search" id="search-field" type="search" class="form-control border-dark" placeholder="Search Resumes" aria-label="Job Listing Search Bar" aria-describedby="search-button">
+                        <button name="search-submit" value="Search" class="btn btn-outline-dark" type="submit" id="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </div>
+                </form>
+            </div>
         </div>
     </nav>
     <section id="dashboard-main-content">
-        <button type="button" class="btn btn-primary btn-floating btn-lg" id="btn-back-to-top">
+        <button type="button" class="d-lg-block d-md-none d-sm-none d-none btn btn-primary btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>
         </button>
         <div class="bg-light">
@@ -140,26 +144,32 @@ if ($resumeNumber <= 10) {
                 <div class="col-12 p-lg-5 p-md-4 p-sm-2 p-2" style="min-height: 1000px; background-color: #ddd;">
                     <div class="">
                         <div class="container">
-                            <div class="">
+                            <div class="mt-4">
                                 <div class="d-flex justify-content-between">
-                                    <div class="">
 
+                                    <div class="mb-3">
+                                        <button id="goBackButton" class=" btn btn-danger"><i class="fa-solid fa-arrow-left-long"></i></button>
                                     </div>
-                                    <div class="">
+
+                                    <div class="d-lg-block d-md-block d-sm-none d-none">
                                         <h2 class="text-center mb-5">Available Resumes</h2>
                                     </div>
-                                    <div class="text-end dropdown">
+                                    <div class="d-lg-none d-md-none d-sm-block d-block">
+                                        <h2 class="text-center mb-5">Resumes</h2>
+                                    </div>
+                                    <!-- <div class="text-end dropdown">
                                         <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
                                             <i class="fa-solid fa-filter"></i> Filter
                                         </button>
                                         <form action="" class="" method="get">
                                             <div class="dropdown-menu">
-    
                                                 <div class="dropdown-divider"></div>
                                                 <button type="submit" class="dropdown-item btn">Apply</button>
-    
                                             </div>
                                         </form>
+                                    </div> -->
+                                    <div>
+
                                     </div>
                                 </div>
                                 <div class="row">
@@ -256,7 +266,7 @@ if ($resumeNumber <= 10) {
                                                 ?>
                                                     <li class="page-item"><a class="page-link" href="?resumepage=<?php echo $resumeNextPage ?><?php if (isset($_GET['search']) && isset($_GET['search-submit'])) { ?>&search=<?= $_GET['search'];
                                                                                                                                                                                                                                 ?>&search-submit=<?= $_GET['search-submit'];
-                                                                                                                                                                                                                                            } ?>">Next</a></li>
+                                                                                                                                                                                                                                                } ?>">Next</a></li>
                                                 <?php } else { ?>
                                                     <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
                                                 <?php } ?>
@@ -364,6 +374,11 @@ if ($resumeNumber <= 10) {
                 searchField.value = '';
                 searchField.focus();
             });
+        });
+    </script>
+    <script>
+        document.getElementById('goBackButton').addEventListener('click', function() {
+            window.history.back();
         });
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

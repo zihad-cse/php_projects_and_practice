@@ -293,13 +293,13 @@ if (isset($_POST['update'])) {
                                     <?php if (file_exists($resumePfpPath)) { ?>
                                         <div class="row pb-1">
                                             <div class="col-2">
-                                                <img class="img-fluid" style="max-height: 100px; max-width: 100px;" src="<?php echo $resumePfpPath; ?>" alt="">
+                                                <img class="img-fluid" style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" src="<?php echo $resumePfpPath; ?>" alt="">
                                             </div>
                                         </div>
                                     <?php } else { ?>
                                         <div class="row pb-1">
                                             <div class="col-2">
-                                                <img class="img-fluid" style="max-height: 100px; max-width: 100px;" src="uploads/resumes/placeholder_pfp.svg" alt="">
+                                                <img class="img-fluid" style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" src="uploads/resumes/placeholder_pfp.svg" alt="">
                                             </div>
                                         </div>
                                     <?php } ?>
@@ -370,7 +370,7 @@ if (isset($_POST['update'])) {
                                 <?php }
                             } else { ?>
                                 <div>
-                                    <a href="?edit" class="btn btn-primary">Set up</a>
+                                    <a href="resume.php?new-resume" class="btn btn-primary">Set up</a>
                                 </div>
                             <?php } ?>
                         </div>
@@ -385,7 +385,7 @@ if (isset($_POST['update'])) {
                             <?php if (file_exists($resumePfpPath)) { ?>
                                 <div class="row pb-1">
                                     <div class="col-lg-2 col-md-12 col-sm-12 col-12">
-                                        <img style="height:100px; width:100px;" src="<?php echo $resumePfpPath; ?>" alt="">
+                                        <img style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" src="<?php echo $resumePfpPath; ?>" alt="">
                                     </div>
                                     <div class="col-lg-5 col-md-12 col-sm-12 col-12">
                                         <div class="row py-1">
@@ -403,7 +403,7 @@ if (isset($_POST['update'])) {
                             <?php } else { ?>
                                 <div class="row pb-1">
                                     <div class="col-lg-2 col-md-12 col-sm-12 col-12">
-                                        <img style="height: 100px; width: 100px;" src="uploads/resumes/placeholder_pfp.svg" alt="">
+                                        <img style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" src="uploads/resumes/placeholder_pfp.svg" alt="">
                                     </div>
                                     <div class="col-lg-5 col-md-12 col-sm-12 col-12">
                                         <div class="row py-1">

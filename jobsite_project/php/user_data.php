@@ -25,7 +25,7 @@ function getUserData($pdo, $phnNumber)
 function getResumeData($pdo, $phnNumber)
 {
     try {
-        $stmt = $pdo->prepare("SELECT resumes.*, org.orgindex FROM resumes LEFT JOIN org ON org.orgindex = resumes.orgindex WHERE prphone = :phnNumber");
+        $stmt = $pdo->prepare("SELECT resumes.*, org.orgindex, org.prphone, org.premail FROM resumes LEFT JOIN org ON org.orgindex = resumes.orgindex WHERE prphone = :phnNumber");
         $stmt->bindParam(':phnNumber', $phnNumber, PDO::PARAM_STR);
         $stmt->execute();
         $resume = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -39,7 +39,7 @@ function getResumeData($pdo, $phnNumber)
 function getResumeDataGuest($pdo, $rindex)
 {
     try {
-        $stmt = $pdo->prepare("SELECT resumes.*, org.orgindex FROM resumes LEFT JOIN org ON org.orgindex = resumes.orgindex WHERE rindex = :rindex");
+        $stmt = $pdo->prepare("SELECT resumes.*, org.orgindex, org.prphone, org.premail FROM resumes LEFT JOIN org ON org.orgindex = resumes.orgindex WHERE rindex = :rindex");
         $stmt->bindParam(':rindex', $rindex, PDO::PARAM_STR);
         $stmt->execute();
         $resume = $stmt->fetch(PDO::FETCH_ASSOC);
