@@ -233,13 +233,12 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
                                     <a class="nav-link" href="org_profile.php">Org Profile</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="resume_profile.php">Resume</a>
+                                    <a class="nav-link" href="resume_profile.php">Resumes</a>
                                 </li>
                             </ul>
 
                             <div class="tab-content" id="myTabContent">
                                 <div>
-                                    <?= $debug_var; ?>
                                     <hr>
                                     <h4 class="mb-4">Company Profile</h4>
                                     <hr>

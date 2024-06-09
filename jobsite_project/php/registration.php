@@ -48,13 +48,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bindParam(':phn', $phn, PDO::PARAM_INT);
             $stmt->bindParam(':membersince', $membersince, PDO::PARAM_STR);
 
-            if($stmt->execute()){
+            try{
+                $pdo->beginTransaction();
+                $stmt->execute();
+                $orgIndex = $pdo->lastInsertId();
+                $sql = "INSERT INTO resumes (orgindex) VALUES (:orgindex)";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindParam(":orgindex", $orgIndex, PDO::PARAM_INT);
+                $stmt->execute();
+                $pdo->commit();
                 session_start();
                 $token = randomToken();
                 $_SESSION['token'] = $token;
                 $_SESSION['phnNumber'] = $phn;
                 header("Location: dashboard.php");
                 exit();
+                
+            } catch (PDOException $e) {
+                $pdo->rollBack();
+                echo "Error!: " . $e->getMessage() . "</br>";
             }
         }
     } catch (PDOException $e) {

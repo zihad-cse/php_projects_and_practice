@@ -8,6 +8,7 @@ ini_set('display_errors', 1);
 include 'php/user_data.php';
 include 'php/auth.php';
 include 'php/db_connection.php';
+include 'php/pagination.php';
 
 session_start();
 
@@ -27,16 +28,10 @@ if (isset($_SESSION['phnNumber'])) {
 
 if (isset($_SESSION['phnNumber'])) {
     $phnNumber = $_SESSION['phnNumber'];
-    $resumeData = getResumeData($pdo, $phnNumber);
-}
-//Formats Date of Birth for the edit form.
-$orgCatData = getOrgCategories($pdo);
-$dob = '';
-if (isset($reumeData) == true) {
-    $dob = $resumeData['dateofbirth'];
+    $resumeData = getAllPostedResumes($pdo, $userData['orgindex']);
 }
 
-$formatteddob = date("Y-d-m", strtotime($dob));
+$countedRows = count($resumeData);
 
 
 //Updates resume details (table: resumes)
@@ -263,277 +258,194 @@ if (isset($_POST['update'])) {
                     </ul>
                 </div>
                 <div style="background-color: #eee; min-height: 1000px" class="col-lg-10 col-md-12 col-sm-12 col-12 p-5 border rounded ">
+                    <ul class="nav nav-tabs" id="dashboard-tabs">
+                        <li class="nav-item">
+                            <div class="mb-3">
+                                <button id="goBackButton" class="nav-link"><i class="fa-solid fa-arrow-left-long"></i></button>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="dashboard.php">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="org_profile.php">Org Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="resume_profile.php">Resumes</a>
+                        </li>
+                    </ul>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="container px-0 ">
+                                <div class="">
+                                    <div class="mt-3">
+                                        <a href="php/add_resume.php" class="btn btn-primary"><i class="fa-solid fa-plus"></i> New Resume</a>
+                                    </div>
+                                    <div class="row">
+                                        <?php
+                                        if (isset($resumeData) && !empty($resumeData)) {
+                                            
+                                            foreach ($resumeData as $row) {
 
-                    <?php if (!isset($_GET['edit'])) { ?>
+                                                if (empty($resumeData[0]['fullname'])) {
+                                                    echo '';
+                                                } else  {
+                                                    $resume_img_src = "uploads/resumes/placeholder_pfp.svg";
+                                                    if (file_exists("uploads/resumes/" . $row['rindex'] . ".png")) {
+                                                        $resume_img_src = "uploads/resumes/" . $row['rindex'] . ".png";
+                                                    }
+                                        ?>
+                                                    <div class="container">
+                                                        <div class="col-12">
+                                                            <a id="landing-page-mouse-hover-card" style="max-height: 400px;" href="resume.php?view&id=<?php echo $row['rindex'] ?>" class="text-start my-4 mx-0 card text-decoration-none">
+                                                                <div class="card-body">
+                                                                    <div class="row text-lg-start text-md-start text-sm-center text-center">
+                                                                        <div class="col-1 row">
+                                                                            <div class="row">
 
-                        <ul class="nav nav-tabs" id="dashboard-tabs">
-                            <li class="nav-item">
-                                <div class="mb-3">
-                                    <button id="goBackButton" class="nav-link"><i class="fa-solid fa-arrow-left-long"></i></button>
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <?php if ($row['rdefault'] == 1) { ?>
+                                                                                    <div class="d-flex justify-content-center align-items-center">
+                                                                                        <i class="fa-solid fa-crown"></i>
+                                                                                    </div>
+                                                                                <?php } else {
+                                                                                    echo '';
+                                                                                } ?>
+                                                                            </div>
+                                                                            <div class="row">
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="col-lg-3 col-md-4 col-sm-12 col-12">
+                                                                            <img style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" src="<?php echo $resume_img_src ?>" alt="">
+                                                                        </div>
+                                                                        <div class="col-lg-8 col-md-8 col-sm-12 col-12">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-4 col-md-4 d-md-block d-lg-block d-sm-none d-none">
+                                                                                    <b>Full Name</b>
+                                                                                </div>
+                                                                                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                                                                    <b><?php echo $row['fullname']; ?> </b>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <div class="col-lg-4 col-md-4 d-md-block d-lg-block d-sm-none d-none">
+                                                                                    <b>Date Of Birth</b>
+                                                                                </div>
+                                                                                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                                                                    <div>
+                                                                                        <b><?php echo $row['dateofbirth']; ?> </b>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <div class="col-lg-4 col-md-4 d-md-block d-lg-block d-sm-none d-none">
+                                                                                    <b>Skills</b>
+                                                                                </div>
+                                                                                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                                                                    <?php if (strlen($row['skilleduexp']) > 100) {
+                                                                                        $maxLength = 99;
+                                                                                        $row['skilleduexp'] = substr($row['skilleduexp'], 0, $maxLength);
+                                                                                    } ?>
+                                                                                    <p class="mb-0"><?= $row['skilleduexp']; ?>...</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                        <?php }
+                                            }
+                                            
+                                        }
+                                        ?>
+                                    </div>
                                 </div>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="dashboard.php">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="org_profile.php">Org Profile</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="resume_profile.php">Resume</a>
-                            </li>
-
-                        </ul>
-                        <div class="row">
-
-                            <hr>
-                            <h4 class="mb-4">Resume</h4>
-                            <hr>
-                            <?php if (isset($resumeData['visible']) == true) {
-                                if (isset($resumeData['rindex']) && !empty($resumeData['rindex'])) { ?>
-                                    <?php if (file_exists($resumePfpPath)) { ?>
-                                        <div class="row pb-1">
-                                            <div class="col-2">
-                                                <img class="img-fluid" style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" src="<?php echo $resumePfpPath; ?>" alt="">
-                                            </div>
-                                        </div>
-                                    <?php } else { ?>
-                                        <div class="row pb-1">
-                                            <div class="col-2">
-                                                <img class="img-fluid" style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" src="uploads/resumes/placeholder_pfp.svg" alt="">
-                                            </div>
-                                        </div>
-                                    <?php } ?>
-                                    <div class="row pb-1">
-                                        <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                            <b>Full Name</b>
-                                        </div>
-                                        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                                            <p><?php echo $resumeData['fullname'] ?></p>
-                                        </div>
-                                    </div>
-                                    <div class="row pb-1">
-                                        <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                            <b>Father's Name</b>
-                                        </div>
-                                        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                                            <p><?php echo $resumeData['fathername'] ?></p>
-                                        </div>
-                                    </div>
-                                    <div class="row pb-1">
-                                        <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                            <b>Mother's Name</b>
-                                        </div>
-                                        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                                            <p><?php echo $resumeData['mothername'] ?></p>
-                                        </div>
-                                    </div>
-                                    <div class="row pb-1">
-                                        <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                            <b>Date of Birth</b>
-                                        </div>
-                                        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                                            <p><?php echo $resumeData['dateofbirth'] ?></p>
-                                        </div>
-                                    </div>
-                                    <div class="row pb-1">
-                                        <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                            <b>Religion</b>
-                                        </div>
-                                        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                                            <p><?php echo $resumeData['religion'] ?></p>
-                                        </div>
-                                    </div>
-                                    <div class="row pb-1">
-                                        <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                            <b>Address</b>
-                                        </div>
-                                        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                                            <p><?php echo $resumeData['homeaddress'] ?></p>
-                                        </div>
-                                    </div>
-                                    <div class="row pb-1">
-                                        <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                            <b>Birth Area</b>
-                                        </div>
-                                        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                                            <p><?php echo $resumeData['birtharea'] ?></p>
-                                        </div>
-                                    </div>
-                                    <div class="row pb-1">
-                                        <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                            <b>Skills</b>
-                                        </div>
-                                        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                                            <p><?php echo $resumeData['skilleduexp'] ?></p>
-                                        </div>
-                                    </div>
-                                <?php }
-                            } else { ?>
-                                <div>
-                                    <a href="resume.php?new-resume" class="btn btn-primary">Set up</a>
-                                </div>
-                            <?php } ?>
+                            </div>
                         </div>
-                    <?php } ?>
-                    <?php if (isset($_GET['edit'])) {
-                        if (isset($resumeData) && !empty($resumeData)) {
-                            $resumePfpPath = "uploads/resumes/" . $resumeData['rindex'] . '.png';
-                        } else {
-                            $resumePfpPath = '';
-                        } ?>
-                        <form method="post" enctype="multipart/form-data">
-                            <?php if (file_exists($resumePfpPath)) { ?>
-                                <div class="row pb-1">
-                                    <div class="col-lg-2 col-md-12 col-sm-12 col-12">
-                                        <img style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" src="<?php echo $resumePfpPath; ?>" alt="">
-                                    </div>
-                                    <div class="col-lg-5 col-md-12 col-sm-12 col-12">
-                                        <div class="row py-1">
-                                            <div class="p-lg-0 pb-md-3 pb-sm-3 pb-3 col-lg-3 col-md-12 col-sm-12 col-12">
-                                                <b>Upload An Image</b>
-                                            </div>
-                                            <div class="col-lg-8 col-md-6 col-sm-6 col-6">
-                                                <div>
-                                                    <input name="imgUpload" class="form-control" type="file">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php } else { ?>
-                                <div class="row pb-1">
-                                    <div class="col-lg-2 col-md-12 col-sm-12 col-12">
-                                        <img style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" src="uploads/resumes/placeholder_pfp.svg" alt="">
-                                    </div>
-                                    <div class="col-lg-5 col-md-12 col-sm-12 col-12">
-                                        <div class="row py-1">
-                                            <div class="p-lg-0 pb-md-3 pb-sm-3 pb-3 col-lg-3 col-md-12 col-sm-12 col-12">
-                                                <b>Upload An Image</b>
-                                            </div>
-                                            <div class="col-lg-8 col-md-6 col-sm-6 col-6">
-                                                <div>
-                                                    <input name="imgUpload" class="form-control" type="file">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php } ?>
-                            <form action="" method="post" enctype="multipart/form-data">
-                                <div class="row py-1">
-                                    <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                        <b>Full Name</b>
-                                    </div>
-                                    <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                                        <div>
-                                            <input name="fullname" class="form-control" type="text" value="<?= isset($resumeData['fullname']) == 1 ?  $resumeData['fullname'] : ''; ?>">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row py-1">
-                                    <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                        <b>Father's Name</b>
-                                    </div>
-                                    <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                                        <div>
-                                            <input name="fathername" class="form-control" type="text" value="<?= isset($resumeData['fathername']) == 1 ?  $resumeData['fathername'] : ''; ?>">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row py-1">
-                                    <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                        <b>Mother's Name</b>
-                                    </div>
-                                    <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                                        <div>
-                                            <input name="mothername" class="form-control" type="text" value="<?= isset($resumeData['mothername']) == 1 ?  $resumeData['mothername'] : ''; ?>">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row py-1">
-                                    <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                        <b>Date of Birth</b>
-                                    </div>
-                                    <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                                        <div>
-                                            <input name="dateofbirth" class="form-control" type="date" value=<?= isset($resumeData['dateofbirth']) == 1 ?  $resumeData['dateofbirth'] : ''; ?>>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row py-1">
-                                    <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                        <b>Religion</b>
-                                    </div>
-                                    <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                                        <div>
-                                            <input name="religion" class="form-control" type="text" value="<?= isset($resumeData['religion']) == 1 ?  $resumeData['religion'] : ''; ?>">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row py-1">
-                                    <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                        <b>Address</b>
-                                    </div>
-                                    <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                                        <div>
-                                            <textarea class="mt-3 small-textarea form-control" style="resize: none;" name="homeaddress" id="homeAddress" cols="30" rows="10"><?= isset($resumeData['homeaddress']) == 1 ?  $resumeData['homeaddress'] : ''; ?></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row py-1">
-                                    <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                        <b>Birth Area</b>
-                                    </div>
-                                    <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                                        <div>
-                                            <textarea class="small-textarea form-control" name="birtharea" id="birtharea"><?= isset($resumeData['birtharea']) == 1 ?  $resumeData['birtharea'] : ''; ?></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row py-1">
-                                    <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                        <b>Skills</b>
-                                    </div>
-                                    <script>
-                                        tinymce.init({
-                                            selector: 'textarea.rte'
-                                        });
-                                    </script>
-                                    <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                                        <div>
-                                            <textarea class="rte mt-3 medium-textarea form-control" style="resize: none;" name="skilleduexp" id="skilleduexp" cols="30" rows="10"><?= isset($resumeData['skilleduexp']) == 1 ?  $resumeData['skilleduexp'] : ''; ?></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                        <b>Active</b>
-                                    </div>
-                                    <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-                                        <div class="form-check">
-                                            <input <?php if (isset($resumeData['visible'])) {
-                                                        if ($resumeData['visible'] == 1) {
-                                                            echo "checked";
-                                                        } else {
-                                                            echo '';
-                                                        }
-                                                    } ?> class="form-check-input" type="checkbox" value="1" name="resumeDetailsShow" id="flexCheckDefault">
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                                <input type="submit" name="update" class="btn btn-primary" value="Update">
-                            </form>
-                            <?php } else {
-                            if (!isset($resumeData['rindex']) && empty($resumeData['rindex'])) {
-                                echo '';
-                            } else { ?>
-                                <div>
-                                    <a href="resume.php?view&id=<?= $resumeData['rindex']; ?>&edit" class="btn btn-primary">Edit</a>
-                                </div>
-                        <?php }
-                        } ?>
+                    </div>
+                    <!-- <?php if ($pag_invis == false) { ?>
+                        <div class="d-lg-block d-md-block d-sm-none d-none">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination mt-3 justify-content-center">
+                                    <form method="post">
+                                        <select onchange="this.form.submit()" class="form-select bg-primary text-light" name="resumes-pagination-limit" id="">
+                                            <option <?= ($_SESSION["resumes-pagination-limit"] == 10 ? "selected" : "") ?> value="10">10</option>
+                                            <option <?= ($_SESSION["resumes-pagination-limit"] == 20 ? "selected" : "") ?> value="20">20</option>
+                                            <option <?= ($_SESSION["resumes-pagination-limit"] == 50 ? "selected" : "") ?> value="50">50</option>
+                                        </select>
+                                    </form>
+                                    <?php if ($resume_current_page > 1) {
+                                        $resumePrevPage = $resume_current_page - 1;
+                                    ?>
+                                        <li class="page-item"><a class="page-link" href="?resumepage=<?php echo $resumePrevPage; ?><?php if (isset($_GET['search']) && isset($_GET['search-submit'])) { ?>&search=<?= $_GET['search'] ?>&search-submit=<?= $_GET['search-submit'];
+                                                                                                                                                                                                                                                    } ?>">Previous</a></li>
+                                    <?php } else { ?>
+                                        <li class="page-item disabled"><a class="page-link" href="">Previous</a></li>
+                                    <?php } ?>
+                                    <?php foreach (range($resumePagination_rangeFirstNumber, $resumePagination_rangeLastNumber) as $resume_page_number) { ?>
+                                        <li class="page-item <?= ($resume_current_page == $resume_page_number ? "active" : "");  ?>">
+                                            <a class="page-link" href="?resumepage=<?php echo $resume_page_number ?><?php if (isset($_GET['search']) && isset($_GET['search-submit'])) { ?>&search=<?= $_GET['search'] ?>&search-submit=<?= $_GET['search-submit'];
+                                                                                                                                                                                                                                    } ?>"><?php echo $resume_page_number ?></a>
+                                        </li>
+                                    <?php } ?>
 
+                                    <?php if ($resume_current_page < $resume_total_pages) {
+                                        $resumeNextPage = $resume_current_page + 1;
+                                    ?>
+                                        <li class="page-item"><a class="page-link" href="?resumepage=<?php echo $resumeNextPage ?><?php if (isset($_GET['search']) && isset($_GET['search-submit'])) { ?>&search=<?= $_GET['search'];
+                                                                                                                                                                                                                    ?>&search-submit=<?= $_GET['search-submit'];
+                                                                                                                                                                                                                                    } ?>">Next</a></li>
+                                    <?php } else { ?>
+                                        <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
+                                    <?php } ?>
+                                </ul>
+                            </nav>
+                        </div>
+                        <div class="my-3 d-lg-none d-md-none d-sm-block d-block">
+                            <div class="row">
+                                <div class="col-1"></div>
+                                <div class="col-10">
+                                    <div class="row">
+                                        <div class="col-6 ">
+                                            <form method="post">
+                                                <div class="col-6">
+                                                    <select onchange="this.form.submit()" class="form-select bg-primary text-light" name="resumes-pagination-limit" id="pageLimit">
+                                                        <option <?= ($_SESSION["resumes-pagination-limit"] == 10 ? "selected" : "") ?> value="10">10 Per Page</option>
+                                                        <option <?= ($_SESSION["resumes-pagination-limit"] == 20 ? "selected" : "") ?> value="20">20 Per Page</option>
+                                                        <option <?= ($_SESSION["resumes-pagination-limit"] == 50 ? "selected" : "") ?> value="50">50 Per Page</option>
+                                                    </select>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="input-group">
+                                                <label for="pageSelect" class="input-group-text">Page</label>
+                                                <select class="p-2 form-select" name="" id="pageSelect">
+                                                    <?php foreach (range($resumePagination_rangeFirstNumber, $resumePagination_rangeLastNumber) as $resume_page_number) { ?>
+                                                        <option <?php if (isset($_GET['resumepage'])) {
+                                                                    if ($_GET['resumepage'] == $resume_page_number) {
+                                                                        echo 'selected';
+                                                                    } else {
+                                                                        echo '';
+                                                                    }
+                                                                } ?> value="<?= $resume_page_number; ?>"><?= $resume_page_number; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1"></div>
+                            </div>
+                        </div>
+                    <?php } else if ($pag_invis == true) {
+                                echo '';
+                            } ?> -->
                 </div>
             </div>
         </div>

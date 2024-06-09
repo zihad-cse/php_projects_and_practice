@@ -190,7 +190,7 @@ if ($resumeNumber <= 10) {
                                                                     <div class="card-body">
                                                                         <div class="row text-lg-start text-md-start text-sm-center text-center">
                                                                             <div class="col-lg-4 col-md-4 col-sm-12 col-12">
-                                                                                <img style="height:100px; width: 100px;" src="<?php echo $resume_img_src ?>" alt="">
+                                                                                <img style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" src="<?php echo $resume_img_src ?>" alt="">
                                                                             </div>
                                                                             <div class="col-lg-8 col-md-8 col-sm-12 col-12">
                                                                                 <div class="row">

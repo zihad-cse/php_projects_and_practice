@@ -36,6 +36,23 @@ function getResumeData($pdo, $phnNumber)
         return false;
     }
 }
+
+function getAllPostedResumes($pdo, $orgindex)
+{
+    try{
+        $sql = "SELECT * FROM resumes WHERE orgindex = :orgindex";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(":orgindex", $orgindex, PDO::PARAM_INT);
+        $stmt->execute();
+        $resumes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $resumes;
+    } catch (PDOException $e){
+        error_log("Error: " . $e->getMessage());
+        return false;        
+    }
+}
+
 function getResumeDataGuest($pdo, $rindex)
 {
     try {

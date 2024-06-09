@@ -31,6 +31,9 @@ if (isset($_SESSION['phnNumber'])) {
     $resumeData = getResumeData($pdo, $phnNumber);
 }
 
+// echo "<pre>";
+// var_dump($_SESSION);
+// echo "</pre>";
 ?>
 
 <head>
@@ -136,7 +139,7 @@ if (isset($_SESSION['phnNumber'])) {
                                     <a class="nav-link" href="org_profile.php">Org Profile</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="resume_profile.php">Resume</a>
+                                    <a class="nav-link" href="resume_profile.php">Resumes</a>
                                 </li>
                             </ul>
                             <div class="tab-content" id="myTabContent">

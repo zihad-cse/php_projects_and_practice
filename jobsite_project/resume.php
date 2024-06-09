@@ -11,16 +11,21 @@ include 'php/resume_search_query.php';
 
 
 session_start();
-if (isset($_GET['id'])) {
+if (isset($_GET['id']) && !empty($_GET['id'])) {
+
     $rindex = $_GET['id'];
-} else {
-    $rindex = '';
+} else if (isset($_SESSION['phnNumber'])) {
+    $resumeData = getResumeData($pdo, $_SESSION['phnNumber']);
+    $rindex = $resumeData['rindex'];
 }
+
 $resumeData = getResumeDataGuest($pdo, $rindex);
 
-if (isset($_POST['update']) && !empty($_POST['update'])) {
+if (isset($_GET['new-resume']) || isset($_GET['first-resume'])) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $fullname = $_POST['fullname'];
+        $fathername = $_POST['fathername'];
+        $mothername = $_POST['mothername'];
         $homeaddress = $_POST['homeaddress'];
         $birtharea = $_POST['birtharea'];
         $religion = $_POST['religion'];
@@ -28,43 +33,22 @@ if (isset($_POST['update']) && !empty($_POST['update'])) {
         $dateofbirth = $_POST['dateofbirth'];
         $visible = isset($_POST['visible']) ? 1 : 0;
         $orgindex = $_SESSION['orgIndex'];
-
-        try {
-            $sql = "UPDATE resumes SET fullname = :fullname, homeaddress = :homeaddress, birtharea = :birtharea, religion = :religion, skilleduexp = :skilleduexp, dateofbirth = :dateofbirth, visible = :visible WHERE orgindex = :orgindex";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':fullname', $fullname, PDO::PARAM_STR);
-            $stmt->bindParam(':homeaddress', $homeaddress, PDO::PARAM_STR);
-            $stmt->bindParam(':birtharea', $birtharea, PDO::PARAM_STR);
-            $stmt->bindParam(':religion', $religion, PDO::PARAM_STR);
-            $stmt->bindParam(':skilleduexp', $skilleduexp, PDO::PARAM_STR);
-            $stmt->bindParam(':dateofbirth', $dateofbirth, PDO::PARAM_STR);
-            $stmt->bindParam(':visible', $visible, PDO::PARAM_INT);
-            $stmt->bindParam(':orgindex', $orgindex, PDO::PARAM_STR);
-            if ($stmt->execute()) {
-                header("location: ?view&id=" . $rindex);
-            }
-        } catch (PDOException $e) {
-            echo 'Error: ' . $e->getMessage();
+        if(isset($_GET['first-resume'])){
+            $rdefault = 1;
+        } else {
+            $rdefault = 0;
         }
-    }
-}
-// echo "<pre>";
-// var_dump($_SESSION);
-// echo "</pre>";
-if (isset($_GET['new-resume'])) {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['new-resume'])) {
-        $fullname = $_POST['fullname'];
-        $homeaddress = $_POST['homeaddress'];
-        $birtharea = $_POST['birtharea'];
-        $religion = $_POST['religion'];
-        $skilleduexp = $_POST['skilleduexp'];
-        $dateofbirth = $_POST['dateofbirth'];
-        $visible = isset($_POST['visible']) ? 1 : 0;
-        $orgindex = $_SESSION['orgIndex'];
         try {
-            $sql = "INSERT INTO resumes (fullname, homeaddress, birtharea, religion, skilleduexp, dateofbirth, visible, orgindex) VALUES (:fullname, :homeaddress, :birtharea, :religion, :skilleduexp, :dateofbirth, :visible, :orgindex)";
+            if (isset($_GET['new-resume'])) {
+                $sql = "INSERT INTO resumes (fullname, fathername, mothername, homeaddress, birtharea, religion, skilleduexp, dateofbirth, visible, orgindex, rdefault) VALUES (:fullname, :fathername, :mothername, :homeaddress, :birtharea, :religion, :skilleduexp, :dateofbirth, :visible, :orgindex, :rdefault)";
+            }
+            if (isset($_GET['first-resume'])) {
+                $sql = "UPDATE resumes SET fullname = :fullname, fathername = :fathername, mothername = :mothername, homeaddress = :homeaddress, birtharea = :birtharea, religion = :religion, skilleduexp = :skilleduexp, dateofbirth = :dateofbirth, visible = :visible, orgindex = :orgindex, rdefault = :rdefault WHERE rindex =". $rindex;
+            }
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':fullname', $fullname, PDO::PARAM_STR);
+            $stmt->bindParam(':fathername', $fathername, PDO::PARAM_STR);
+            $stmt->bindParam(':mothername', $mothername, PDO::PARAM_STR);
             $stmt->bindParam(':homeaddress', $homeaddress, PDO::PARAM_STR);
             $stmt->bindParam(':birtharea', $birtharea, PDO::PARAM_STR);
             $stmt->bindParam(':religion', $religion, PDO::PARAM_STR);
@@ -72,6 +56,7 @@ if (isset($_GET['new-resume'])) {
             $stmt->bindParam(':dateofbirth', $dateofbirth, PDO::PARAM_STR);
             $stmt->bindParam(':visible', $visible, PDO::PARAM_INT);
             $stmt->bindParam(':orgindex', $orgindex, PDO::PARAM_STR);
+            $stmt->bindParam(':rdefault', $rdefault, PDO::PARAM_INT);
             if ($stmt->execute()) {
                 header("location: resume_profile.php");
             }
@@ -81,14 +66,14 @@ if (isset($_GET['new-resume'])) {
     }
 }
 
-if (isset($_POST['update'])) {
+if ((isset($_POST['update'])) || (isset($_POST['first-resume'])) || (isset($_POST['new-resume']))) {
     if (isset($_FILES['imgUpload']['name']) && !empty($_FILES['imgUpload']['name'])) {
         $target_dir = "uploads/resumes/";
         $imgName = $resumeData['rindex'] . ".png";
         $target_file = $target_dir . $imgName;
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        echo "YES";
+        
         $check = getimagesize($_FILES["imgUpload"]["tmp_name"]);
         if ($check !== false) {
             $uploadOk = 1;
@@ -166,7 +151,9 @@ if (isset($_POST['update'])) {
                 echo $resumeData['fullname'];
             } else if (isset($_GET['new-resume'])) {
                 echo "Post a Resume";
-            } ?></title>
+            } else if (isset($_GET['first-resume'])){
+                echo "Resume Setup";
+            }?> </title>
 </head>
 
 <body class="bg-light">
@@ -230,7 +217,20 @@ if (isset($_POST['update'])) {
         </div>
     </nav>
     <section style="min-height: 100vh; " id="dashboard-main-content">
-        <?php if (!isset($_GET['edit']) && !isset($_GET['new-resume'])) { ?>
+        <div class="modal fade" id="image-expansion" tabindex="-1" aria-labelledby="image-expansion-label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img style="max-height: 450px; max-width: fit-content; object-fit: cover; object-position: 25% 25%" src="uploads/resumes/<?= $rindex ?>.png" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <?php if (!isset($_GET['edit']) && !isset($_GET['new-resume']) && !isset($_GET['first-resume'])) { ?>
             <div class="bg-light px-lg-0 px-md-0 px-sm-0 px-0 p-lg-5 p-md-4 p-sm-3 p-3 container">
                 <div class="row p-3">
                     <div class="mb-3">
@@ -258,7 +258,7 @@ if (isset($_POST['update'])) {
                     <div class="text-end col-lg-2 col-md-2 col-sm-12 col-12">
                         <?php $filePath = "uploads/resumes/" . $rindex . ".png";
                         if (file_exists($filePath)) { ?>
-                            <button class="btn">
+                            <button class="btn" data-bs-toggle="modal" data-bs-target="#image-expansion">
                                 <img style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" class="img-thumbnail img-normal" src="uploads/resumes/<?php echo $rindex ?>.png" alt="">
                             </button>
                         <?php } else { ?>
@@ -393,7 +393,7 @@ if (isset($_POST['update'])) {
                     </div>
                 </div>
             </form>
-        <?php } else if (isset($_GET['new-resume'])) { ?>
+        <?php } else if (isset($_GET['new-resume']) || isset($_GET['first-resume'])) { ?>
             <form action="" method="post" enctype="multipart/form-data">
                 <div class="bg-light px-lg-0 px-md-0 px-sm-0 px-0 p-lg-5 p-md-4 p-sm-3 p-3 container">
                     <div class="row p-3">
@@ -401,6 +401,10 @@ if (isset($_POST['update'])) {
                             <div class="row">
                                 <label for="fullname">Full Name</label>
                                 <input name="fullname" class="form-control-lg mb-4" type="text" value="">
+                                <label for="fullname">Father's Name</label>
+                                <input name="fathername" class="form-control-lg mb-4" type="text" value="">
+                                <label for="fullname">Mother's Name</label>
+                                <input name="mothername" class="form-control-lg mb-4" type="text" value="">
                                 <label for="homeaddress">Current Address</label>
                                 <textarea class="form-control mt-3 small-textarea" style="resize: none;" name="homeaddress" id="homeaddress" cols="30" rows="10"></textarea>
                                 <label for="birtharea">Permanent Address</label>
@@ -413,9 +417,13 @@ if (isset($_POST['update'])) {
                                 <input id="religion" name="religion" class="form-control" type="text" value="">
                             </div>
                         </div>
-                        <!-- <div class=" col-lg-4 col-md-2 col-sm-12 col-12">
+                        <div class=" col-lg-4 col-md-2 col-sm-12 col-12">
                             <?php if (isset($resumeData) && !empty($resumeData)) {
-                                $resumePfpPath = "uploads/resumes/" . $resumeData['rindex'] . '.png';
+                                if (isset($_GET['new-resume']) || isset($_GET['first-resume'])) {
+                                    $resumePfpPath = '';
+                                } else {
+                                    $resumePfpPath = "uploads/resumes/" . $resumeData['rindex'] . '.png';
+                                }
                             } else {
                                 $resumePfpPath = '';
                             }  ?>
@@ -467,7 +475,7 @@ if (isset($_POST['update'])) {
 
                                 </div>
                             <?php } ?>
-                        </div> -->
+                        </div>
                     </div>
                     <div class="p-3 form-check">
                         <input <?php if (isset($resumeData['visible'])) {
@@ -493,7 +501,11 @@ if (isset($_POST['update'])) {
                         </div>
                     </div>
                     <div class="text-end">
-                        <input name="new-resume" type="submit" value="Update" class="btn btn-primary">
+                        <?php if (isset($_GET['new-resume'])) { ?>
+                            <input name="new-resume" type="submit" value="Update" class="btn btn-primary">
+                        <?php } else if (isset($_GET['first-resume'])) { ?>
+                            <input name="first-resume" type="submit" value="Update" class="btn btn-primary">
+                        <?php } ?>
                     </div>
                 </div>
             </form>

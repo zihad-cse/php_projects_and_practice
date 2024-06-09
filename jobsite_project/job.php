@@ -207,7 +207,7 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
                 <div class="row py-3">
                     <div class="text-start d-lg-none d-md-none d-sm-block d-block col-lg-2 col-md-2 col-sm-12 col-12">
                         <?php if (file_exists($jobPicFilePath)) { ?>
-                            <img class="img-normal" src="<?php echo $jobPicFilePath ?>" alt="">
+                            <img style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" class="img-normal img-thumbnail" src="<?php echo $jobPicFilePath ?>" alt="">
                         <?php } else { ?>
                             <img class="img-normal" src="uploads/job/placeholder-company.png" alt="">
                         <?php } ?>
