@@ -21,7 +21,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 
 $resumeData = getResumeDataGuest($pdo, $rindex);
 
-if (isset($_GET['new-resume']) || isset($_GET['first-resume'])) {
+if (isset($_GET['new-resume']) || isset($_GET['first-resume']) || isset($_GET['edit'])) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $fullname = $_POST['fullname'];
         $fathername = $_POST['fathername'];
@@ -31,19 +31,30 @@ if (isset($_GET['new-resume']) || isset($_GET['first-resume'])) {
         $religion = $_POST['religion'];
         $skilleduexp = $_POST['skilleduexp'];
         $dateofbirth = $_POST['dateofbirth'];
+        if (isset($_POST['rprphone']) && !empty($_POST['rprphone'])) {
+            $rprphone = $_POST['rprphone'];
+        } else {
+            $rprphone = '';
+        }
+        if (isset($_POST['rpremail']) && !empty($_POST['rpremail'])) {
+            $rpremail = $_POST['rpremail'];
+        } else {
+            $rpremail = '';
+        }
+
         $visible = isset($_POST['visible']) ? 1 : 0;
         $orgindex = $_SESSION['orgIndex'];
-        if(isset($_GET['first-resume'])){
+        if (isset($_GET['first-resume'])) {
             $rdefault = 1;
         } else {
             $rdefault = 0;
         }
         try {
             if (isset($_GET['new-resume'])) {
-                $sql = "INSERT INTO resumes (fullname, fathername, mothername, homeaddress, birtharea, religion, skilleduexp, dateofbirth, visible, orgindex, rdefault) VALUES (:fullname, :fathername, :mothername, :homeaddress, :birtharea, :religion, :skilleduexp, :dateofbirth, :visible, :orgindex, :rdefault)";
+                $sql = "INSERT INTO resumes (fullname, fathername, mothername, homeaddress, birtharea, religion, skilleduexp, dateofbirth, rprphone, rpremail, visible, orgindex, rdefault) VALUES (:fullname, :fathername, :mothername, :homeaddress, :birtharea, :religion, :skilleduexp, :dateofbirth, :rprphone, :rpremail, :visible, :orgindex, :rdefault)";
             }
-            if (isset($_GET['first-resume'])) {
-                $sql = "UPDATE resumes SET fullname = :fullname, fathername = :fathername, mothername = :mothername, homeaddress = :homeaddress, birtharea = :birtharea, religion = :religion, skilleduexp = :skilleduexp, dateofbirth = :dateofbirth, visible = :visible, orgindex = :orgindex, rdefault = :rdefault WHERE rindex =". $rindex;
+            if (isset($_GET['first-resume']) || isset($_GET['edit'])) {
+                $sql = "UPDATE resumes SET fullname = :fullname, fathername = :fathername, mothername = :mothername, homeaddress = :homeaddress, birtharea = :birtharea, religion = :religion, skilleduexp = :skilleduexp, dateofbirth = :dateofbirth, rprphone = :rprphone, rpremail = :rpremail, visible = :visible, orgindex = :orgindex, rdefault = :rdefault WHERE rindex =" . $rindex;
             }
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':fullname', $fullname, PDO::PARAM_STR);
@@ -54,6 +65,8 @@ if (isset($_GET['new-resume']) || isset($_GET['first-resume'])) {
             $stmt->bindParam(':religion', $religion, PDO::PARAM_STR);
             $stmt->bindParam(':skilleduexp', $skilleduexp, PDO::PARAM_STR);
             $stmt->bindParam(':dateofbirth', $dateofbirth, PDO::PARAM_STR);
+            $stmt->bindParam(':rprphone', $rprphone, PDO::PARAM_STR);
+            $stmt->bindParam(':rpremail', $rpremail, PDO::PARAM_STR);
             $stmt->bindParam(':visible', $visible, PDO::PARAM_INT);
             $stmt->bindParam(':orgindex', $orgindex, PDO::PARAM_STR);
             $stmt->bindParam(':rdefault', $rdefault, PDO::PARAM_INT);
@@ -73,7 +86,7 @@ if ((isset($_POST['update'])) || (isset($_POST['first-resume'])) || (isset($_POS
         $target_file = $target_dir . $imgName;
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        
+
         $check = getimagesize($_FILES["imgUpload"]["tmp_name"]);
         if ($check !== false) {
             $uploadOk = 1;
@@ -151,9 +164,9 @@ if ((isset($_POST['update'])) || (isset($_POST['first-resume'])) || (isset($_POS
                 echo $resumeData['fullname'];
             } else if (isset($_GET['new-resume'])) {
                 echo "Post a Resume";
-            } else if (isset($_GET['first-resume'])){
+            } else if (isset($_GET['first-resume'])) {
                 echo "Resume Setup";
-            }?> </title>
+            } ?> </title>
 </head>
 
 <body class="bg-light">
@@ -239,14 +252,29 @@ if ((isset($_POST['update'])) || (isset($_POST['first-resume'])) || (isset($_POS
                     <div class="col-10">
                         <div class="row">
                             <h2 class="mb-4"><?= $resumeData['fullname'] ?></h2>
+                            <b>Father's Name: <br></b>
+                            <p><?= $resumeData['fathername'] ?></p>
+                            <b>Mother's Name: <br></b>
+                            <p><?= $resumeData['mothername'] ?></p>
                             <b>Current Address: <br></b>
                             <p><?= $resumeData['homeaddress'] ?></p>
                             <b>Permanent Address: <br></b>
                             <p><?= $resumeData['birtharea'] ?></p>
-                            <b>Contact Number: <br></b>
-                            <p><?= $resumeData['prphone'] ?></p>
-                            <b>Contact Email Address: <br></b>
-                            <p><?= $resumeData['premail'] ?></p>
+                            <?php if (isset($resumeData['rprphone']) && !empty($resumeData['rprphone'])) { ?>
+                                <b>Contact Number: <br></b>
+                                <p><?= $resumeData['rprphone'] ?></p>
+                            <?php } else { ?>
+                                <b>Contact Number: <br></b>
+                                <p><?= $resumeData['prphone'] ?></p>
+                            <?php }
+                            if (isset($resumeData['rpremail']) && !empty($resumeData['rpremail'])) { ?>
+                                <b>Contact Email Address: <br></b>
+                                <p><?= $resumeData['rpremail'] ?></p>
+                            <?php } else { ?>
+                                <b>Contact Email Address: <br></b>
+                                <p><?= $resumeData['premail'] ?></p>
+                            <?php } ?>
+
                         </div>
                         <div class="row">
                             <b>Date of Birth: <br> </b>
@@ -284,8 +312,7 @@ if ((isset($_POST['update'])) || (isset($_POST['first-resume'])) || (isset($_POS
                     </div>
                 <?php } else { ?>
                     <div class="text-end">
-                        <a href="#" class="btn btn-primary">Invite</a>
-
+                        <a href="apply_invite.php?id=<?= $jobData['jindex'] ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>&application" class="btn btn-primary">Invite</a>
                     </div>
                 <?php } ?>
             </div>
@@ -296,7 +323,15 @@ if ((isset($_POST['update'])) || (isset($_POST['first-resume'])) || (isset($_POS
                         <div class="col-8">
                             <div class="row">
                                 <label for="fullname">Full Name</label>
-                                <input name="fullname" class="form-control-lg mb-4" type="text" value="<?= isset($resumeData['fullname']) == 1 ?  $resumeData['fullname'] : ''; ?>">
+                                <input name="fullname" class="form-control mb-4" type="text" value="<?= isset($resumeData['fullname']) == 1 ?  $resumeData['fullname'] : ''; ?>">
+                                <label for="fullname">Father's Name</label>
+                                <input name="fathername" class="form-control mb-4" type="text" value="<?= isset($resumeData['fathername']) == 1 ?  $resumeData['fathername'] : ''; ?>">
+                                <label for="fullname">Mother's Name</label>
+                                <input name="mothername" class="form-control mb-4" type="text" value="<?= isset($resumeData['mothername']) == 1 ?  $resumeData['mothername'] : ''; ?>">
+                                <label for="fullname">Primary Contact Phone Number (Optional)</label>
+                                <input name="rprphone" class="form-control mb-4" type="text" value="<?= isset($resumeData['rprphone']) == 1 ?  $resumeData['rprphone'] : ''; ?>">
+                                <label for="fullname">Primary Contact Email Address (Optional)</label>
+                                <input name="rpremail" class="form-control mb-4" type="text" value="<?= isset($resumeData['rpremail']) == 1 ?  $resumeData['rpremail'] : ''; ?>">
                                 <label for="homeaddress">Current Address</label>
                                 <textarea class="form-control mt-3 small-textarea" style="resize: none;" name="homeaddress" id="homeaddress" cols="30" rows="10"><?= isset($resumeData['homeaddress']) == 1 ?  $resumeData['homeaddress'] : ''; ?></textarea>
                                 <label for="birtharea">Permanent Address</label>
@@ -400,11 +435,11 @@ if ((isset($_POST['update'])) || (isset($_POST['first-resume'])) || (isset($_POS
                         <div class="col-8">
                             <div class="row">
                                 <label for="fullname">Full Name</label>
-                                <input name="fullname" class="form-control-lg mb-4" type="text" value="">
+                                <input name="fullname" class="form-control mb-4" type="text" value="">
                                 <label for="fullname">Father's Name</label>
-                                <input name="fathername" class="form-control-lg mb-4" type="text" value="">
+                                <input name="fathername" class="form-control mb-4" type="text" value="">
                                 <label for="fullname">Mother's Name</label>
-                                <input name="mothername" class="form-control-lg mb-4" type="text" value="">
+                                <input name="mothername" class="form-control mb-4" type="text" value="">
                                 <label for="homeaddress">Current Address</label>
                                 <textarea class="form-control mt-3 small-textarea" style="resize: none;" name="homeaddress" id="homeaddress" cols="30" rows="10"></textarea>
                                 <label for="birtharea">Permanent Address</label>
@@ -546,7 +581,9 @@ if ((isset($_POST['update'])) || (isset($_POST['first-resume'])) || (isset($_POS
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('.rte').summernote();
+            $('.rte').summernote({
+                height: 300
+            });
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>

@@ -168,9 +168,9 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
                             </button>
                             <div class="collapse" id="dashboard-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
-                                    <li><a href="#" class="btn btn-secondary-outline">Home</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">Applications</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">Invitation List</a></li>
+                                    <li><a href="dashboard.php" class="btn btn-secondary-outline">Home</a></li>
+                                    <li><a href="org_profile.php" class="btn btn-secondary-outline">Org Profile</a></li>
+                                    <li><a href="resume_profile.php" class="btn btn-secondary-outline">Resume List</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -180,7 +180,7 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
                             </button>
                             <div class="collapse" id="orders-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
-                                    <li><a href="job_post.php" class="btn btn-secondary-outline">New</a></li>
+                                    <li><a href="job.php?new-post" class="btn btn-secondary-outline">New</a></li>
                                     <li><a href="posted_jobs.php" class="btn btn-secondary-outline">Posted Jobs</a></li>
                                 </ul>
                             </div>
@@ -202,7 +202,6 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
                                             <ul class="dropdown-menu">
                                                 <li><a class="dropdown-item" href="?edit">Edit Account Info</a></li>
                                                 <li><a class="dropdown-item" href="org_profile.php?edit">Edit Org Profile</a></li>
-                                                <li><a class="dropdown-item" href="resume_profile.php?edit">Edit Resume Profile</a></li>
                                             </ul>
                                         </div>
                                     </li>

@@ -46,7 +46,6 @@ if (isset($_SESSION['phnNumber'])) {
         #logout-button:hover {
             color: #dc3545;
         }
-
     </style>
     <title>Dashboard</title>
 </head>
@@ -80,9 +79,9 @@ if (isset($_SESSION['phnNumber'])) {
                             </button>
                             <div class="collapse" id="dashboard-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
-                                    <li><a href="index.php" class="btn btn-secondary-outline">Home</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">Applications</a></li>
-                                    <li><a href="#" class="btn btn-secondary-outline">Invitation List</a></li>
+                                    <li><a href="dashboard.php" class="btn btn-secondary-outline">Home</a></li>
+                                    <li><a href="org_profile.php" class="btn btn-secondary-outline">Org Profile</a></li>
+                                    <li><a href="resume_profile.php" class="btn btn-secondary-outline">Resume List</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -92,7 +91,7 @@ if (isset($_SESSION['phnNumber'])) {
                             </button>
                             <div class="collapse" id="orders-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
-                                    <li><a href="job_post.php" class="btn btn-secondary-outline">New</a></li>
+                                    <li><a href="job.php?new-post" class="btn btn-secondary-outline">New</a></li>
                                     <li><a href="posted_jobs.php" class="btn btn-secondary-outline">Posted Jobs</a></li>
                                 </ul>
                             </div>

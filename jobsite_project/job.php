@@ -24,6 +24,7 @@ if (isset($_GET['id'])) {
     $jobPicFilePath = "uploads/job/" . $jobData['jindex'] . '.png';
 }
 $jobCatData = getJobCategories($pdo);
+$resumeData = getAllPostedResumes($pdo, $_SESSION['orgIndex']);
 
 
 
@@ -128,6 +129,7 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
             height: 100px;
             width: 100px;
         }
+
         #nav-bar {
             box-shadow: 1px 1px 8px #999;
         }
@@ -199,6 +201,41 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
         </div>
     </nav>
     <section style="min-height: 100vh;" class="" id="dashboard-main-content">
+        <div class="modal fade" id="applymodal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="applyModalLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div style="height: 500px;" class="modal-body">
+                        <?php foreach ($resumeData as $row) { ?>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="my-5 form-check">
+                                                <input class="form-check-input" type="radio" name="appResume" id="<?= $row['rindex'] ?>">
+                                                <label class="form-check-label" for="<?= $row['rindex'] ?>">
+                                                    <?= $row['fullname'] ?>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <img src="" alt="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <?php if (!isset($_GET['edit']) && !isset($_GET['new-post'])) { ?>
             <div class="bg-light py-lg-5 py-md-4 py-sm-3 py-3 container">
                 <div>
@@ -258,7 +295,8 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
 
                     <?php if ($_SESSION['orgIndex'] !== $jobData['orgindex']) { ?>
                         <div class="col-lg-3 col-md-3 col-sm-12 col-12 pe-lg-0 pe-md-0 pe-sm-2 pe-2 mb-sm-2 mb-2 text-end">
-                            <a href="php/apply.php?id=<?= $jobData['jindex'] ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" class="btn btn-primary">Apply</a>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#applymodal">Apply</button>
+                            <!-- <a href="php/apply_invite.php?id=<?= $jobData['jindex'] ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>&application" classu"btn btn-primary">Apply</a> -->
                         </div>
                     <?php } else if ($_SESSION['orgIndex'] == $jobData['orgindex']) { ?>
                         <div class="col-lg-3 col-md-3 col-sm-12 col-12 pe-lg-0 pe-md-0 pe-sm-2 pe-2 mb-sm-2 mb-2 text-end">
@@ -492,7 +530,9 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('.rte').summernote();
+            $('.rte').summernote({
+                height: 300
+            });
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
