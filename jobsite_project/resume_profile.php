@@ -33,6 +33,8 @@ if (isset($_SESSION['phnNumber'])) {
 
 $countedRows = count($resumeData);
 
+$appliedJobs = appliedJobs($pdo, $userData['orgindex']);
+
 
 //Updates resume details (table: resumes)
 
@@ -209,7 +211,7 @@ if (isset($_POST['update'])) {
                             </button>
                             <div class="collapse" id="dashboard-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
-                                <li><a href="dashboard.php" class="btn btn-secondary-outline">Home</a></li>
+                                    <li><a href="dashboard.php" class="btn btn-secondary-outline">Home</a></li>
                                     <li><a href="org_profile.php" class="btn btn-secondary-outline">Org Profile</a></li>
                                     <li><a href="resume_profile.php" class="btn btn-secondary-outline">Resume List</a></li>
                                 </ul>
@@ -223,6 +225,7 @@ if (isset($_POST['update'])) {
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
                                     <li><a href="job.php?new-post" class="btn btn-secondary-outline">New</a></li>
                                     <li><a href="posted_jobs.php" class="btn btn-secondary-outline">Posted Jobs</a></li>
+                                    <li><a href="?applied-jobs" class="btn btn-secondary-outline">Applied Jobs</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -241,9 +244,9 @@ if (isset($_POST['update'])) {
                                             </a>
 
                                             <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="?edit">Edit Account Info</a></li>
+                                                <li><a class="dropdown-item" href="dashboard.php?edit">Edit Account Info</a></li>
                                                 <li><a class="dropdown-item" href="org_profile.php?edit">Edit Org Profile</a></li>
-                                                <li><a class="dropdown-item" href="resume_profile.php?edit">Edit Resume Profile</a></li>
+                                                <li><a class="dropdown-item" href="resume_profile.php">Edit Resume Profile</a></li>
                                             </ul>
                                         </div>
                                     </li>
@@ -278,92 +281,140 @@ if (isset($_POST['update'])) {
                         <div class="col-12">
                             <div class="container px-0 ">
                                 <div class="">
-                                    <div class="mt-3">
-                                        <a href="php/add_resume.php" class="btn btn-primary"><i class="fa-solid fa-plus"></i> New Resume</a>
-                                    </div>
-                                    <div class="row">
-                                        <?php
-                                        if (isset($resumeData) && !empty($resumeData)) {
-                                            
-                                            foreach ($resumeData as $row) {
+                                    <?php if (!isset($_GET['applied-jobs'])) { ?>
+                                        <div class="mt-3">
+                                            <a href="php/add_resume.php" class="btn btn-primary"><i class="fa-solid fa-plus"></i> New Resume</a>
+                                        </div>
+                                        <div class="row">
+                                            <?php
+                                            if (isset($resumeData) && !empty($resumeData)) {
 
-                                                if (empty($resumeData[0]['fullname'])) {
-                                                    echo '';
-                                                } else  {
-                                                    $resume_img_src = "uploads/resumes/placeholder_pfp.svg";
-                                                    if (file_exists("uploads/resumes/" . $row['rindex'] . ".png")) {
-                                                        $resume_img_src = "uploads/resumes/" . $row['rindex'] . ".png";
-                                                    }
-                                        ?>
-                                                    <div class="container">
-                                                        <div class="col-12">
-                                                            <a id="landing-page-mouse-hover-card" style="max-height: 400px;" href="resume.php?view&id=<?php echo $row['rindex'] ?>" class="text-start my-4 mx-0 card text-decoration-none">
-                                                                <div class="card-body">
-                                                                    <div class="row text-lg-start text-md-start text-sm-center text-center">
-                                                                        <div class="col-1 row">
-                                                                            <div class="row">
+                                                foreach ($resumeData as $row) {
 
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <?php if ($row['rdefault'] == 1) { ?>
-                                                                                    <div class="d-flex justify-content-center align-items-center">
-                                                                                        <i class="fa-solid fa-crown"></i>
-                                                                                    </div>
-                                                                                <?php } else {
-                                                                                    echo '';
-                                                                                } ?>
-                                                                            </div>
-                                                                            <div class="row">
+                                                    if (empty($resumeData[0]['fullname'])) {
+                                                        echo '';
+                                                    } else {
+                                                        $resume_img_src = "uploads/resumes/placeholder_pfp.svg";
+                                                        if (file_exists("uploads/resumes/" . $row['rindex'] . ".png")) {
+                                                            $resume_img_src = "uploads/resumes/" . $row['rindex'] . ".png";
+                                                        }
+                                            ?>
+                                                        <div class="container">
+                                                            <div class="col-12">
+                                                                <a id="landing-page-mouse-hover-card" style="max-height: 400px;" href="resume.php?view&id=<?php echo $row['rindex'] ?>" class="text-start my-4 mx-0 card text-decoration-none">
+                                                                    <div class="card-body">
+                                                                        <div class="row text-lg-start text-md-start text-sm-center text-center">
+                                                                            <div class="col-1 row">
+                                                                                <div class="row">
 
-                                                                            </div>
-
-                                                                        </div>
-                                                                        <div class="col-lg-3 col-md-4 col-sm-12 col-12">
-                                                                            <img style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" src="<?php echo $resume_img_src ?>" alt="">
-                                                                        </div>
-                                                                        <div class="col-lg-8 col-md-8 col-sm-12 col-12">
-                                                                            <div class="row">
-                                                                                <div class="col-lg-4 col-md-4 d-md-block d-lg-block d-sm-none d-none">
-                                                                                    <b>Full Name</b>
                                                                                 </div>
-                                                                                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-                                                                                    <b><?php echo $row['fullname']; ?> </b>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="col-lg-4 col-md-4 d-md-block d-lg-block d-sm-none d-none">
-                                                                                    <b>Date Of Birth</b>
-                                                                                </div>
-                                                                                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-                                                                                    <div>
-                                                                                        <b><?php echo $row['dateofbirth']; ?> </b>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="col-lg-4 col-md-4 d-md-block d-lg-block d-sm-none d-none">
-                                                                                    <b>Skills</b>
-                                                                                </div>
-                                                                                <div class="col-lg-6 col-md-6 col-sm-12 col-12">
-                                                                                    <?php if (strlen($row['skilleduexp']) > 100) {
-                                                                                        $maxLength = 99;
-                                                                                        $row['skilleduexp'] = substr($row['skilleduexp'], 0, $maxLength);
+                                                                                <div class="row">
+                                                                                    <?php if ($row['rdefault'] == 1) { ?>
+                                                                                        <div class="d-flex justify-content-center align-items-center">
+                                                                                            <i class="fa-solid fa-crown"></i>
+                                                                                        </div>
+                                                                                    <?php } else {
+                                                                                        echo '';
                                                                                     } ?>
-                                                                                    <p class="mb-0"><?= $row['skilleduexp']; ?>...</p>
+                                                                                </div>
+                                                                                <div class="row">
+
+                                                                                </div>
+
+                                                                            </div>
+                                                                            <div class="col-lg-3 col-md-4 col-sm-12 col-12">
+                                                                                <img style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" src="<?php echo $resume_img_src ?>" alt="">
+                                                                            </div>
+                                                                            <div class="col-lg-8 col-md-8 col-sm-12 col-12">
+                                                                                <div class="row">
+                                                                                    <div class="col-lg-4 col-md-4 d-md-block d-lg-block d-sm-none d-none">
+                                                                                        <b>Full Name</b>
+                                                                                    </div>
+                                                                                    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                                                                        <b><?php echo $row['fullname']; ?> </b>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col-lg-4 col-md-4 d-md-block d-lg-block d-sm-none d-none">
+                                                                                        <b>Date Of Birth</b>
+                                                                                    </div>
+                                                                                    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                                                                        <div>
+                                                                                            <b><?php echo $row['dateofbirth']; ?> </b>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col-lg-4 col-md-4 d-md-block d-lg-block d-sm-none d-none">
+                                                                                        <b>Skills</b>
+                                                                                    </div>
+                                                                                    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                                                                        <?php if (strlen($row['skilleduexp']) > 100) {
+                                                                                            $maxLength = 99;
+                                                                                            $row['skilleduexp'] = substr($row['skilleduexp'], 0, $maxLength);
+                                                                                        } ?>
+                                                                                        <p class="mb-0"><?= $row['skilleduexp']; ?>...</p>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                            <?php }
+                                                }
+                                            }
+                                            ?>
+                                        </div>
+                                    <?php } else if (isset($_GET['applied-jobs'])) { ?>
+                                        <h3 class="text-center">Applications</h3>
+                                        <?php if (!empty($appliedJobs)) {
+                                            foreach ($appliedJobs as $row) {
+                                                $job_img_src = "uploads/job/placeholder-company.png";
+                                                if (file_exists("uploads/job/" . $row['jindex'] . ".png")) {
+                                                    $job_img_src = "uploads/job/" . $row['jindex'] . ".png";
+                                                } ?>
+                                                <a id="landing-page-mouse-hover-card" style="max-height: 400px;" href="job.php?view&id=<?php echo $row['jindex'] ?>" class="text-start my-4 mx-0 card text-decoration-none">
+                                                    <div class="card-body">
+                                                        <div class="row text-lg-start text-md-start text-sm-center text-center">
+                                                            <div class="col-lg-3 col-md-4 col-sm-12 col-12">
+                                                                <img style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" src="<?php echo $job_img_src ?>" alt="">
+                                                            </div>
+                                                            <div class="col-lg-8 col-md-8 col-sm-12 col-12">
+                                                                <div class="row">
+                                                                    <div class="col-lg-4 col-md-4 d-md-block d-lg-block d-sm-none d-none">
+                                                                        <b>Job Title</b>
+                                                                    </div>
+                                                                    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                                                        <b><?php echo $row['jobtitle']; ?> </b>
+                                                                    </div>
                                                                 </div>
-                                                            </a>
+                                                                <div class="row">
+                                                                    <div class="col-lg-4 col-md-4 d-md-block d-lg-block d-sm-none d-none">
+                                                                        <b>Category</b>
+                                                                    </div>
+                                                                    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                                                        <div>
+                                                                            <b><?php echo $row['jcategory']; ?> </b>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-lg-4 col-md-4 d-md-block d-lg-block d-sm-none d-none">
+                                                                        <b>Resume Name</b>
+                                                                    </div>
+                                                                    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                                                        <b><?= $row['fullname'] ?></b>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                        <?php }
-                                            }
-                                            
-                                        }
-                                        ?>
-                                    </div>
+                                                </a>
+                                    <?php }
+                                        } else {echo "<b>None found</b>";}
+                                    } ?>
                                 </div>
                             </div>
                         </div>

@@ -24,8 +24,13 @@ if (isset($_GET['id'])) {
     $jobPicFilePath = "uploads/job/" . $jobData['jindex'] . '.png';
 }
 $jobCatData = getJobCategories($pdo);
-$resumeData = getAllPostedResumes($pdo, $_SESSION['orgIndex']);
+if (isset($_SESSION['orgIndex'])) {
+    $resumeData = getAllPostedResumes($pdo, $_SESSION['orgIndex']);
+}
 
+// $jobCheck = appliedJobCheck($pdo, $_SESSION['orgIndex'], $jobId);
+
+// var_dump($jobCheck);
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -91,7 +96,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo 'Error: ' . $e->getMessage();
         }
     }
+    // if (isset($_GET['apply']) && isset($_SESSION['orgIndex']) && !empty($_SESSION['orgIndex'])) {
+    //     if (!empty($_POST['apprindex']) && !empty($_GET['id'])) {
+    //         $rindex = $_GET['rindex'];
+    //         $jindex = $_GET['id'];
+
+    //         try {
+    //             $sql = "INSERT INTO applications (jindex, rindex) VALUES (:jindex, :rindex)";
+    //             $stmt = $pdo->prepare($sql);
+    //             $stmt->bindParam(":jindex", $jindex, PDO::PARAM_INT);
+    //             $stmt->bindParam(":rindex", $rindex, PDO::PARAM_INT);
+    //             $stmt->execute();
+    //             header("location: dashboard.php");
+    //         } catch (PDOException $e) {
+    //             echo $e->getMessage();
+    //         }
+    //     }
+    // }
 }
+
 if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
     $_SESSION['orgIndex'] = '';
 }
@@ -204,35 +227,40 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
         <div class="modal fade" id="applymodal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="applyModalLabel">Modal title</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div style="height: 500px;" class="modal-body">
-                        <?php foreach ($resumeData as $row) { ?>
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-8">
-                                            <div class="my-5 form-check">
-                                                <input class="form-check-input" type="radio" name="appResume" id="<?= $row['rindex'] ?>">
-                                                <label class="form-check-label" for="<?= $row['rindex'] ?>">
-                                                    <?= $row['fullname'] ?>
-                                                </label>
+                    <form action="" name="resume-pick-modal" method="post">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="applyModalLabel">Pick a Resume to apply with</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div style="height: 500px;" class="modal-body">
+                            <?php foreach ($resumeData as $row) { ?>
+                                <div id="landing-page-mouse-hover-card" class="<?= ($row['appindex'] > 0 ? "d-none" : "d-block") ?> card my-2 ">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-8">
+                                                <div class="my-3 form-check">
+                                                    <p><?= $row['fullname'] ?></p>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <?php $resume_img_src = "uploads/resumes/placeholder_pfp.svg";
+                                                if (file_exists("uploads/resumes/" . $row['rindex'] . ".png")) {
+                                                    $resume_img_src = "uploads/resumes/" . $row['rindex'] . ".png";
+                                                } ?>
+                                                <img class="img-fluid img-thumbnail" style="height: 75px; width: 75px; object-fit: cover; object-position: 25% 25%" src="<?= $resume_img_src ?>" alt="">
                                             </div>
                                         </div>
-                                        <div class="col-4">
-                                            <img src="" alt="">
-                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <a class="btn btn-primary" href="php/application.php?id=<?= $jobData['jindex'] ?>&apply&rindex=<?= $row['rindex'] ?>">Apply</a>
                                     </div>
                                 </div>
-                            </div>
-                        <?php } ?>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary">Apply</button>
-                    </div>
+                            <?php } ?>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

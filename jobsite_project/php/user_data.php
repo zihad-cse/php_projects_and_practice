@@ -39,17 +39,23 @@ function getResumeData($pdo, $phnNumber)
 
 function getAllPostedResumes($pdo, $orgindex)
 {
-    try{
-        $sql = "SELECT * FROM resumes WHERE orgindex = :orgindex";
+    try {
+        $sql = "SELECT
+        resumes.*, applications.appindex
+    FROM
+        resumes
+        LEFT JOIN applications ON resumes.rindex = applications.rindex AND applications.jindex = 7
+    WHERE
+        orgindex = :orgindex";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(":orgindex", $orgindex, PDO::PARAM_INT);
         $stmt->execute();
         $resumes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $resumes;
-    } catch (PDOException $e){
+    } catch (PDOException $e) {
         error_log("Error: " . $e->getMessage());
-        return false;        
+        return false;
     }
 }
 
@@ -233,15 +239,14 @@ function pageination_alljobdetails($pdo, $initial_page, $limit, $search = "")
         $stmt->bindParam(':limitnumber', $limit, PDO::PARAM_INT);
         $stmt->execute();
         $alljobdetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        if (!empty($alljobdetails)){
-            foreach ($alljobdetails as $row){
+        if (!empty($alljobdetails)) {
+            foreach ($alljobdetails as $row) {
                 $currentDate = date("Y-m-d");
-                if($row['enddate'] < $currentDate){
-                    $updateSql = "UPDATE job SET visibility = 0 WHERE jindex =". $row['jindex'];
+                if ($row['enddate'] < $currentDate) {
+                    $updateSql = "UPDATE job SET visibility = 0 WHERE jindex =" . $row['jindex'];
                     $stmt = $pdo->prepare($updateSql);
                     $stmt->execute();
                 }
-                
             }
         }
         return $alljobdetails;
@@ -306,19 +311,60 @@ function pageination_allresumerows($pdo, $search = '')
     }
 }
 
-function appliedJobs($pdo, $rindex, $jindex)
+function appliedJobs($pdo, $orgindex)
 {
-    try{
-        $query = "SELECT * FROM applications WHERE rindex = :rindex AND jindex = :jindex";
-        $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':rindex', $rindex, PDO::PARAM_INT);
-        $stmt->bindParam(':jindex', $jindex, PDO::PARAM_INT);
-        $stmt->execute();
-        $appliedJob = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $appliedJob;
-    } catch (PDOException $e){
-        error_log("Error: " . $e->getMessage());
-        return false;
+    if (isset($_GET['applied-jobs'])) {
+        try {
+            $sql = "SELECT 
+            applications.appindex, applications.appinvtype, job.jindex, job.jobtitle, job.jobcategory, resumes.rindex, resumes.fullname, resumes.orgindex, jobcat.jcategory 
+            FROM applications
+            INNER JOIN job ON applications.jindex = job.jindex
+            INNER JOIN resumes ON applications.rindex = resumes.rindex
+            INNER JOIN org ON resumes.orgindex = org.orgindex
+            INNER JOIN jobcat ON job.jobcategory = jobcat.jcatindex
+            WHERE org.orgindex = :orgindex";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(":orgindex", $orgindex, PDO::PARAM_INT);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $results;
+        } catch (PDOException $e) {
+            error_log("Error: " . $e->getMessage());
+            return false;
+        }
     }
 }
-
+function appliedJobCheck($pdo, $orgindex, $jindex)
+{
+    if (isset($_GET['applied-jobs'])) {
+        try {
+            $sql = "SELECT
+            applications.appindex,
+            applications.appinvtype,
+            job.jindex,
+            job.jobtitle,
+            job.jobcategory,
+            resumes.rindex,
+            resumes.fullname,
+            resumes.orgindex,
+            jobcat.jcategory
+        FROM
+            applications
+        INNER JOIN job ON applications.jindex = job.jindex
+        INNER JOIN resumes ON applications.rindex = resumes.rindex
+        INNER JOIN org ON resumes.orgindex = org.orgindex
+        INNER JOIN jobcat ON job.jobcategory = jobcat.jcatindex
+        
+        WHERE applications.jindex = :jindex AND org.orgindex = :orgindex";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(":orgindex", $orgindex, PDO::PARAM_INT);
+            $stmt->bindParam(":jindex", $jindex, PDO::PARAM_INT);
+            $stmt->execute();
+            $results = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $results;
+        } catch (PDOException $e) {
+            error_log("Error: " . $e->getMessage());
+            return false;
+        }
+    }
+}
