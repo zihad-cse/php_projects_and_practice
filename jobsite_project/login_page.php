@@ -16,6 +16,7 @@ if (isset($_SESSION['token'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
     <title>Log in</title>
     <style>
         #form-card {
@@ -69,15 +70,15 @@ if (isset($_SESSION['token'])) {
                                             <a href="#" class="link-dark">Forgot Password</a>
                                         </div>
                                     </div>
+                                    <!-- <div class="g-recaptcha" data-sitekey="6LcyWfYpAAAAAD28JpZ1LcQGZR4VmtrzDnGy1bUi"></div> -->
                                     <div class="mt-lg-5 mt-md-5 mt-sm-3 mt-3 row justify-content-center">
-                                        <input type="submit" value="Log In" class=" col-11 btn p-3 btn-primary">
-
+                                        <input type="submit" value="Log In" class="col-11 btn p-3 btn-primary">
                                     </div>
                                 </form>
 
                                 <div class="d-flex justify-content-between mt-4">
                                     <div>
-                                        <p>Don't have an account? <i class="fa-solid fa-arrow-right"></i></p>
+                                        <p>Don' t have an account? <i class="fa-solid fa-arrow-right"></i></p>
                                     </div>
                                     <div>
                                         <a class="link-dark" href="registration_page.php">Sign Up</a>
