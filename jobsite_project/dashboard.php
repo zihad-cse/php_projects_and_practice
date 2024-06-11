@@ -93,6 +93,8 @@ if (isset($_SESSION['phnNumber'])) {
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
                                     <li><a href="job.php?new-post" class="btn btn-secondary-outline">New</a></li>
                                     <li><a href="posted_jobs.php" class="btn btn-secondary-outline">Posted Jobs</a></li>
+                                    <li><a href="resume_profile.php?applied-jobs" class="btn btn-secondary-outline">Applied Jobs</a></li>
+                                    <li><a href="posted_jobs.php?invitations-received" class="btn btn-secondary-outline">Job Invitations</a></li>
                                 </ul>
                             </div>
                         </li>

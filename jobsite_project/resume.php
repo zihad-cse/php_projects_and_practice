@@ -18,8 +18,9 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     $resumeData = getResumeData($pdo, $_SESSION['phnNumber']);
     $rindex = $resumeData['rindex'];
 }
-
+$allJobs = getAllPostedJobs($pdo, $_SESSION['orgIndex'], $rindex);
 $resumeData = getResumeDataGuest($pdo, $rindex);
+
 
 if (isset($_GET['new-resume']) || isset($_GET['first-resume']) || isset($_GET['edit'])) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -242,7 +243,45 @@ if ((isset($_POST['update'])) || (isset($_POST['first-resume'])) || (isset($_POS
                 </div>
             </div>
         </div>
-
+        <div class="modal fade" id="invitemodal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="applyModalLabel">Pick a Posting to invite for</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div style="height: 500px;" class="modal-body">
+                        <?php foreach ($allJobs as $row) { ?>
+                            <div id="landing-page-mouse-hover-card" class="card my-2 ">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="my-3 form-check">
+                                                <p><?= $row['jobtitle'] ?></p><br>
+                                                <i>Deadline: </i><p><?= $row['enddate'] ?></p>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <?php $resume_img_src = "uploads/job/placeholder-company.png";
+                                            if (file_exists("uploads/job/" . $row['jindex'] . ".png")) {
+                                                $resume_img_src = "uploads/job/" . $row['jindex'] . ".png";
+                                            } ?>
+                                            <img class="img-fluid img-thumbnail" style="height: 75px; width: 75px; object-fit: cover; object-position: 25% 25%" src="<?= $resume_img_src ?>" alt="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <a class="btn btn-primary <?= ($row['appindex'] > 0 ? "disabled" : "") ?>" href="php/application.php?jobid=<?= $row['jindex'] ?>&invite&rindex=<?= $rindex ?>">Invite</a>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <?php if (!isset($_GET['edit']) && !isset($_GET['new-resume']) && !isset($_GET['first-resume'])) { ?>
             <div class="bg-light px-lg-0 px-md-0 px-sm-0 px-0 p-lg-5 p-md-4 p-sm-3 p-3 container">
                 <div class="row p-3">
@@ -312,7 +351,7 @@ if ((isset($_POST['update'])) || (isset($_POST['first-resume'])) || (isset($_POS
                     </div>
                 <?php } else { ?>
                     <div class="text-end">
-                        <a href="apply_invite.php?id=<?= $jobData['jindex'] ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>&application" class="btn btn-primary">Invite</a>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#invitemodal">Invite</button>
                     </div>
                 <?php } ?>
             </div>

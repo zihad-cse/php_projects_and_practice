@@ -37,18 +37,20 @@ function getResumeData($pdo, $phnNumber)
     }
 }
 
-function getAllPostedResumes($pdo, $orgindex)
+function getAllPostedResumes($pdo, $orgindex, $jindex = 0)
 {
     try {
-        $sql = "SELECT
-        resumes.*, applications.appindex
-    FROM
+        $sql =
+            "SELECT
+        resumes.*, applications.appindex, applications.appinvtype
+        FROM
         resumes
-        LEFT JOIN applications ON resumes.rindex = applications.rindex AND applications.jindex = 7
-    WHERE
+        LEFT JOIN applications ON resumes.rindex = applications.rindex AND applications.jindex = :jindex
+        WHERE
         orgindex = :orgindex";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(":orgindex", $orgindex, PDO::PARAM_INT);
+        $stmt->bindParam(":jindex", $jindex, PDO::PARAM_INT);
         $stmt->execute();
         $resumes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -76,11 +78,22 @@ function getResumeDataGuest($pdo, $rindex)
 
 // All posted jobs with OrgIndex
 
-function getAllPostedJobs($pdo, $orgIndex)
+function getAllPostedJobs($pdo, $orgIndex, $rindex = 0)
 {
     try {
-        $stmt = $pdo->prepare("SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE orgindex = :orgIndex  ORDER BY `job`.`jindex` DESC");
-        $stmt->bindParam(':orgIndex', $orgIndex, PDO::PARAM_STR);
+        $stmt = $pdo->prepare("SELECT
+        job.*,
+        applications.appindex,
+        jobcat.jcategory AS categoryName
+        FROM
+        job
+        LEFT JOIN applications ON job.jindex = applications.jindex AND applications.rindex = :rindex
+        LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex
+        WHERE
+        orgindex = :orgIndex
+        ORDER BY `job`.`jindex` DESC");
+        $stmt->bindParam(':orgIndex', $orgIndex, PDO::PARAM_INT);
+        $stmt->bindParam(':rindex', $rindex, PDO::PARAM_INT);
         $stmt->execute();
         $allJobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -364,6 +377,38 @@ function appliedJobCheck($pdo, $orgindex, $jindex)
             return $results;
         } catch (PDOException $e) {
             error_log("Error: " . $e->getMessage());
+            return false;
+        }
+    }
+}
+function resumeInvitations($pdo, $orgindex)
+{
+    if (isset($_GET['invitations-received'])) {
+        try {
+            $sql = "SELECT
+            applications.*,
+            job.jindex AS jobID,
+            job.jobtitle,
+            resumes.rindex AS resumesID,
+            resumes.fullname,
+            resumes.orgindex AS resumeOrgIndex,
+            job.orgindex AS jobOrgIndex,
+            job.workarea,
+            job.enddate,
+            applications.appinvtype
+        FROM
+            applications
+        LEFT JOIN job ON job.jindex = applications.jindex
+        LEFT JOIN resumes ON resumes.rindex = applications.rindex
+        WHERE
+            applications.appinvtype = 1 AND resumes.orgindex = :orgindex";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(":orgindex", $orgindex, PDO::PARAM_INT);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $results;
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
             return false;
         }
     }

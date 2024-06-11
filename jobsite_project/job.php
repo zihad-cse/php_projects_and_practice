@@ -25,7 +25,7 @@ if (isset($_GET['id'])) {
 }
 $jobCatData = getJobCategories($pdo);
 if (isset($_SESSION['orgIndex'])) {
-    $resumeData = getAllPostedResumes($pdo, $_SESSION['orgIndex']);
+    $resumeData = getAllPostedResumes($pdo, $_SESSION['orgIndex'], $jobId);
 }
 
 // $jobCheck = appliedJobCheck($pdo, $_SESSION['orgIndex'], $jobId);
@@ -227,40 +227,46 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
         <div class="modal fade" id="applymodal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
-                    <form action="" name="resume-pick-modal" method="post">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="applyModalLabel">Pick a Resume to apply with</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div style="height: 500px;" class="modal-body">
-                            <?php foreach ($resumeData as $row) { ?>
-                                <div id="landing-page-mouse-hover-card" class="<?= ($row['appindex'] > 0 ? "d-none" : "d-block") ?> card my-2 ">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-8">
-                                                <div class="my-3 form-check">
-                                                    <p><?= $row['fullname'] ?></p>
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                <?php $resume_img_src = "uploads/resumes/placeholder_pfp.svg";
-                                                if (file_exists("uploads/resumes/" . $row['rindex'] . ".png")) {
-                                                    $resume_img_src = "uploads/resumes/" . $row['rindex'] . ".png";
-                                                } ?>
-                                                <img class="img-fluid img-thumbnail" style="height: 75px; width: 75px; object-fit: cover; object-position: 25% 25%" src="<?= $resume_img_src ?>" alt="">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="applyModalLabel">Pick a Resume to apply with</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div style="height: 500px;" class="modal-body">
+                        <?php foreach ($resumeData as $row) { ?>
+                            <div id="landing-page-mouse-hover-card" class="card my-2 ">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="my-3 form-check">
+                                                <p><?= $row['fullname'] ?></p>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="card-footer">
-                                        <a class="btn btn-primary" href="php/application.php?id=<?= $jobData['jindex'] ?>&apply&rindex=<?= $row['rindex'] ?>">Apply</a>
+                                        <div class="col-4">
+                                            <?php $resume_img_src = "uploads/resumes/placeholder_pfp.svg";
+                                            if (file_exists("uploads/resumes/" . $row['rindex'] . ".png")) {
+                                                $resume_img_src = "uploads/resumes/" . $row['rindex'] . ".png";
+                                            } ?>
+                                            <img class="img-fluid img-thumbnail" style="height: 75px; width: 75px; object-fit: cover; object-position: 25% 25%" src="<?= $resume_img_src ?>" alt="">
+                                        </div>
                                     </div>
                                 </div>
-                            <?php } ?>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                        </div>
-                    </form>
+                                <div class="card-footer">
+                                    <?php if ($row['appinvtype'] == 0) { ?>
+                                        <a class="btn btn-primary <?= ($row['appindex'] > 0 ? "disabled" : "") ?>" href="php/application.php?id=<?= $jobData['jindex'] ?>&apply&rindex=<?= $row['rindex'] ?>">Apply</a>
+                                    <?php } else if ($row['appinvtype'] == 1) { ?>
+                                        <a class="btn btn-success" href="php/application.php?jobid=<?= $jobData['jindex'] ?>&acceptinv&rindex=<?= $row['rindex'] ?>">Accept</a> <a class="btn btn-danger" href="php/application.php?jobid=<?= $jobData['jindex'] ?>&rejectinv&rindex=<?= $row['rindex'] ?>">Reject</a>
+                                    <?php } else if ($row['appinvtype'] == 2) { ?>
+                                        <strong class="text-success"><i class="fa-solid fa-check-double"></i></strong>
+                                    <?php } else if ($row['appinvtype'] == 3) { ?>
+                                        <strong class="text-danger">You Rejected This</strong>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -324,7 +330,6 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
                     <?php if ($_SESSION['orgIndex'] !== $jobData['orgindex']) { ?>
                         <div class="col-lg-3 col-md-3 col-sm-12 col-12 pe-lg-0 pe-md-0 pe-sm-2 pe-2 mb-sm-2 mb-2 text-end">
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#applymodal">Apply</button>
-                            <!-- <a href="php/apply_invite.php?id=<?= $jobData['jindex'] ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>&application" classu"btn btn-primary">Apply</a> -->
                         </div>
                     <?php } else if ($_SESSION['orgIndex'] == $jobData['orgindex']) { ?>
                         <div class="col-lg-3 col-md-3 col-sm-12 col-12 pe-lg-0 pe-md-0 pe-sm-2 pe-2 mb-sm-2 mb-2 text-end">

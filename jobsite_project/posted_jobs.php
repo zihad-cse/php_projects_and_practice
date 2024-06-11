@@ -34,6 +34,9 @@ $orgindex = $userData['orgindex'];
 
 $allJobsData = getAllPostedJobs($pdo, $orgindex);
 
+$inviteList = resumeInvitations($pdo, $userData['orgindex']);
+
+
 ?>
 
 <head>
@@ -61,7 +64,6 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
             border: var(--bs-card-border-width) solid black;
             box-shadow: 4px 4px 8px #999;
         }
-
     </style>
     <title>Posted Listings
     </title>
@@ -110,6 +112,8 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
                                     <li><a href="job.php?new-post" class="btn btn-secondary-outline">New</a></li>
                                     <li><a href="posted_jobs.php" class="btn btn-secondary-outline">Posted Jobs</a></li>
+                                    <li><a href="resume_profile.php?applied-jobs" class="btn btn-secondary-outline">Applied Jobs</a></li>
+                                    <li><a href="posted_jobs.php?invitations-received" class="btn btn-secondary-outline">Job Invitations</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -144,61 +148,63 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
                         </li>
                     </ul>
                 </div>
-                <div  class="col-lg-10 col-md-12 col-sm-12 col-12 p-5" style="min-height: 100vh; background-color: #ddd;">
-                    <hr>
-                    <div class="row border">
-                        <div class="col-2">
-                            <h3>Posted Jobs</h3>
+                <div class="col-lg-10 col-md-12 col-sm-12 col-12 p-5" style="min-height: 100vh; background-color: #ddd;">
+                    <?php if (!isset($_GET['invitations-received'])) { ?>
+                        <hr>
+                        <div class="row border">
+                            <div class="col-2">
+                                <h3>Posted Jobs</h3>
+                            </div>
+                            <div class="col-1 d-flex justify-content-center align-items-center">
+                                <a class="btn btn-primary" href="job.php?new-post"><i class="fa-solid fa-plus"></i></a>
+                            </div>
                         </div>
-                        <div class="col-1 d-flex justify-content-center align-items-center">
-                            <a class="btn btn-primary" href="job.php?new-post"><i class="fa-solid fa-plus"></i></a>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <?php if (!empty($allJobsData)) {
-                            foreach ($allJobsData as $row) {
-                                $job_img_src = "uploads/job/placeholder-company.png";
-                                if (file_exists("uploads/job/" . $row['jindex'] . ".png")) {
-                                    $job_img_src = "uploads/job/" . $row['jindex'] . ".png";
-                                }
-                        ?>
-                                <div class="container">
-                                    <div class="col-12 mx-0">
-                                        <div id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start my-4 mx-0 card text-decoration-none">
-                                            <div class="card-body">
-                                                <div class="row text-sm-center text-md-center text-lg-start text-center">
-                                                    <div class="col-lg-4 col-md-12 col-sm-12 col-12">
-                                                        <img class="img-fluid" style="max-height: 100px;" src="<?php echo $job_img_src ?>" alt="">
-                                                    </div>
-                                                    <div class="col-lg-8 col-md-12 col-sm-12 col-12">
-                                                        <div class="row">
-                                                            <div class="col-12">
-                                                                <b class="m-0 p-2"><?php echo $row['jobtitle']; ?> </b>
-                                                            </div>
+                        <hr>
+                        <div class="row">
+                            <?php if (!empty($allJobsData)) {
+                                foreach ($allJobsData as $row) {
+                                    $job_img_src = "uploads/job/placeholder-company.png";
+                                    if (file_exists("uploads/job/" . $row['jindex'] . ".png")) {
+                                        $job_img_src = "uploads/job/" . $row['jindex'] . ".png";
+                                    }
+                            ?>
+                                    <div class="container">
+                                        <div class="col-12 mx-0">
+                                            <div id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start my-4 mx-0 card text-decoration-none">
+                                                <div class="card-body">
+                                                    <div class="row text-sm-center text-md-center text-lg-start text-center">
+                                                        <div class="col-lg-4 col-md-12 col-sm-12 col-12">
+                                                            <img class="img-fluid" style="max-height: 100px;" src="<?php echo $job_img_src ?>" alt="">
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-12">
-                                                                <div class="p-2">
-                                                                    <?php if (strlen($row['dutyskilleduexp']) > 100) {
-                                                                        $maxLength = 99;
-                                                                        $row['dutyskilleduexp'] = substr($row['dutyskilleduexp'], 0, $maxLength);
-                                                                    } ?>
-                                                                    <p class="mb-0"><?= $row['dutyskilleduexp']; ?>...</p>
+                                                        <div class="col-lg-8 col-md-12 col-sm-12 col-12">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <b class="m-0 p-2"><?php echo $row['jobtitle']; ?> </b>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-12">
-                                                                <p class="m-0 p-2"><i class="fa-solid fa-dollar-sign"></i> <?php echo $row['salary']; ?> </p>
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <div class="p-2">
+                                                                        <?php if (strlen($row['dutyskilleduexp']) > 100) {
+                                                                            $maxLength = 99;
+                                                                            $row['dutyskilleduexp'] = substr($row['dutyskilleduexp'], 0, $maxLength);
+                                                                        } ?>
+                                                                        <p class="mb-0"><?= $row['dutyskilleduexp']; ?>...</p>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class=" row">
-                                                            <div class="col-6">
-                                                                <span class="p-2"><i class="fa-solid fa-location-dot"></i> <?= $row['workarea'] ?></span>
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <p class="m-0 p-2"><i class="fa-solid fa-dollar-sign"></i> <?php echo $row['salary']; ?> </p>
+                                                                </div>
                                                             </div>
-                                                            <div class="col-6">
-                                                                <b><i class="fa-solid fa-calendar-day"></i> <?= $row['enddate'] ?></b>
+                                                            <div class=" row">
+                                                                <div class="col-6">
+                                                                    <span class="p-2"><i class="fa-solid fa-location-dot"></i> <?= $row['workarea'] ?></span>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <b><i class="fa-solid fa-calendar-day"></i> <?= $row['enddate'] ?></b>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -206,16 +212,81 @@ $allJobsData = getAllPostedJobs($pdo, $orgindex);
                                             </div>
                                         </div>
                                     </div>
+                                <?php }
+                            } else { ?>
+
+                                <div class="text-center">
+                                    <b>None Posted</b>
                                 </div>
-                            <?php }
-                        } else { ?>
 
-                            <div class="text-center">
-                                <b>None Posted</b>
+                            <?php } ?>
+                        </div>
+                    <?php } else if (isset($_GET['invitations-received'])) { ?>
+                        <hr>
+                        <div class="row border">
+                            <div class="col-2">
+                                <h3>Invitations</h3>
                             </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <?php if (!empty($inviteList)) {
+                                foreach ($inviteList as $row) {
+                                    $job_img_src = "uploads/job/placeholder-company.png";
+                                    if (file_exists("uploads/job/" . $row['jindex'] . ".png")) {
+                                        $job_img_src = "uploads/job/" . $row['jindex'] . ".png";
+                                    }
+                            ?>
+                                    <div class="container">
+                                        <div class="col-12 mx-0">
+                                            <div id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start my-4 mx-0 card text-decoration-none">
+                                                <div class="card-body">
+                                                    <div class="row text-sm-center text-md-center text-lg-start text-center">
+                                                        <div class="col-lg-4 col-md-12 col-sm-12 col-12">
+                                                            <img class="img-fluid" style="max-height: 100px;" src="<?php echo $job_img_src ?>" alt="">
+                                                        </div>
+                                                        <div class="col-lg-8 col-md-12 col-sm-12 col-12">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <b class="m-0 p-2"><?php echo $row['jobtitle']; ?> </b>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <div class="p-2">
+                                                                        <p class="mb-0">For: <b><?= $row['fullname'] ?></b></p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <p class="m-0 p-2"></p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-6">
+                                                                    <span class="p-2"><i class="fa-solid fa-location-dot"></i> <?= $row['workarea'] ?></span>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <b><i class="fa-solid fa-calendar-day"></i> <?= $row['enddate'] ?></b>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php }
+                            } else { ?>
 
-                        <?php } ?>
-                    </div>
+                                <div class="text-center">
+                                    <b>None Posted</b>
+                                </div>
+
+                            <?php } ?>
+                        </div>
+                    <?php } ?>
                 </div>
             </div>
         </div>
