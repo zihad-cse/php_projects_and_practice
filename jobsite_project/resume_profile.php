@@ -376,13 +376,13 @@ if (isset($_POST['update'])) {
                                                 if (file_exists("uploads/job/" . $row['jindex'] . ".png")) {
                                                     $job_img_src = "uploads/job/" . $row['jindex'] . ".png";
                                                 } ?>
-                                                <a id="landing-page-mouse-hover-card" style="max-height: 400px;" href="job.php?view&id=<?php echo $row['jindex'] ?>" class="text-start my-4 mx-0 card text-decoration-none">
+                                                <div id="landing-page-mouse-hover-card" style="max-height: 400px;" onclick="location.href='job.php?view&id=<?php echo $row['jindex'] ?>'" class="text-start my-4 mx-0 card text-decoration-none">
                                                     <div class="card-body">
                                                         <div class="row text-lg-start text-md-start text-sm-center text-center">
                                                             <div class="col-lg-3 col-md-4 col-sm-12 col-12">
                                                                 <img style="height: 100px; width: 100px; object-fit: cover; object-position: 25% 25%" src="<?php echo $job_img_src ?>" alt="">
                                                             </div>
-                                                            <div class="col-lg-8 col-md-8 col-sm-12 col-12">
+                                                            <div class="col-lg-7 col-md-8 col-sm-12 col-12">
                                                                 <div class="row">
                                                                     <div class="col-lg-4 col-md-4 d-md-block d-lg-block d-sm-none d-none">
                                                                         <b>Job Title</b>
@@ -410,9 +410,35 @@ if (isset($_POST['update'])) {
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            <div class="col-2">
+                                                                <div>
+                                                                    <?php if ($row['resumeOrgIndex'] === $_SESSION['orgIndex']) { ?>
+                                                                        <strong>Type: Sent Application <br></strong>
+                                                                        <strong>Status: <br></strong>
+                                                                        <?php if ($row['appinvtype'] == 0) { ?>
+                                                                            <strong class="text-warning">Pending</strong>
+                                                                        <?php } else if ($row['appinvtype'] == 4) { ?>
+                                                                            <strong class="text-success">Accepted!</strong>
+                                                                        <?php } else if ($row['appinvtype'] == 5) { ?>
+                                                                            <strong class="text-danger">Rejected</strong>
+                                                                        <?php } ?>
+                                                                    <?php } else if ($row['jobOrgIndex'] === $_SESSION['orgIndex']) { ?>
+                                                                        <strong>Type: Received Application <br></strong>
+                                                                        <strong>Status: <br></strong>
+                                                                        <?php if ($row['appinvtype'] == 0) { ?>
+                                                                            <a class="btn btn-success" href="php/application.php?jobid=<?= $row['jindex'] ?>&acceptapp&rindex=<?= $row['rindex'] ?>">Accept</a>
+                                                                            <a class="btn btn-danger" href="php/application.php?jobid=<?= $row['jindex'] ?>&rejectapp&rindex=<?= $row['rindex'] ?>">Reject</a>
+                                                                        <?php } else if ($row['appinvtype'] == 4) { ?>
+                                                                            <strong class="text-success">Accepted!</strong>
+                                                                        <?php } else if ($row['appinvtype'] == 5) { ?>
+                                                                            <strong class="text-danger">Rejected</strong>
+                                                                        <?php } ?>
+                                                                    <?php  } ?>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </a>
+                                                </div>
                                         <?php   }
                                         } else {
                                             echo "<b>None found</b>";

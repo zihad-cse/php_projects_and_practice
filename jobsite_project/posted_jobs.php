@@ -235,6 +235,7 @@ $inviteList = resumeInvitations($pdo, $userData['orgindex']);
                                     $job_img_src = "uploads/job/placeholder-company.png";
                                     if (file_exists("uploads/job/" . $row['jindex'] . ".png")) {
                                         $job_img_src = "uploads/job/" . $row['jindex'] . ".png";
+                                        // appinvtype INDEX: 0 = Application, 1 = Invitation, 2 = Acceptance of Invite, 3 = Rejecting of Invite, 4 = acceptance of Application, 5 = rejecting of application
                                     }
                             ?>
                                     <div class="container">
@@ -242,10 +243,10 @@ $inviteList = resumeInvitations($pdo, $userData['orgindex']);
                                             <div id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start my-4 mx-0 card text-decoration-none">
                                                 <div class="card-body">
                                                     <div class="row text-sm-center text-md-center text-lg-start text-center">
-                                                        <div class="col-lg-4 col-md-12 col-sm-12 col-12">
+                                                        <div class="col-lg-3 col-md-12 col-sm-12 col-12">
                                                             <img class="img-fluid" style="max-height: 100px;" src="<?php echo $job_img_src ?>" alt="">
                                                         </div>
-                                                        <div class="col-lg-8 col-md-12 col-sm-12 col-12">
+                                                        <div class="col-lg-7 col-md-12 col-sm-12 col-12">
                                                             <div class="row">
                                                                 <div class="col-12">
                                                                     <b class="m-0 p-2"><?php echo $row['jobtitle']; ?> </b>
@@ -271,6 +272,30 @@ $inviteList = resumeInvitations($pdo, $userData['orgindex']);
                                                                     <b><i class="fa-solid fa-calendar-day"></i> <?= $row['enddate'] ?></b>
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <?php if ($row['jobOrgIndex'] === $_SESSION['orgIndex']) {?>
+                                                                <strong>Type: Invitation Sent<br></strong>
+                                                                <strong>Status: </strong>
+                                                                <?php if($row['appinvtype'] == 1){?>
+                                                              <strong class='text-success'>Pending</strong>
+                                                            <?php } else if($row['appinvtype'] == 2){ ?>
+                                                                <strong class='text-success'>Accepted</strong>
+                                                            <?php } else if ($row['appinvtype'] == 3){ ?>
+                                                                <strong class='text-danger'>Rejected</strong>
+                                                           <?php }
+                                                            } else if ($row['resumeOrgIndex'] === $_SESSION['orgIndex']) { ?>
+                                                                <strong>Type: Invitation Received <br></strong>
+                                                                <strong>Status: </strong>
+                                                               <?php if ($row['appinvtype'] == 1) { ?>
+                                                                    <a class="btn btn-success" href="php/application.php?acceptinv&jobid=<?= $row['jindex'] ?>&rindex=<?= $row['rindex'] ?>">Accept</a>
+                                                                    <a class="btn btn-danger" href="php/application.php?rejectinv&jobid=<?= $row['jindex'] ?>&rindex=<?= $row['rindex'] ?>">Reject</a>
+                                                                <?php } else if ($row['appinvtype'] == 2) { ?>
+                                                                    <strong class="text-success">Accepted</strong>
+                                                                <?php } else if ($row['appinvtype'] == 3) { ?>
+                                                                    <strong class="text-danger">Rejected</strong>
+                                                            <?php }
+                                                            } ?>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -81,4 +81,40 @@ if (isset($_GET['apply']) && isset($_SESSION['orgIndex']) && !empty($_SESSION['o
             echo "ERROR: " . $e->getMessage();
         }
     }
+} else if (isset($_GET['acceptapp']) && isset($_SESSION['orgIndex']) && !empty($_SESSION['orgIndex'])) {
+    if (!empty($_GET['jobid']) && !empty($_GET['rindex'])) {
+        $jindex = $_GET['jobid'];
+        $rindex = $_GET['rindex'];
+        $appinvtype = 4;
+
+        try {
+            $sql = "UPDATE applications SET appinvtype = :appinvtype WHERE jindex = :jindex AND rindex = :rindex";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(":jindex", $jindex, PDO::PARAM_INT);
+            $stmt->bindParam(":rindex", $rindex, PDO::PARAM_INT);
+            $stmt->bindParam(":appinvtype", $appinvtype, PDO::PARAM_INT);
+            $stmt->execute();
+            header("location: ../dashboard.php");
+        } catch (PDOException $e) {
+            echo "ERROR: " . $e->getMessage();
+        }
+    }
+} else if (isset($_GET['rejectapp']) && isset($_SESSION['orgIndex']) && !empty($_SESSION['orgIndex'])) {
+    if (!empty($_GET['jobid']) && !empty($_GET['rindex'])) {
+        $jindex = $_GET['jobid'];
+        $rindex = $_GET['rindex'];
+        $appinvtype = 5;
+
+        try {
+            $sql = "UPDATE applications SET appinvtype = :appinvtype WHERE jindex = :jindex AND rindex = :rindex";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(":jindex", $jindex, PDO::PARAM_INT);
+            $stmt->bindParam(":rindex", $rindex, PDO::PARAM_INT);
+            $stmt->bindParam(":appinvtype", $appinvtype, PDO::PARAM_INT);
+            $stmt->execute();
+            header("location: ../dashboard.php");
+        } catch (PDOException $e) {
+            echo "ERROR: " . $e->getMessage();
+        }
+    }
 }

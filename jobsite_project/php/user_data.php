@@ -328,14 +328,27 @@ function appliedJobs($pdo, $orgindex)
 {
     if (isset($_GET['applied-jobs'])) {
         try {
-            $sql = "SELECT 
-            applications.appindex, applications.appinvtype, job.jindex, job.jobtitle, job.jobcategory, resumes.rindex, resumes.fullname, resumes.orgindex, jobcat.jcategory 
-            FROM applications
-            INNER JOIN job ON applications.jindex = job.jindex
-            INNER JOIN resumes ON applications.rindex = resumes.rindex
-            INNER JOIN org ON resumes.orgindex = org.orgindex
-            INNER JOIN jobcat ON job.jobcategory = jobcat.jcatindex
-            WHERE org.orgindex = :orgindex";
+            $sql = "SELECT
+            applications.appindex,
+            applications.appinvtype,
+            job.jindex,
+            job.jobtitle,
+            job.jobcategory,
+            job.orgindex AS jobOrgIndex,
+            resumes.rindex,
+            resumes.fullname,
+            resumes.orgindex AS resumeOrgIndex,
+            jobcat.jcategory
+        FROM
+            org
+        INNER JOIN job ON org.orgindex = job.orgindex
+        INNER JOIN applications ON applications.jindex = job.jindex
+        INNER JOIN resumes ON applications.rindex = resumes.rindex
+        INNER JOIN jobcat ON job.jobcategory = jobcat.jcatindex
+        WHERE
+            (applications.appinvtype = 0 OR applications.appinvtype = 4 OR applications.appinvtype = 5) AND 
+            org.orgindex = :orgindex
+            OR resumes.orgindex = :orgindex";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(":orgindex", $orgindex, PDO::PARAM_INT);
             $stmt->execute();
@@ -347,9 +360,43 @@ function appliedJobs($pdo, $orgindex)
         }
     }
 }
-function appliedJobCheck($pdo, $orgindex, $jindex)
+// function appliedJobCheck($pdo, $orgindex, $jindex)
+// {
+//     if (isset($_GET['applied-jobs'])) {
+//         try {
+//             $sql = "SELECT
+//             applications.appindex,
+//             applications.appinvtype,
+//             job.jindex,
+//             job.jobtitle,
+//             job.jobcategory,
+//             resumes.rindex,
+//             resumes.fullname,
+//             resumes.orgindex,
+//             jobcat.jcategory
+//         FROM
+//             applications
+//         INNER JOIN job ON applications.jindex = job.jindex
+//         INNER JOIN resumes ON applications.rindex = resumes.rindex
+//         INNER JOIN org ON resumes.orgindex = org.orgindex
+//         INNER JOIN jobcat ON job.jobcategory = jobcat.jcatindex
+
+//         WHERE applications.jindex = :jindex AND org.orgindex = :orgindex";
+//             $stmt = $pdo->prepare($sql);
+//             $stmt->bindParam(":orgindex", $orgindex, PDO::PARAM_INT);
+//             $stmt->bindParam(":jindex", $jindex, PDO::PARAM_INT);
+//             $stmt->execute();
+//             $results = $stmt->fetch(PDO::FETCH_ASSOC);
+//             return $results;
+//         } catch (PDOException $e) {
+//             error_log("Error: " . $e->getMessage());
+//             return false;
+//         }
+//     }
+// }
+function resumeInvitations($pdo, $orgindex)
 {
-    if (isset($_GET['applied-jobs'])) {
+    if (isset($_GET['invitations-received'])) {
         try {
             $sql = "SELECT
             applications.appindex,
@@ -357,51 +404,21 @@ function appliedJobCheck($pdo, $orgindex, $jindex)
             job.jindex,
             job.jobtitle,
             job.jobcategory,
+            job.enddate,
+            job.workarea,
+            job.orgindex AS jobOrgIndex,
             resumes.rindex,
             resumes.fullname,
-            resumes.orgindex,
+            resumes.orgindex AS resumeOrgIndex,
             jobcat.jcategory
         FROM
-            applications
-        INNER JOIN job ON applications.jindex = job.jindex
+            org
+        INNER JOIN job ON org.orgindex = job.orgindex
+        INNER JOIN applications ON applications.jindex = job.jindex
         INNER JOIN resumes ON applications.rindex = resumes.rindex
-        INNER JOIN org ON resumes.orgindex = org.orgindex
         INNER JOIN jobcat ON job.jobcategory = jobcat.jcatindex
-        
-        WHERE applications.jindex = :jindex AND org.orgindex = :orgindex";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(":orgindex", $orgindex, PDO::PARAM_INT);
-            $stmt->bindParam(":jindex", $jindex, PDO::PARAM_INT);
-            $stmt->execute();
-            $results = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $results;
-        } catch (PDOException $e) {
-            error_log("Error: " . $e->getMessage());
-            return false;
-        }
-    }
-}
-function resumeInvitations($pdo, $orgindex)
-{
-    if (isset($_GET['invitations-received'])) {
-        try {
-            $sql = "SELECT
-            applications.*,
-            job.jindex AS jobID,
-            job.jobtitle,
-            resumes.rindex AS resumesID,
-            resumes.fullname,
-            resumes.orgindex AS resumeOrgIndex,
-            job.orgindex AS jobOrgIndex,
-            job.workarea,
-            job.enddate,
-            applications.appinvtype
-        FROM
-            applications
-        LEFT JOIN job ON job.jindex = applications.jindex
-        LEFT JOIN resumes ON resumes.rindex = applications.rindex
         WHERE
-            applications.appinvtype = 1 AND resumes.orgindex = :orgindex";
+            (applications.appinvtype = 1 OR applications.appinvtype = 2 OR applications.appinvtype = 3) AND (org.orgindex = :orgindex OR resumes.orgindex = :orgindex)";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(":orgindex", $orgindex, PDO::PARAM_INT);
             $stmt->execute();
