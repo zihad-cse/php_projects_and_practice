@@ -9,6 +9,7 @@ if (isset($_SESSION['token'])) {
     header("Location: /");
     exit();
 }
+
 ?>
 
 <head>
@@ -16,7 +17,7 @@ if (isset($_SESSION['token'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
+
     <title>Log in</title>
     <style>
         #form-card {
@@ -70,7 +71,21 @@ if (isset($_SESSION['token'])) {
                                             <a href="#" class="link-dark">Forgot Password</a>
                                         </div>
                                     </div>
-                                    <!-- <div class="g-recaptcha" data-sitekey="6LcyWfYpAAAAAD28JpZ1LcQGZR4VmtrzDnGy1bUi"></div> -->
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <strong>Captcha Verification</strong>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <img class="" src="php/captcha.php" alt="CAPTCHA">
+                                                </div>
+                                                <div class="col-9">
+                                                    <input class="form-control" type="text" name="captcha" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="mt-lg-5 mt-md-5 mt-sm-3 mt-3 row justify-content-center">
                                         <input type="submit" value="Log In" class="col-11 btn p-3 btn-primary">
                                     </div>

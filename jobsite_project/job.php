@@ -24,13 +24,9 @@ if (isset($_GET['id'])) {
     $jobPicFilePath = "uploads/job/" . $jobData['jindex'] . '.png';
 }
 $jobCatData = getJobCategories($pdo);
-if (isset($_SESSION['orgIndex'])) {
+if (isset($_SESSION['orgIndex']) && isset($jobId)) {
     $resumeData = getAllPostedResumes($pdo, $_SESSION['orgIndex'], $jobId);
 }
-
-// $jobCheck = appliedJobCheck($pdo, $_SESSION['orgIndex'], $jobId);
-
-// var_dump($jobCheck);
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -96,23 +92,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo 'Error: ' . $e->getMessage();
         }
     }
-    // if (isset($_GET['apply']) && isset($_SESSION['orgIndex']) && !empty($_SESSION['orgIndex'])) {
-    //     if (!empty($_POST['apprindex']) && !empty($_GET['id'])) {
-    //         $rindex = $_GET['rindex'];
-    //         $jindex = $_GET['id'];
-
-    //         try {
-    //             $sql = "INSERT INTO applications (jindex, rindex) VALUES (:jindex, :rindex)";
-    //             $stmt = $pdo->prepare($sql);
-    //             $stmt->bindParam(":jindex", $jindex, PDO::PARAM_INT);
-    //             $stmt->bindParam(":rindex", $rindex, PDO::PARAM_INT);
-    //             $stmt->execute();
-    //             header("location: dashboard.php");
-    //         } catch (PDOException $e) {
-    //             echo $e->getMessage();
-    //         }
-    //     }
-    // }
 }
 
 if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
@@ -326,14 +305,19 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
                         <b>Contact Email: <br></b>
                         <p><?= $jobData['conemail'] ?></p>
                     </div>
-
-                    <?php if ($_SESSION['orgIndex'] !== $jobData['orgindex']) { ?>
+                            
+                    <?php if (isset($_SESSION['token']) && !empty($_SESSION['token'])){
+                     if ($_SESSION['orgIndex'] !== $jobData['orgindex']) { ?>
                         <div class="col-lg-3 col-md-3 col-sm-12 col-12 pe-lg-0 pe-md-0 pe-sm-2 pe-2 mb-sm-2 mb-2 text-end">
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#applymodal">Apply</button>
                         </div>
                     <?php } else if ($_SESSION['orgIndex'] == $jobData['orgindex']) { ?>
                         <div class="col-lg-3 col-md-3 col-sm-12 col-12 pe-lg-0 pe-md-0 pe-sm-2 pe-2 mb-sm-2 mb-2 text-end">
                             <a href="?view&id=<?= $jobData['jindex'] ?>&edit" class="btn btn-primary">Edit</a>
+                        </div>
+                    <?php } } else { ?>
+                        <div class="col-lg-3 col-md-3 col-sm-12 col-12 pe-lg-0 pe-md-0 pe-sm-2 pe-2 mb-sm-2 mb-2 text-end">
+                            <a href="login_page" class="btn btn-primary">Login to Apply</a>
                         </div>
                     <?php } ?>
                 </div>

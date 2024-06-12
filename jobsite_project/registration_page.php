@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
+session_start();
 include 'php/registration.php';
 
-session_start();
 if (isset($_SESSION['token'])) {
     header("Location: ");
     exit();
@@ -74,6 +74,22 @@ if (isset($_SESSION['token'])) {
                                                     Conditions</a></label>
                                         </div>
                                     </div>
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <strong>Captcha Verification</strong>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <img class="" src="php/captcha.php" alt="CAPTCHA">
+                                                </div>
+                                                <div class="col-9">
+                                                    <input class="form-control" type="text" name="captcha" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div><?= $captchaErr ?></div>
                                     <div class="mt-lg-5 mt-md-5 mt-sm-3 mt-3 row justify-content-center">
                                         <button type="submit" class=" col-11 btn p-3 btn-primary">
                                             <h3>Sign Up</h3>

@@ -380,17 +380,12 @@ if ($jobNumber <= 10) {
             </footer>
         </div>
     </div>
-    <script>
+    <script> // Back To Top button
         document.getElementById("pageSelect").addEventListener('change', function() {
             var selectedPage = this.value;
             window.location.href = '?jobpage=' + selectedPage;
         })
-
-
-        //Get the button
         let mybutton = document.getElementById("btn-back-to-top");
-
-        // When the user scrolls down 20px from the top of the document, show the button
         window.onscroll = function() {
             scrollFunction();
         };
@@ -405,7 +400,6 @@ if ($jobNumber <= 10) {
                 mybutton.style.display = "none";
             }
         }
-        // When the user clicks on the button, scroll to the top of the document
         mybutton.addEventListener("click", backToTop);
 
         function backToTop() {
@@ -425,7 +419,7 @@ if ($jobNumber <= 10) {
         });
     </script>
 
-    <script>
+    <script> // Back Button
         document.getElementById('goBackButton').addEventListener('click', function() {
             window.history.back();
         });

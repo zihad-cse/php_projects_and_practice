@@ -258,7 +258,8 @@ if ((isset($_POST['update'])) || (isset($_POST['first-resume'])) || (isset($_POS
                                         <div class="col-8">
                                             <div class="my-3 form-check">
                                                 <p><?= $row['jobtitle'] ?></p><br>
-                                                <i>Deadline: </i><p><?= $row['enddate'] ?></p>
+                                                <i>Deadline: </i>
+                                                <p><?= $row['enddate'] ?></p>
                                             </div>
                                         </div>
                                         <div class="col-4">
@@ -345,13 +346,19 @@ if ((isset($_POST['update'])) || (isset($_POST['first-resume'])) || (isset($_POS
                 <?php if (!isset($_SESSION['orgIndex'])) {
                     $_SESSION['orgIndex'] = '';
                 } ?>
-                <?php if ($resumeData['orgindex'] == $_SESSION['orgIndex']) { ?>
+                <?php if (isset($_SESSION['token']) && !empty($_SESSION['token'])) {
+                    if ($resumeData['orgindex'] == $_SESSION['orgIndex']) { ?>
+                        <div class="text-end">
+                            <a href="?view&id=<?= $resumeData['rindex']; ?>&edit" class="btn btn-primary">Edit</a>
+                        </div>
+                    <?php } else { ?>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#invitemodal">Invite</button>
+                        </div>
+                    <?php }
+                } else { ?>
                     <div class="text-end">
-                        <a href="?view&id=<?= $resumeData['rindex']; ?>&edit" class="btn btn-primary">Edit</a>
-                    </div>
-                <?php } else { ?>
-                    <div class="text-end">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#invitemodal">Invite</button>
+                        <a href="login_page.php" class="btn btn-primary">Login to Invite</a>
                     </div>
                 <?php } ?>
             </div>
