@@ -152,6 +152,9 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
                     <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
+                    <li><a class="dropdown-item" href="resume_profile.php">Resumes</a></li>
+                    <li><a class="dropdown-item" href="resume_profile.php?applied-jobs" class="btn btn-secondary-outline">Job Applications</a></li>
+                    <li><a class="dropdown-item" href="posted_jobs.php?invitations-received" class="btn btn-secondary-outline">Job Invitations</a></li>
                     <li><a class="dropdown-item" href="/php_basics/jobsite_project/php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                 </ul>
             </div>

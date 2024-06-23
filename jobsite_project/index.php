@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     }
 }
 
-if(isset($_SESSION['phnNumber']) && !empty($_SESSION['phnNumber'])){
+if (isset($_SESSION['phnNumber']) && !empty($_SESSION['phnNumber'])) {
     $orgData = getUserData($pdo, $_SESSION['phnNumber']);
     $_SESSION['orgIndex'] = $orgData['orgindex'];
 }
@@ -34,7 +34,7 @@ if(isset($_SESSION['phnNumber']) && !empty($_SESSION['phnNumber'])){
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/landing_page.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    
+
     <title>Document</title>
     <style>
         #landing-page-mouse-hover-card {
@@ -105,6 +105,9 @@ if(isset($_SESSION['phnNumber']) && !empty($_SESSION['phnNumber'])){
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
                         <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
+                        <li><a class="dropdown-item" href="resume_profile.php">Resumes</a></li>
+                        <li><a class="dropdown-item" href="resume_profile.php?applied-jobs" class="btn btn-secondary-outline">Job Applications</a></li>
+                        <li><a class="dropdown-item" href="posted_jobs.php?invitations-received" class="btn btn-secondary-outline">Job Invitations</a></li>
                         <li><a class="dropdown-item" href="/php_basics/jobsite_project/php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
@@ -223,7 +226,7 @@ if(isset($_SESSION['phnNumber']) && !empty($_SESSION['phnNumber'])){
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-12">
-                                                                    <p class="m-0 p-2"><i class="fa-solid fa-dollar-sign"></i> <?php echo $row['salary']; ?> </p>
+                                                                    <p class="m-0 p-2"><i class="fa-solid fa-bangladeshi-taka-sign"></i> <?php echo $row['salary']; ?> </p>
                                                                 </div>
                                                             </div>
                                                             <div class=" row">
@@ -278,11 +281,11 @@ if(isset($_SESSION['phnNumber']) && !empty($_SESSION['phnNumber'])){
                                                                 </div>
                                                             </div>
                                                             <div class="row py-2 py-sm-2 py-md-2 py-lg-1">
-                                                            <?php if (strlen($row['skilleduexp']) > 100) {
-                                                                            $maxLength = 99;
-                                                                            $row['skilleduexp'] = substr($row['skilleduexp'], 0, $maxLength);
-                                                                        } ?>
-                                                                        <p class="mb-0"><?= $row['skilleduexp']; ?>...</p>
+                                                                <?php if (strlen($row['skilleduexp']) > 100) {
+                                                                    $maxLength = 99;
+                                                                    $row['skilleduexp'] = substr($row['skilleduexp'], 0, $maxLength);
+                                                                } ?>
+                                                                <p class="mb-0"><?= $row['skilleduexp']; ?>...</p>
                                                             </div>
                                                         </div>
                                                     </div>

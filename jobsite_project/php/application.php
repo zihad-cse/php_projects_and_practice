@@ -6,8 +6,16 @@ include 'db_connection.php';
 
 session_start();
 
+if (isset($_GET['return_url'])) {
+    $returnurl = urldecode($_GET['return_url']);
+    
+} else {
+    $returnurl = '../dashboard.php';
+    
+}
 
-// appinvtype INDEX: 0 = Application, 1 = Invitation, 2 = Acceptance of Invite, 3 = Rejecting of Invite
+
+// appinvtype INDEX: 0 = Application, 1 = Invitation, 2 = Acceptance of Invite, 3 = Rejecting of Invite, 4 = Acceptance of Application, 5 = Rejection of Application
 
 if (isset($_GET['apply']) && isset($_SESSION['orgIndex']) && !empty($_SESSION['orgIndex'])) {
     if (!empty($_GET['id']) && !empty($_GET['rindex'])) {
@@ -21,7 +29,7 @@ if (isset($_GET['apply']) && isset($_SESSION['orgIndex']) && !empty($_SESSION['o
             $stmt->bindParam(":jindex", $jindex, PDO::PARAM_INT);
             $stmt->bindParam(":rindex", $rindex, PDO::PARAM_INT);
             $stmt->execute();
-            header("location: ../resume_profile.php?applied-jobs");
+            header("location: " . $returnurl);
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -40,7 +48,7 @@ if (isset($_GET['apply']) && isset($_SESSION['orgIndex']) && !empty($_SESSION['o
             $stmt->bindParam(":rindex", $rindex, PDO::PARAM_INT);
             $stmt->bindParam(":appinvtype", $appinvtype, PDO::PARAM_INT);
             $stmt->execute();
-            header("location: ../dashboard.php");
+            header("location: " . $returnurl);
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -58,7 +66,7 @@ if (isset($_GET['apply']) && isset($_SESSION['orgIndex']) && !empty($_SESSION['o
             $stmt->bindParam(":rindex", $rindex, PDO::PARAM_INT);
             $stmt->bindParam(":appinvtype", $appinvtype, PDO::PARAM_INT);
             $stmt->execute();
-            header("location: ../dashboard.php");
+            header("location: " . $returnurl);
         } catch (PDOException $e) {
             echo "ERROR: " . $e->getMessage();
         }
@@ -76,7 +84,7 @@ if (isset($_GET['apply']) && isset($_SESSION['orgIndex']) && !empty($_SESSION['o
             $stmt->bindParam(":rindex", $rindex, PDO::PARAM_INT);
             $stmt->bindParam(":appinvtype", $appinvtype, PDO::PARAM_INT);
             $stmt->execute();
-            header("location: ../dashboard.php");
+            header("location: " . $returnurl);
         } catch (PDOException $e) {
             echo "ERROR: " . $e->getMessage();
         }
@@ -94,7 +102,7 @@ if (isset($_GET['apply']) && isset($_SESSION['orgIndex']) && !empty($_SESSION['o
             $stmt->bindParam(":rindex", $rindex, PDO::PARAM_INT);
             $stmt->bindParam(":appinvtype", $appinvtype, PDO::PARAM_INT);
             $stmt->execute();
-            header("location: ../dashboard.php");
+            header("location: " . $returnurl);
         } catch (PDOException $e) {
             echo "ERROR: " . $e->getMessage();
         }
@@ -112,7 +120,7 @@ if (isset($_GET['apply']) && isset($_SESSION['orgIndex']) && !empty($_SESSION['o
             $stmt->bindParam(":rindex", $rindex, PDO::PARAM_INT);
             $stmt->bindParam(":appinvtype", $appinvtype, PDO::PARAM_INT);
             $stmt->execute();
-            header("location: ../dashboard.php");
+            header("location: " . $returnurl);
         } catch (PDOException $e) {
             echo "ERROR: " . $e->getMessage();
         }

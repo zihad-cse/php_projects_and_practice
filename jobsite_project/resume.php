@@ -18,7 +18,9 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     $resumeData = getResumeData($pdo, $_SESSION['phnNumber']);
     $rindex = $resumeData['rindex'];
 }
-$allJobs = getAllPostedJobs($pdo, $_SESSION['orgIndex'], $rindex);
+if(isset($_SESSION)){
+    $allJobs = getAllPostedJobs($pdo, $_SESSION['orgIndex'], $rindex);
+}
 $resumeData = getResumeDataGuest($pdo, $rindex);
 
 
@@ -209,6 +211,9 @@ if ((isset($_POST['update'])) || (isset($_POST['first-resume'])) || (isset($_POS
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
                         <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
+                        <li><a class="dropdown-item" href="resume_profile.php">Resumes</a></li>
+                        <li><a class="dropdown-item" href="resume_profile.php?applied-jobs" class="btn btn-secondary-outline">Job Applications</a></li>
+                        <li><a class="dropdown-item" href="posted_jobs.php?invitations-received" class="btn btn-secondary-outline">Job Invitations</a></li>
                         <li><a class="dropdown-item" href="php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
@@ -272,7 +277,7 @@ if ((isset($_POST['update'])) || (isset($_POST['first-resume'])) || (isset($_POS
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <a class="btn btn-primary <?= ($row['appindex'] > 0 ? "disabled" : "") ?>" href="php/application.php?jobid=<?= $row['jindex'] ?>&invite&rindex=<?= $rindex ?>">Invite</a>
+                                    <a class="btn btn-primary <?= ($row['appindex'] > 0 ? "disabled" : "") ?>" href="php/application.php?jobid=<?= $row['jindex'] ?>&invite&rindex=<?= $rindex ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Invite</a>
                                 </div>
                             </div>
                         <?php } ?>

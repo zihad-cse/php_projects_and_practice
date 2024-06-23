@@ -115,6 +115,9 @@ if ($jobNumber <= 10) {
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
                         <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
+                        <li><a class="dropdown-item" href="resume_profile.php">Resumes</a></li>
+                        <li><a class="dropdown-item" href="resume_profile.php?applied-jobs" class="btn btn-secondary-outline">Job Applications</a></li>
+                        <li><a class="dropdown-item" href="posted_jobs.php?invitations-received" class="btn btn-secondary-outline">Job Invitations</a></li>
                         <li><a class="dropdown-item" href="php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
@@ -380,7 +383,8 @@ if ($jobNumber <= 10) {
             </footer>
         </div>
     </div>
-    <script> // Back To Top button
+    <script>
+        // Back To Top button
         document.getElementById("pageSelect").addEventListener('change', function() {
             var selectedPage = this.value;
             window.location.href = '?jobpage=' + selectedPage;
@@ -419,7 +423,8 @@ if ($jobNumber <= 10) {
         });
     </script>
 
-    <script> // Back Button
+    <script>
+        // Back Button
         document.getElementById('goBackButton').addEventListener('click', function() {
             window.history.back();
         });

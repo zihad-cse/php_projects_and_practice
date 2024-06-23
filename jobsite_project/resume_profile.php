@@ -195,6 +195,9 @@ if (isset($_POST['update'])) {
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
                     <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
+                    <li><a class="dropdown-item" href="resume_profile.php">Resumes</a></li>
+                    <li><a class="dropdown-item" href="resume_profile.php?applied-jobs" class="btn btn-secondary-outline">Job Applications</a></li>
+                    <li><a class="dropdown-item" href="posted_jobs.php?invitations-received" class="btn btn-secondary-outline">Job Invitations</a></li>
                     <li><a class="dropdown-item" href="/php_basics/jobsite_project/php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                 </ul>
             </div>
@@ -224,8 +227,8 @@ if (isset($_POST['update'])) {
                             <div class="collapse" id="orders-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
                                     <li><a href="job.php?new-post" class="btn btn-secondary-outline">New</a></li>
-                                    <li><a href="posted_jobs.php" class="btn btn-secondary-outline">Posted Jobs</a></li>
-                                    <li><a href="?applied-jobs" class="btn btn-secondary-outline">Applied Jobs</a></li>
+                                    <li><a href="posted_jobs.php" class="btn btn-secondary-outline">Job Posts</a></li>
+                                    <li><a href="?applied-jobs" class="btn btn-secondary-outline">Job Applications</a></li>
                                     <li><a href="posted_jobs.php?invitations-received" class="btn btn-secondary-outline">Job Invitations</a></li>
                                 </ul>
                             </div>
@@ -423,11 +426,11 @@ if (isset($_POST['update'])) {
                                                                             <strong class="text-danger">Rejected</strong>
                                                                         <?php } ?>
                                                                     <?php } else if ($row['jobOrgIndex'] === $_SESSION['orgIndex']) { ?>
-                                                                        <strong>Type: Received Application <br></strong>
+                                                                        <strong>Type: Received Application <br></strong>                                                                    
                                                                         <strong>Status: <br></strong>
                                                                         <?php if ($row['appinvtype'] == 0) { ?>
-                                                                            <a class="btn btn-success" href="php/application.php?jobid=<?= $row['jindex'] ?>&acceptapp&rindex=<?= $row['rindex'] ?>">Accept</a>
-                                                                            <a class="btn btn-danger" href="php/application.php?jobid=<?= $row['jindex'] ?>&rejectapp&rindex=<?= $row['rindex'] ?>">Reject</a>
+                                                                            <a class="btn btn-success" href="php/application.php?jobid=<?= $row['jindex'] ?>&acceptapp&rindex=<?= $row['rindex'] ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Accept</a>
+                                                                            <a class="btn btn-danger" href="php/application.php?jobid=<?= $row['jindex'] ?>&rejectapp&rindex=<?= $row['rindex'] ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Reject</a>
                                                                         <?php } else if ($row['appinvtype'] == 4) { ?>
                                                                             <strong class="text-success">Accepted!</strong>
                                                                         <?php } else if ($row['appinvtype'] == 5) { ?>

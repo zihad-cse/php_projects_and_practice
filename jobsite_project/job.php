@@ -182,6 +182,9 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
                         <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
+                        <li><a class="dropdown-item" href="resume_profile.php">Resumes</a></li>
+                        <li><a class="dropdown-item" href="resume_profile.php?applied-jobs" class="btn btn-secondary-outline">Job Applications</a></li>
+                        <li><a class="dropdown-item" href="posted_jobs.php?invitations-received" class="btn btn-secondary-outline">Job Invitations</a></li>
                         <li><a class="dropdown-item" href="php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
@@ -231,13 +234,17 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
                                 </div>
                                 <div class="card-footer">
                                     <?php if ($row['appinvtype'] == 0) { ?>
-                                        <a class="btn btn-primary <?= ($row['appindex'] > 0 ? "disabled" : "") ?>" href="php/application.php?id=<?= $jobData['jindex'] ?>&apply&rindex=<?= $row['rindex'] ?>">Apply</a>
+                                        <a class="btn btn-primary <?= ($row['appindex'] > 0 ? "disabled" : "") ?>" href="php/application.php?id=<?= $jobData['jindex'] ?>&apply&rindex=<?= $row['rindex'] ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Apply</a>
                                     <?php } else if ($row['appinvtype'] == 1) { ?>
-                                        <a class="btn btn-success" href="php/application.php?jobid=<?= $jobData['jindex'] ?>&acceptinv&rindex=<?= $row['rindex'] ?>">Accept</a> <a class="btn btn-danger" href="php/application.php?jobid=<?= $jobData['jindex'] ?>&rejectinv&rindex=<?= $row['rindex'] ?>">Reject</a>
+                                        <a class="btn btn-success" href="php/application.php?jobid=<?= $jobData['jindex'] ?>&acceptinv&rindex=<?= $row['rindex'] ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Accept</a> <a class="btn btn-danger" href="php/application.php?jobid=<?= $jobData['jindex'] ?>&rejectinv&rindex=<?= $row['rindex'] ?>?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Reject</a>
                                     <?php } else if ($row['appinvtype'] == 2) { ?>
                                         <strong class="text-success"><i class="fa-solid fa-check-double"></i></strong>
                                     <?php } else if ($row['appinvtype'] == 3) { ?>
                                         <strong class="text-danger">You Rejected This</strong>
+                                    <?php } else if ($row['appinvtype'] == 4) { ?>
+                                        <strong class="text-success">You Were Accepted!</strong>
+                                    <?php } else if ($row['appinvtype'] == 5) { ?>
+                                        <strong class="text-danger">You Were Rejected</strong>
                                     <?php } ?>
                                 </div>
                             </div>
@@ -305,19 +312,20 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
                         <b>Contact Email: <br></b>
                         <p><?= $jobData['conemail'] ?></p>
                     </div>
-                            
-                    <?php if (isset($_SESSION['token']) && !empty($_SESSION['token'])){
-                     if ($_SESSION['orgIndex'] !== $jobData['orgindex']) { ?>
+
+                    <?php if (isset($_SESSION['token']) && !empty($_SESSION['token'])) {
+                        if ($_SESSION['orgIndex'] !== $jobData['orgindex']) { ?>
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-12 pe-lg-0 pe-md-0 pe-sm-2 pe-2 mb-sm-2 mb-2 text-end">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#applymodal">Apply</button>
+                            </div>
+                        <?php } else if ($_SESSION['orgIndex'] == $jobData['orgindex']) { ?>
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-12 pe-lg-0 pe-md-0 pe-sm-2 pe-2 mb-sm-2 mb-2 text-end">
+                                <a href="?view&id=<?= $jobData['jindex'] ?>&edit" class="btn btn-primary">Edit</a>
+                            </div>
+                        <?php }
+                    } else { ?>
                         <div class="col-lg-3 col-md-3 col-sm-12 col-12 pe-lg-0 pe-md-0 pe-sm-2 pe-2 mb-sm-2 mb-2 text-end">
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#applymodal">Apply</button>
-                        </div>
-                    <?php } else if ($_SESSION['orgIndex'] == $jobData['orgindex']) { ?>
-                        <div class="col-lg-3 col-md-3 col-sm-12 col-12 pe-lg-0 pe-md-0 pe-sm-2 pe-2 mb-sm-2 mb-2 text-end">
-                            <a href="?view&id=<?= $jobData['jindex'] ?>&edit" class="btn btn-primary">Edit</a>
-                        </div>
-                    <?php } } else { ?>
-                        <div class="col-lg-3 col-md-3 col-sm-12 col-12 pe-lg-0 pe-md-0 pe-sm-2 pe-2 mb-sm-2 mb-2 text-end">
-                            <a href="login_page" class="btn btn-primary">Login to Apply</a>
+                            <a href="login_page.php" class="btn btn-primary">Login to Apply</a>
                         </div>
                     <?php } ?>
                 </div>

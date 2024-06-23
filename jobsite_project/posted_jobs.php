@@ -82,6 +82,9 @@ $inviteList = resumeInvitations($pdo, $userData['orgindex']);
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
                     <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
+                    <li><a class="dropdown-item" href="resume_profile.php">Resumes</a></li>
+                    <li><a class="dropdown-item" href="resume_profile.php?applied-jobs" class="btn btn-secondary-outline">Job Applications</a></li>
+                    <li><a class="dropdown-item" href="posted_jobs.php?invitations-received" class="btn btn-secondary-outline">Job Invitations</a></li>
                     <li><a class="dropdown-item" href="/php_basics/jobsite_project/php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                 </ul>
             </div>
@@ -111,8 +114,8 @@ $inviteList = resumeInvitations($pdo, $userData['orgindex']);
                             <div class="collapse" id="orders-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
                                     <li><a href="job.php?new-post" class="btn btn-secondary-outline">New</a></li>
-                                    <li><a href="posted_jobs.php" class="btn btn-secondary-outline">Posted Jobs</a></li>
-                                    <li><a href="resume_profile.php?applied-jobs" class="btn btn-secondary-outline">Applied Jobs</a></li>
+                                    <li><a href="posted_jobs.php" class="btn btn-secondary-outline">Job Posts</a></li>
+                                    <li><a href="resume_profile.php?applied-jobs" class="btn btn-secondary-outline">Job Applications</a></li>
                                     <li><a href="posted_jobs.php?invitations-received" class="btn btn-secondary-outline">Job Invitations</a></li>
                                 </ul>
                             </div>
@@ -274,22 +277,22 @@ $inviteList = resumeInvitations($pdo, $userData['orgindex']);
                                                             </div>
                                                         </div>
                                                         <div class="col-2">
-                                                            <?php if ($row['jobOrgIndex'] === $_SESSION['orgIndex']) {?>
+                                                            <?php if ($row['jobOrgIndex'] === $_SESSION['orgIndex']) { ?>
                                                                 <strong>Type: Invitation Sent<br></strong>
                                                                 <strong>Status: </strong>
-                                                                <?php if($row['appinvtype'] == 1){?>
-                                                              <strong class='text-success'>Pending</strong>
-                                                            <?php } else if($row['appinvtype'] == 2){ ?>
-                                                                <strong class='text-success'>Accepted</strong>
-                                                            <?php } else if ($row['appinvtype'] == 3){ ?>
-                                                                <strong class='text-danger'>Rejected</strong>
-                                                           <?php }
+                                                                <?php if ($row['appinvtype'] == 1) { ?>
+                                                                    <strong class='text-success'>Pending</strong>
+                                                                <?php } else if ($row['appinvtype'] == 2) { ?>
+                                                                    <strong class='text-success'>Accepted</strong>
+                                                                <?php } else if ($row['appinvtype'] == 3) { ?>
+                                                                    <strong class='text-danger'>Rejected</strong>
+                                                                <?php }
                                                             } else if ($row['resumeOrgIndex'] === $_SESSION['orgIndex']) { ?>
                                                                 <strong>Type: Invitation Received <br></strong>
                                                                 <strong>Status: </strong>
-                                                               <?php if ($row['appinvtype'] == 1) { ?>
-                                                                    <a class="btn btn-success" href="php/application.php?acceptinv&jobid=<?= $row['jindex'] ?>&rindex=<?= $row['rindex'] ?>">Accept</a>
-                                                                    <a class="btn btn-danger" href="php/application.php?rejectinv&jobid=<?= $row['jindex'] ?>&rindex=<?= $row['rindex'] ?>">Reject</a>
+                                                                <?php if ($row['appinvtype'] == 1) { ?>
+                                                                    <a class="btn btn-success" href="php/application.php?acceptinv&jobid=<?= $row['jindex'] ?>&rindex=<?= $row['rindex'] ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Accept</a>
+                                                                    <a class="btn btn-danger" href="php/application.php?rejectinv&jobid=<?= $row['jindex'] ?>&rindex=<?= $row['rindex'] ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Reject</a>
                                                                 <?php } else if ($row['appinvtype'] == 2) { ?>
                                                                     <strong class="text-success">Accepted</strong>
                                                                 <?php } else if ($row['appinvtype'] == 3) { ?>

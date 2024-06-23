@@ -114,6 +114,9 @@ if ($resumeNumber <= 10) {
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
                         <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
+                        <li><a class="dropdown-item" href="resume_profile.php">Resumes</a></li>
+                        <li><a class="dropdown-item" href="resume_profile.php?applied-jobs" class="btn btn-secondary-outline">Job Applications</a></li>
+                        <li><a class="dropdown-item" href="posted_jobs.php?invitations-received" class="btn btn-secondary-outline">Job Invitations</a></li>
                         <li><a class="dropdown-item" href="php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
@@ -249,13 +252,15 @@ if ($resumeNumber <= 10) {
                                                 <?php if ($resume_current_page > 1) {
                                                     $resumePrevPage = $resume_current_page - 1;
                                                 ?>
-                                                    <li class="page-item"><a class="page-link" href="?resumepage=<?php echo $resumePrevPage; ?><?php if (isset($_GET['search'])) { ?>&search=<?= $_GET['search'];} ?>">Previous</a></li>
+                                                    <li class="page-item"><a class="page-link" href="?resumepage=<?php echo $resumePrevPage; ?><?php if (isset($_GET['search'])) { ?>&search=<?= $_GET['search'];
+                                                                                                                                                                                            } ?>">Previous</a></li>
                                                 <?php } else { ?>
                                                     <li class="page-item disabled"><a class="page-link" href="">Previous</a></li>
                                                 <?php } ?>
                                                 <?php foreach (range($resumePagination_rangeFirstNumber, $resumePagination_rangeLastNumber) as $resume_page_number) { ?>
                                                     <li class="page-item <?= ($resume_current_page == $resume_page_number ? "active" : "");  ?>">
-                                                        <a class="page-link" href="?resumepage=<?php echo $resume_page_number ?><?php if (isset($_GET['search'])) { ?>&search=<?= $_GET['search']; }?>"><?php echo $resume_page_number ?></a>
+                                                        <a class="page-link" href="?resumepage=<?php echo $resume_page_number ?><?php if (isset($_GET['search'])) { ?>&search=<?= $_GET['search'];
+                                                                                                                                                                            } ?>"><?php echo $resume_page_number ?></a>
                                                     </li>
                                                 <?php } ?>
 
