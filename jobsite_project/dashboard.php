@@ -198,7 +198,7 @@ if (isset($_SESSION['phnNumber'])) {
                 </div>
                 <div class="col-6">
                     <ul class="list-unstyled d-flex justify-content-end">
-                        <li class="ms-3"><a class="text-decoration-none text-light" href="#">Home</a></li>
+                        <li class="ms-3"><a class="text-decoration-none text-light" href="index.php">Home</a></li>
                         <li class="ms-3"><a class="text-decoration-none text-light" href="#">Terms and Conditions</a></li>
                         <li class="ms-3"><a class="text-decoration-none text-light" href="#">FAQs</a></li>
                     </ul>

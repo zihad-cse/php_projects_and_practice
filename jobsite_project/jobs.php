@@ -205,8 +205,7 @@ if ($jobNumber <= 10) {
                                                             $job_img_src = "uploads/job/placeholder-company.png";
                                                             if (file_exists("uploads/job/" . $row['jindex'] . ".png")) {
                                                                 $job_img_src = "uploads/job/" . $row['jindex'] . ".png";
-                                                            }
-                                                    ?>
+                                                            }  ?>
                                                             <div class="container">
                                                                 <div class="col-12 mx-0">
                                                                     <div id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start my-4 mx-0 card text-decoration-none">
@@ -375,7 +374,7 @@ if ($jobNumber <= 10) {
                 </div>
                 <div class="col-6">
                     <ul class="list-unstyled d-flex justify-content-end">
-                        <li class="ms-3"><a class="text-decoration-none text-light" href="#">Home</a></li>
+                        <li class="ms-3"><a class="text-decoration-none text-light" href="index.php">Home</a></li>
                         <li class="ms-3"><a class="text-decoration-none text-light" href="#">Terms and Conditions</a></li>
                         <li class="ms-3"><a class="text-decoration-none text-light" href="#">FAQs</a></li>
                     </ul>

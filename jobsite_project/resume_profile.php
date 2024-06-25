@@ -33,7 +33,12 @@ if (isset($_SESSION['phnNumber'])) {
 
 $countedRows = count($resumeData);
 
-$appliedJobs = appliedJobs($pdo, $userData['orgindex']);
+$filter = '';
+if(!empty($_GET['applied-jobs'])){
+    $filter = $_GET['applied-jobs'];
+}
+
+$appliedJobs = appliedJobs($pdo, $userData['orgindex'], $filter);
 
 
 //Updates resume details (table: resumes)
@@ -372,7 +377,42 @@ if (isset($_POST['update'])) {
                                             ?>
                                         </div>
                                     <?php } else if (isset($_GET['applied-jobs'])) { ?>
-                                        <h3 class="text-center">Applications</h3>
+                                        <h3 class="text-center">Applications Sent/Received</h3>
+                                        <div class="col-2">
+                                            <div class="dropdown">
+                                                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                                                    <i class="fa-solid fa-filter"></i> Filter
+                                                </button>
+                                                <form name="filter" action="" class="" method="get">
+                                                    <div class="dropdown-menu">
+                                                        <h6 class="dropdown-header">Type</h6>
+                                                        <div class="p-2">
+                                                            <div class="form-check">
+                                                                <ul class="list-unstyled">
+                                                                    <li>
+                                                                        <label for="accept">
+                                                                            <input value="4" name="applied-jobs" type="radio"> Accepted
+                                                                        </label>
+                                                                    </li>
+                                                                    <li>
+                                                                        <label for="rejected">
+                                                                            <input value="5" name="applied-jobs" type="radio"> Rejected
+                                                                        </label>
+                                                                    </li>
+                                                                    <li>
+                                                                        <label for="pending">
+                                                                            <input value="1" name="applied-jobs" type="radio"> Pending
+                                                                        </label>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="dropdown-divider"></div>
+                                                        <button type="submit" class="dropdown-item btn">Apply</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
                                         <?php if (!empty($appliedJobs)) {
                                             foreach ($appliedJobs as $row) {
                                                 $job_img_src = "uploads/job/placeholder-company.png";
@@ -410,6 +450,8 @@ if (isset($_POST['update'])) {
                                                                     </div>
                                                                     <div class="col-lg-6 col-md-6 col-sm-12 col-12">
                                                                         <b><?= $row['fullname'] ?></b>
+                                                                        <b><?= $row['appinvtype'] ?></b>
+
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -426,7 +468,7 @@ if (isset($_POST['update'])) {
                                                                             <strong class="text-danger">Rejected</strong>
                                                                         <?php } ?>
                                                                     <?php } else if ($row['jobOrgIndex'] === $_SESSION['orgIndex']) { ?>
-                                                                        <strong>Type: Received Application <br></strong>                                                                    
+                                                                        <strong>Type: Received Application <br></strong>
                                                                         <strong>Status: <br></strong>
                                                                         <?php if ($row['appinvtype'] == 0) { ?>
                                                                             <a class="btn btn-success" href="php/application.php?jobid=<?= $row['jindex'] ?>&acceptapp&rindex=<?= $row['rindex'] ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Accept</a>
@@ -512,7 +554,7 @@ if (isset($_POST['update'])) {
                 </div>
                 <div class="col-6">
                     <ul class="list-unstyled d-flex justify-content-end">
-                        <li class="ms-3"><a class="text-decoration-none text-light" href="#">Home</a></li>
+                        <li class="ms-3"><a class="text-decoration-none text-light" href="index.php">Home</a></li>
                         <li class="ms-3"><a class="text-decoration-none text-light" href="#">Terms and Conditions</a></li>
                         <li class="ms-3"><a class="text-decoration-none text-light" href="#">FAQs</a></li>
                     </ul>

@@ -81,7 +81,8 @@ function getResumeDataGuest($pdo, $rindex)
 function getAllPostedJobs($pdo, $orgIndex, $rindex = 0)
 {
     try {
-        $stmt = $pdo->prepare("SELECT
+
+        $sql = "SELECT
         job.*,
         applications.appindex,
         jobcat.jcategory AS categoryName
@@ -90,8 +91,9 @@ function getAllPostedJobs($pdo, $orgIndex, $rindex = 0)
         LEFT JOIN applications ON job.jindex = applications.jindex AND applications.rindex = :rindex
         LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex
         WHERE
-        orgindex = :orgIndex
-        ORDER BY `job`.`jindex` DESC");
+        orgindex = :orgIndex 
+        ORDER BY `job`.`jindex` DESC";
+        $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':orgIndex', $orgIndex, PDO::PARAM_INT);
         $stmt->bindParam(':rindex', $rindex, PDO::PARAM_INT);
         $stmt->execute();
@@ -324,9 +326,17 @@ function pageination_allresumerows($pdo, $search = '')
     }
 }
 
-function appliedJobs($pdo, $orgindex)
+function appliedJobs($pdo, $orgindex, $filter = '')
 {
     if (isset($_GET['applied-jobs'])) {
+            $condition = "(applications.appinvtype = 0 OR applications.appinvtype = 4 OR applications.appinvtype = 5) AND 
+            (org.orgindex = :orgindex
+            OR resumes.orgindex = :orgindex)";       
+        if (isset($filter) && !empty($filter)){
+            $condition = "(applications.appinvtype = ". $filter .") AND 
+            org.orgindex = :orgindex
+            OR resumes.orgindex = :orgindex";
+        }
         try {
             $sql = "SELECT
             applications.appindex,
@@ -345,10 +355,7 @@ function appliedJobs($pdo, $orgindex)
         INNER JOIN applications ON applications.jindex = job.jindex
         INNER JOIN resumes ON applications.rindex = resumes.rindex
         INNER JOIN jobcat ON job.jobcategory = jobcat.jcatindex
-        WHERE
-            (applications.appinvtype = 0 OR applications.appinvtype = 4 OR applications.appinvtype = 5) AND 
-            org.orgindex = :orgindex
-            OR resumes.orgindex = :orgindex";
+        WHERE". $condition;
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(":orgindex", $orgindex, PDO::PARAM_INT);
             $stmt->execute();
@@ -394,9 +401,13 @@ function appliedJobs($pdo, $orgindex)
 //         }
 //     }
 // }
-function resumeInvitations($pdo, $orgindex)
+function resumeInvitations($pdo, $orgindex, $filter = '')
 {
     if (isset($_GET['invitations-received'])) {
+        $condition = "(applications.appinvtype = 1 OR applications.appinvtype = 2 OR applications.appinvtype = 3) AND (org.orgindex = :orgindex OR resumes.orgindex = :orgindex)";
+        if (isset($filter) && !empty($filter)) {
+            $condition = "(applications.appinvtype = " . $filter . ") AND (org.orgindex = :orgindex OR resumes.orgindex = :orgindex)";
+        }
         try {
             $sql = "SELECT
             applications.appindex,
@@ -417,8 +428,7 @@ function resumeInvitations($pdo, $orgindex)
         INNER JOIN applications ON applications.jindex = job.jindex
         INNER JOIN resumes ON applications.rindex = resumes.rindex
         INNER JOIN jobcat ON job.jobcategory = jobcat.jcatindex
-        WHERE
-            (applications.appinvtype = 1 OR applications.appinvtype = 2 OR applications.appinvtype = 3) AND (org.orgindex = :orgindex OR resumes.orgindex = :orgindex)";
+        WHERE" . $condition;
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(":orgindex", $orgindex, PDO::PARAM_INT);
             $stmt->execute();

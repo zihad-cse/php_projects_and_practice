@@ -33,8 +33,12 @@ if (isset($_SESSION['phnNumber'])) {
 $orgindex = $userData['orgindex'];
 
 $allJobsData = getAllPostedJobs($pdo, $orgindex);
+$filter = '';
+if(!empty($_GET['invitations-received'])){
+    $filter = $_GET['invitations-received'];
+}
 
-$inviteList = resumeInvitations($pdo, $userData['orgindex']);
+$inviteList = resumeInvitations($pdo, $userData['orgindex'], $filter);
 
 
 ?>
@@ -227,8 +231,43 @@ $inviteList = resumeInvitations($pdo, $userData['orgindex']);
                     <?php } else if (isset($_GET['invitations-received'])) { ?>
                         <hr>
                         <div class="row border">
+                            <div class="col-4">
+                                <h3>Invitations Sent/Recieved</h3>
+                            </div>
                             <div class="col-2">
-                                <h3>Invitations</h3>
+                                <div class="dropdown">
+                                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                                        <i class="fa-solid fa-filter"></i> Filter
+                                    </button>
+                                    <form name="filter" action="" class="" method="get">
+                                        <div class="dropdown-menu">
+                                            <h6 class="dropdown-header">Type</h6>
+                                            <div class="p-2">
+                                                <div class="form-check">
+                                                    <ul class="list-unstyled">
+                                                        <li>
+                                                            <label for="accept">
+                                                                <input value="2" name="invitations-received" type="radio"> Accepted
+                                                            </label>
+                                                        </li>
+                                                        <li>
+                                                            <label for="rejected">
+                                                                <input value="3" name="invitations-received" type="radio"> Rejected
+                                                            </label>
+                                                        </li>
+                                                        <li>
+                                                            <label for="pending">
+                                                                <input value="1" name="invitations-received" type="radio"> Pending
+                                                            </label>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="dropdown-divider"></div>
+                                            <button type="submit" class="dropdown-item btn">Apply</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                         <hr>
@@ -241,7 +280,8 @@ $inviteList = resumeInvitations($pdo, $userData['orgindex']);
                                         // appinvtype INDEX: 0 = Application, 1 = Invitation, 2 = Acceptance of Invite, 3 = Rejecting of Invite, 4 = acceptance of Application, 5 = rejecting of application
                                     }
                             ?>
-                                    <div class="container">
+                                    <div class="container row">
+
                                         <div class="col-12 mx-0">
                                             <div id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start my-4 mx-0 card text-decoration-none">
                                                 <div class="card-body">
@@ -327,7 +367,7 @@ $inviteList = resumeInvitations($pdo, $userData['orgindex']);
                 </div>
                 <div class="col-6">
                     <ul class="list-unstyled d-flex justify-content-end">
-                        <li class="ms-3"><a class="text-decoration-none text-light" href="#">Home</a></li>
+                        <li class="ms-3"><a class="text-decoration-none text-light" href="index.php">Home</a></li>
                         <li class="ms-3"><a class="text-decoration-none text-light" href="#">Terms and Conditions</a></li>
                         <li class="ms-3"><a class="text-decoration-none text-light" href="#">FAQs</a></li>
                     </ul>
