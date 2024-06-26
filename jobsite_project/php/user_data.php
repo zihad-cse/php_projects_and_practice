@@ -334,8 +334,8 @@ function appliedJobs($pdo, $orgindex, $filter = '')
             OR resumes.orgindex = :orgindex)";       
         if (isset($filter) && !empty($filter)){
             $condition = "(applications.appinvtype = ". $filter .") AND 
-            org.orgindex = :orgindex
-            OR resumes.orgindex = :orgindex";
+            (org.orgindex = :orgindex
+            OR resumes.orgindex = :orgindex)";
         }
         try {
             $sql = "SELECT
@@ -367,43 +367,9 @@ function appliedJobs($pdo, $orgindex, $filter = '')
         }
     }
 }
-// function appliedJobCheck($pdo, $orgindex, $jindex)
-// {
-//     if (isset($_GET['applied-jobs'])) {
-//         try {
-//             $sql = "SELECT
-//             applications.appindex,
-//             applications.appinvtype,
-//             job.jindex,
-//             job.jobtitle,
-//             job.jobcategory,
-//             resumes.rindex,
-//             resumes.fullname,
-//             resumes.orgindex,
-//             jobcat.jcategory
-//         FROM
-//             applications
-//         INNER JOIN job ON applications.jindex = job.jindex
-//         INNER JOIN resumes ON applications.rindex = resumes.rindex
-//         INNER JOIN org ON resumes.orgindex = org.orgindex
-//         INNER JOIN jobcat ON job.jobcategory = jobcat.jcatindex
-
-//         WHERE applications.jindex = :jindex AND org.orgindex = :orgindex";
-//             $stmt = $pdo->prepare($sql);
-//             $stmt->bindParam(":orgindex", $orgindex, PDO::PARAM_INT);
-//             $stmt->bindParam(":jindex", $jindex, PDO::PARAM_INT);
-//             $stmt->execute();
-//             $results = $stmt->fetch(PDO::FETCH_ASSOC);
-//             return $results;
-//         } catch (PDOException $e) {
-//             error_log("Error: " . $e->getMessage());
-//             return false;
-//         }
-//     }
-// }
 function resumeInvitations($pdo, $orgindex, $filter = '')
 {
-    if (isset($_GET['invitations-received'])) {
+    if (isset($_GET['invitations'])) {
         $condition = "(applications.appinvtype = 1 OR applications.appinvtype = 2 OR applications.appinvtype = 3) AND (org.orgindex = :orgindex OR resumes.orgindex = :orgindex)";
         if (isset($filter) && !empty($filter)) {
             $condition = "(applications.appinvtype = " . $filter . ") AND (org.orgindex = :orgindex OR resumes.orgindex = :orgindex)";

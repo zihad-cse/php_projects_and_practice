@@ -154,7 +154,7 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
                     <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
                     <li><a class="dropdown-item" href="resume_profile.php">Resumes</a></li>
                     <li><a class="dropdown-item" href="resume_profile.php?applied-jobs" class="btn btn-secondary-outline">Job Applications</a></li>
-                    <li><a class="dropdown-item" href="posted_jobs.php?invitations-received" class="btn btn-secondary-outline">Job Invitations</a></li>
+                    <li><a class="dropdown-item" href="posted_jobs.php?invitations" class="btn btn-secondary-outline">Job Invitations</a></li>
                     <li><a class="dropdown-item" href="/php_basics/jobsite_project/php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                 </ul>
             </div>
@@ -186,7 +186,7 @@ $orgPfpPath = "uploads/org/" . $userData['orgindex'] . '.png';
                                     <li><a href="job.php?new-post" class="btn btn-secondary-outline">New</a></li>
                                     <li><a href="posted_jobs.php" class="btn btn-secondary-outline">Posted Jobs</a></li>
                                     <li><a href="resume_profile.php?applied-jobs" class="btn btn-secondary-outline">Applied Jobs</a></li>
-                                    <li><a href="posted_jobs.php?invitations-received" class="btn btn-secondary-outline">Job Invitations</a></li>
+                                    <li><a href="posted_jobs.php?invitations" class="btn btn-secondary-outline">Job Invitations</a></li>
                                 </ul>
                             </div>
                         </li>

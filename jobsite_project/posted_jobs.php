@@ -34,8 +34,8 @@ $orgindex = $userData['orgindex'];
 
 $allJobsData = getAllPostedJobs($pdo, $orgindex);
 $filter = '';
-if(!empty($_GET['invitations-received'])){
-    $filter = $_GET['invitations-received'];
+if (!empty($_GET['filter']) && isset($_GET['filter'])) {
+    $filter = $_GET['filter'];
 }
 
 $inviteList = resumeInvitations($pdo, $userData['orgindex'], $filter);
@@ -88,7 +88,7 @@ $inviteList = resumeInvitations($pdo, $userData['orgindex'], $filter);
                     <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
                     <li><a class="dropdown-item" href="resume_profile.php">Resumes</a></li>
                     <li><a class="dropdown-item" href="resume_profile.php?applied-jobs" class="btn btn-secondary-outline">Job Applications</a></li>
-                    <li><a class="dropdown-item" href="posted_jobs.php?invitations-received" class="btn btn-secondary-outline">Job Invitations</a></li>
+                    <li><a class="dropdown-item" href="posted_jobs.php?invitations" class="btn btn-secondary-outline">Job Invitations</a></li>
                     <li><a class="dropdown-item" href="/php_basics/jobsite_project/php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                 </ul>
             </div>
@@ -120,7 +120,7 @@ $inviteList = resumeInvitations($pdo, $userData['orgindex'], $filter);
                                     <li><a href="job.php?new-post" class="btn btn-secondary-outline">New</a></li>
                                     <li><a href="posted_jobs.php" class="btn btn-secondary-outline">Job Posts</a></li>
                                     <li><a href="resume_profile.php?applied-jobs" class="btn btn-secondary-outline">Job Applications</a></li>
-                                    <li><a href="posted_jobs.php?invitations-received" class="btn btn-secondary-outline">Job Invitations</a></li>
+                                    <li><a href="posted_jobs.php?invitations" class="btn btn-secondary-outline">Job Invitations</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -156,7 +156,7 @@ $inviteList = resumeInvitations($pdo, $userData['orgindex'], $filter);
                     </ul>
                 </div>
                 <div class="col-lg-10 col-md-12 col-sm-12 col-12 p-5" style="min-height: 100vh; background-color: #ddd;">
-                    <?php if (!isset($_GET['invitations-received'])) { ?>
+                    <?php if (!isset($_GET['invitations'])) { ?>
                         <hr>
                         <div class="row border">
                             <div class="col-2">
@@ -228,131 +228,299 @@ $inviteList = resumeInvitations($pdo, $userData['orgindex'], $filter);
 
                             <?php } ?>
                         </div>
-                    <?php } else if (isset($_GET['invitations-received'])) { ?>
-                        <hr>
-                        <div class="row border">
+                    <?php } else if (isset($_GET['invitations'])) { ?>
+                        <div class="row">
                             <div class="col-4">
-                                <h3>Invitations Sent/Recieved</h3>
-                            </div>
-                            <div class="col-2">
                                 <div class="dropdown">
                                     <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
                                         <i class="fa-solid fa-filter"></i> Filter
                                     </button>
-                                    <form name="filter" action="" class="" method="get">
-                                        <div class="dropdown-menu">
-                                            <h6 class="dropdown-header">Type</h6>
-                                            <div class="p-2">
-                                                <div class="form-check">
-                                                    <ul class="list-unstyled">
-                                                        <li>
-                                                            <label for="accept">
-                                                                <input value="2" name="invitations-received" type="radio"> Accepted
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <label for="rejected">
-                                                                <input value="3" name="invitations-received" type="radio"> Rejected
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <label for="pending">
-                                                                <input value="1" name="invitations-received" type="radio"> Pending
-                                                            </label>
-                                                        </li>
-                                                    </ul>
-                                                </div>
+                                    <div class="dropdown-menu">
+                                        <h6 class="dropdown-header">Type</h6>
+                                        <div class="p-2">
+                                            <div class="dropdown-item <?php if ($_GET['filter'] == 2) {
+                                                                            echo "active";
+                                                                        } ?> ">
+                                                <a class="text-decoration-none <?php if ($_GET['filter'] == 2) {
+                                                                                    echo "text-light";
+                                                                                } else {
+                                                                                    echo "text-success";
+                                                                                } ?> " href="?invitations&filter=2<?php if (isset($_GET['sent'])) {
+                                                                                                                        echo "&sent";
+                                                                                                                    } else if (isset($_GET['received'])) {
+                                                                                                                        echo "&received";
+                                                                                                                    } ?>">Accepted</a>
                                             </div>
-                                            <div class="dropdown-divider"></div>
-                                            <button type="submit" class="dropdown-item btn">Apply</button>
+                                            <div class="dropdown-item">
+                                                <a class="text-decoration-none <?php if ($_GET['filter'] == 3) {
+                                                                                    echo "text-light";
+                                                                                } else {
+                                                                                    echo "text-danger";
+                                                                                } ?> " href="?invitations&filter=3<?php if (isset($_GET['sent'])) {
+                                                                                                                        echo "&sent";
+                                                                                                                    } else if (isset($_GET['received'])) {
+                                                                                                                        echo "&received";
+                                                                                                                    } ?>">Rejected</a>
+                                            </div>
+                                            <div class="dropdown-item">
+                                                <a class="text-decoration-none <?php if ($_GET['filter'] == 1) {
+                                                                                    echo "text-light";
+                                                                                } else {
+                                                                                    echo "text-warning";
+                                                                                } ?> " href="?invitations&filter=1<?php if (isset($_GET['sent'])) {
+                                                                                                                        echo "&sent";
+                                                                                                                    } else if (isset($_GET['received'])) {
+                                                                                                                        echo "&received";
+                                                                                                                    } ?>">Pending</a>
+                                            </div>
                                         </div>
-                                    </form>
+                                        <div class="dropdown-divider"></div>
+                                        <div class="p-2">
+                                            <div class="dropdown-item <?php if (isset($_GET['sent'])) {
+                                                                            echo "active";
+                                                                        } ?>">
+                                                <a href="?invitations<?php if (isset($_GET['filter'])) {
+                                                                            echo "&filter=" . $_GET['filter'];
+                                                                        } ?>&sent" class="text-decoration-none <?php if (isset($_GET['sent'])) {
+                                                                                                                    echo "text-light";
+                                                                                                                } else {
+                                                                                                                    echo "text-dark";
+                                                                                                                } ?>">Sent</a>
+                                            </div>
+                                            <div class="dropdown-item <?php if (isset($_GET['received'])) {
+                                                                            echo "active";
+                                                                        } ?>">
+                                                <a href="?invitations<?php if (isset($_GET['filter'])) {
+                                                                            echo "&filter=" . $_GET['filter'];
+                                                                        } ?>&received" class="text-decoration-none <?php if (isset($_GET['received'])) {
+                                                                                                                        echo "text-light";
+                                                                                                                    } else {
+                                                                                                                        echo "text-dark";
+                                                                                                                    } ?>">Received</a>
+                                            </div>
+                                        </div>
+                                        <div class="dropdown-divider"></div>
+                                        <div class="p-2">
+                                            <div class="dropdown-item">
+                                                <a href="?invitations" class="text-decoration-none text-dark">Reset Filters</a>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="col-4 text-center">
+                                <h3>Invitations Sent/Recieved</h3>
+                            </div>
+                            <div class="col-4"></div>
                         </div>
-                        <hr>
                         <div class="row">
-                            <?php if (!empty($inviteList)) {
-                                foreach ($inviteList as $row) {
-                                    $job_img_src = "uploads/job/placeholder-company.png";
-                                    if (file_exists("uploads/job/" . $row['jindex'] . ".png")) {
-                                        $job_img_src = "uploads/job/" . $row['jindex'] . ".png";
-                                        // appinvtype INDEX: 0 = Application, 1 = Invitation, 2 = Acceptance of Invite, 3 = Rejecting of Invite, 4 = acceptance of Application, 5 = rejecting of application
-                                    }
-                            ?>
-                                    <div class="container row">
-
-                                        <div class="col-12 mx-0">
-                                            <div id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start my-4 mx-0 card text-decoration-none">
-                                                <div class="card-body">
-                                                    <div class="row text-sm-center text-md-center text-lg-start text-center">
-                                                        <div class="col-lg-3 col-md-12 col-sm-12 col-12">
-                                                            <img class="img-fluid" style="max-height: 100px;" src="<?php echo $job_img_src ?>" alt="">
-                                                        </div>
-                                                        <div class="col-lg-7 col-md-12 col-sm-12 col-12">
-                                                            <div class="row">
-                                                                <div class="col-12">
-                                                                    <b class="m-0 p-2"><?php echo $row['jobtitle']; ?> </b>
-                                                                </div>
+                            <?php if (!empty($inviteList)) { ?>
+                                <?php if (!isset($_GET['sent']) && !isset($_GET['received'])) { ?>
+                                    <?php foreach ($inviteList as $row) {
+                                        $job_img_src = "uploads/job/placeholder-company.png";
+                                        if (file_exists("uploads/job/" . $row['jindex'] . ".png")) {
+                                            $job_img_src = "uploads/job/" . $row['jindex'] . ".png";
+                                        } ?>
+                                        <div class="container row">
+                                            <div class="col-12 mx-0">
+                                                <div id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start my-4 mx-0 card text-decoration-none">
+                                                    <div class="card-body">
+                                                        <div class="row text-sm-center text-md-center text-lg-start text-center">
+                                                            <div class="col-lg-3 col-md-12 col-sm-12 col-12">
+                                                                <img class="img-fluid" style="max-height: 100px;" src="<?php echo $job_img_src ?>" alt="">
                                                             </div>
-                                                            <div class="row">
-                                                                <div class="col-12">
-                                                                    <div class="p-2">
-                                                                        <p class="mb-0">For: <b><?= $row['fullname'] ?></b></p>
+                                                            <div class="col-lg-7 col-md-12 col-sm-12 col-12">
+                                                                <div class="row">
+                                                                    <div class="col-12">
+                                                                        <b class="m-0 p-2"><?php echo $row['jobtitle']; ?> </b>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-12">
+                                                                        <div class="p-2">
+                                                                            <p class="mb-0">For: <b><?= $row['fullname'] ?></b></p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-12">
+                                                                        <p class="m-0 p-2"></p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-6">
+                                                                        <span class="p-2"><i class="fa-solid fa-location-dot"></i> <?= $row['workarea'] ?></span>
+                                                                    </div>
+                                                                    <div class="col-6">
+                                                                        <b><i class="fa-solid fa-calendar-day"></i> <?= $row['enddate'] ?></b>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="row">
-                                                                <div class="col-12">
-                                                                    <p class="m-0 p-2"></p>
-                                                                </div>
+                                                            <div class="col-2">
+                                                                <?php if ($row['jobOrgIndex'] === $_SESSION['orgIndex']) { ?>
+                                                                    <strong>Type: Invitation Sent<br></strong>
+                                                                    <strong>Status: </strong>
+                                                                    <?php if ($row['appinvtype'] == 1) { ?>
+                                                                        <strong class='text-success'>Pending</strong>
+                                                                    <?php } else if ($row['appinvtype'] == 2) { ?>
+                                                                        <strong class='text-success'>Accepted</strong>
+                                                                    <?php } else if ($row['appinvtype'] == 3) { ?>
+                                                                        <strong class='text-danger'>Rejected</strong>
+                                                                    <?php }
+                                                                } else if ($row['resumeOrgIndex'] === $_SESSION['orgIndex']) { ?>
+                                                                    <strong>Type: Invitation Received <br></strong>
+                                                                    <strong>Status: </strong>
+                                                                    <?php if ($row['appinvtype'] == 1) { ?>
+                                                                        <a class="btn btn-success" href="php/application.php?acceptinv&jobid=<?= $row['jindex'] ?>&rindex=<?= $row['rindex'] ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Accept</a>
+                                                                        <a class="btn btn-danger" href="php/application.php?rejectinv&jobid=<?= $row['jindex'] ?>&rindex=<?= $row['rindex'] ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Reject</a>
+                                                                    <?php } else if ($row['appinvtype'] == 2) { ?>
+                                                                        <strong class="text-success">Accepted</strong>
+                                                                    <?php } else if ($row['appinvtype'] == 3) { ?>
+                                                                        <strong class="text-danger">Rejected</strong>
+                                                                    <?php } ?>
+                                                                <?php } ?>
                                                             </div>
-                                                            <div class="row">
-                                                                <div class="col-6">
-                                                                    <span class="p-2"><i class="fa-solid fa-location-dot"></i> <?= $row['workarea'] ?></span>
-                                                                </div>
-                                                                <div class="col-6">
-                                                                    <b><i class="fa-solid fa-calendar-day"></i> <?= $row['enddate'] ?></b>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-2">
-                                                            <?php if ($row['jobOrgIndex'] === $_SESSION['orgIndex']) { ?>
-                                                                <strong>Type: Invitation Sent<br></strong>
-                                                                <strong>Status: </strong>
-                                                                <?php if ($row['appinvtype'] == 1) { ?>
-                                                                    <strong class='text-success'>Pending</strong>
-                                                                <?php } else if ($row['appinvtype'] == 2) { ?>
-                                                                    <strong class='text-success'>Accepted</strong>
-                                                                <?php } else if ($row['appinvtype'] == 3) { ?>
-                                                                    <strong class='text-danger'>Rejected</strong>
-                                                                <?php }
-                                                            } else if ($row['resumeOrgIndex'] === $_SESSION['orgIndex']) { ?>
-                                                                <strong>Type: Invitation Received <br></strong>
-                                                                <strong>Status: </strong>
-                                                                <?php if ($row['appinvtype'] == 1) { ?>
-                                                                    <a class="btn btn-success" href="php/application.php?acceptinv&jobid=<?= $row['jindex'] ?>&rindex=<?= $row['rindex'] ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Accept</a>
-                                                                    <a class="btn btn-danger" href="php/application.php?rejectinv&jobid=<?= $row['jindex'] ?>&rindex=<?= $row['rindex'] ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Reject</a>
-                                                                <?php } else if ($row['appinvtype'] == 2) { ?>
-                                                                    <strong class="text-success">Accepted</strong>
-                                                                <?php } else if ($row['appinvtype'] == 3) { ?>
-                                                                    <strong class="text-danger">Rejected</strong>
-                                                            <?php }
-                                                            } ?>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    <?php } ?>
                                 <?php }
-                            } else { ?>
-
-                                <div class="text-center">
-                                    <b>None Posted</b>
-                                </div>
-
+                                if (isset($_GET['sent'])) { ?>
+                                    <?php foreach ($inviteList as $row) {
+                                        $job_img_src = "uploads/job/placeholder-company.png";
+                                        if (file_exists("uploads/job/" . $row['jindex'] . ".png")) {
+                                            $job_img_src = "uploads/job/" . $row['jindex'] . ".png";
+                                        } ?>
+                                        <?php if ($row['jobOrgIndex'] === $_SESSION['orgIndex']) { ?>
+                                            <div class="container row">
+                                                <div class="col-12 mx-0">
+                                                    <div id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start my-4 mx-0 card text-decoration-none">
+                                                        <div class="card-body">
+                                                            <div class="row text-sm-center text-md-center text-lg-start text-center">
+                                                                <div class="col-lg-3 col-md-12 col-sm-12 col-12">
+                                                                    <img class="img-fluid" style="max-height: 100px;" src="<?php echo $job_img_src ?>" alt="">
+                                                                </div>
+                                                                <div class="col-lg-7 col-md-12 col-sm-12 col-12">
+                                                                    <div class="row">
+                                                                        <div class="col-12">
+                                                                            <b class="m-0 p-2"><?php echo $row['jobtitle']; ?> </b>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-12">
+                                                                            <div class="p-2">
+                                                                                <p class="mb-0">For: <b><?= $row['fullname'] ?></b></p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-12">
+                                                                            <p class="m-0 p-2"></p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-6">
+                                                                            <span class="p-2"><i class="fa-solid fa-location-dot"></i> <?= $row['workarea'] ?></span>
+                                                                        </div>
+                                                                        <div class="col-6">
+                                                                            <b><i class="fa-solid fa-calendar-day"></i> <?= $row['enddate'] ?></b>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <?php if ($row['jobOrgIndex'] === $_SESSION['orgIndex']) { ?>
+                                                                        <strong>Type: Invitation Sent<br></strong>
+                                                                        <strong>Status: </strong>
+                                                                        <?php if ($row['appinvtype'] == 1) { ?>
+                                                                            <strong class='text-success'>Pending</strong>
+                                                                        <?php } else if ($row['appinvtype'] == 2) { ?>
+                                                                            <strong class='text-success'>Accepted</strong>
+                                                                        <?php } else if ($row['appinvtype'] == 3) { ?>
+                                                                            <strong class='text-danger'>Rejected</strong>
+                                                                        <?php } ?>
+                                                                    <?php } ?>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+                                    <?php } ?>
+                                <?php }
+                                if (isset($_GET['received'])) { ?>
+                                    <?php foreach ($inviteList as $row) {
+                                        $job_img_src = "uploads/job/placeholder-company.png";
+                                        if (file_exists("uploads/job/" . $row['jindex'] . ".png")) {
+                                            $job_img_src = "uploads/job/" . $row['jindex'] . ".png";
+                                        } ?>
+                                        <?php if ($row['resumeOrgIndex'] === $_SESSION['orgIndex']) { ?>    
+                                        <div class="container row">
+                                            <div class="col-12 mx-0">
+                                                <div id="landing-page-mouse-hover-card" style="max-height: 400px; min-height: 170px;" onclick="location.href='job.php?view&id=<?= $row['jindex'] ?>'" class="text-start my-4 mx-0 card text-decoration-none">
+                                                    <div class="card-body">
+                                                        <div class="row text-sm-center text-md-center text-lg-start text-center">
+                                                            <div class="col-lg-3 col-md-12 col-sm-12 col-12">
+                                                                <img class="img-fluid" style="max-height: 100px;" src="<?php echo $job_img_src ?>" alt="">
+                                                            </div>
+                                                            <div class="col-lg-7 col-md-12 col-sm-12 col-12">
+                                                                <div class="row">
+                                                                    <div class="col-12">
+                                                                        <b class="m-0 p-2"><?php echo $row['jobtitle']; ?> </b>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-12">
+                                                                        <div class="p-2">
+                                                                            <p class="mb-0">For: <b><?= $row['fullname'] ?></b></p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-12">
+                                                                        <p class="m-0 p-2"></p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-6">
+                                                                        <span class="p-2"><i class="fa-solid fa-location-dot"></i> <?= $row['workarea'] ?></span>
+                                                                    </div>
+                                                                    <div class="col-6">
+                                                                        <b><i class="fa-solid fa-calendar-day"></i> <?= $row['enddate'] ?></b>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-2">
+                                                                <?php if ($row['resumeOrgIndex'] === $_SESSION['orgIndex']) { ?>
+                                                                    <strong>Type: Invitation Received <br></strong>
+                                                                    <strong>Status: </strong>
+                                                                    <?php if ($row['appinvtype'] == 1) { ?>
+                                                                        <a class="btn btn-success" href="php/application.php?acceptinv&jobid=<?= $row['jindex'] ?>&rindex=<?= $row['rindex'] ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Accept</a>
+                                                                        <a class="btn btn-danger" href="php/application.php?rejectinv&jobid=<?= $row['jindex'] ?>&rindex=<?= $row['rindex'] ?>&return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Reject</a>
+                                                                    <?php } else if ($row['appinvtype'] == 2) { ?>
+                                                                        <strong class="text-success">Accepted</strong>
+                                                                    <?php } else if ($row['appinvtype'] == 3) { ?>
+                                                                        <strong class="text-danger">Rejected</strong>
+                                                                    <?php } ?>
+                                                                <?php } ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
+                                <?php } ?>
                             <?php } ?>
+                        <?php } else { ?>
+
+                            <div class="text-center">
+                                <b>None Posted</b>
+                            </div>
+
+                        <?php } ?>
                         </div>
                     <?php } ?>
                 </div>

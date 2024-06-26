@@ -213,7 +213,7 @@ if ((isset($_POST['update'])) || (isset($_POST['first-resume'])) || (isset($_POS
                         <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
                         <li><a class="dropdown-item" href="resume_profile.php">Resumes</a></li>
                         <li><a class="dropdown-item" href="resume_profile.php?applied-jobs" class="btn btn-secondary-outline">Job Applications</a></li>
-                        <li><a class="dropdown-item" href="posted_jobs.php?invitations-received" class="btn btn-secondary-outline">Job Invitations</a></li>
+                        <li><a class="dropdown-item" href="posted_jobs.php?invitations" class="btn btn-secondary-outline">Job Invitations</a></li>
                         <li><a class="dropdown-item" href="php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                     </ul>
                 </div>
