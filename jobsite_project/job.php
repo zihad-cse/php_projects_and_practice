@@ -28,6 +28,12 @@ if (isset($_SESSION['orgIndex']) && isset($jobId)) {
     $resumeData = getAllPostedResumes($pdo, $_SESSION['orgIndex'], $jobId);
 }
 
+if (isset($_SESSION['phnNumber'])) {
+    $phnNumber = $_SESSION['phnNumber'];
+    $userData = getUserData($pdo, $phnNumber);
+}
+
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['update']) && !empty($_POST['update'])) {
@@ -175,18 +181,33 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
                 </div>
             <?php } else if (isset($_SESSION['token']) && isset($_SESSION['phnNumber'])) { ?>
                 <div class="dropdown">
-                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-regular fa-user"></i>
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
-                        <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
-                        <li><a class="dropdown-item" href="resume_profile.php">Resumes</a></li>
-                        <li><a class="dropdown-item" href="resume_profile.php?applied-jobs" class="btn btn-secondary-outline">Job Applications</a></li>
-                        <li><a class="dropdown-item" href="posted_jobs.php?invitations" class="btn btn-secondary-outline">Job Invitations</a></li>
-                        <li><a class="dropdown-item" href="php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
-                    </ul>
+                    <div class="btn-group">
+                        <button class="btn btn-outline-dark" disabled><?= $userData['orguser'] ?></button>
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-regular fa-user"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><strong class="dropdown-header">Employer Menu</strong></li>
+                            <li><a class="dropdown-item" href="posted_jobs.php">All Jobs Posted</a></li>
+                            <li><a class="dropdown-item" href="posted_jobs.php?invitations&sent" class="btn btn-secondary-outline">Invitations Sent</a></li>
+                            <li><a class="dropdown-item" href="resume_profile.php?applied-jobs&received" class="btn btn-secondary-outline">Applications Received</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><strong class="dropdown-header">Seeker Menu</strong></li>
+                            <li><a class="dropdown-item" href="resume_profile.php">All Posted Resumes</a></li>
+                            <li><a class="dropdown-item" href="posted_jobs.php?invitations&received" class="btn btn-secondary-outline">Invitations Received</a></li>
+                            <li><a class="dropdown-item" href="resume_profile.php?applied-jobs&sent" class="btn btn-secondary-outline">Applications Sent</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="text-danger dropdown-item" href="/php_basics/jobsite_project/php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
+                        </ul>
+                    </div>
                 </div>
             <?php } ?>
         </div>

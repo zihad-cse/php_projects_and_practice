@@ -56,18 +56,34 @@ if (isset($_SESSION['phnNumber'])) {
             <a class="navbar-brand" href="index.php">
                 <img src="img/logoipsum-248.svg" alt="">
             </a>
-            <div class="d-sm-block d-md-block d-lg-none d-block dropdown">
-                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa-regular fa-user"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
-                    <li><a class="dropdown-item" href="posted_jobs.php">Jobs Posted</a></li>
-                    <li><a class="dropdown-item" href="resume_profile.php">Resumes</a></li>
-                    <li><a class="dropdown-item" href="resume_profile.php?applied-jobs" class="btn btn-secondary-outline">Job Applications</a></li>
-                    <li><a class="dropdown-item" href="posted_jobs.php?invitations" class="btn btn-secondary-outline">Job Invitations</a></li>
-                    <li><a class="dropdown-item" href="/php_basics/jobsite_project/php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
-                </ul>
+            <div class="dropdown d-sm-block d-md-block d-lg-none d-block">
+                <div class="btn-group">
+                    <button class="btn btn-outline-dark" disabled><?= $userData['orguser'] ?></button>
+                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-regular fa-user"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><strong class="dropdown-header">Employer Menu</strong></li>
+                        <li><a class="dropdown-item" href="posted_jobs.php">All Jobs Posted</a></li>
+                        <li><a class="dropdown-item" href="posted_jobs.php?invitations&sent" class="btn btn-secondary-outline">Invitations Sent</a></li>
+                        <li><a class="dropdown-item" href="resume_profile.php?applied-jobs&received" class="btn btn-secondary-outline">Applications Received</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><strong class="dropdown-header">Seeker Menu</strong></li>
+                        <li><a class="dropdown-item" href="resume_profile.php">All Posted Resumes</a></li>
+                        <li><a class="dropdown-item" href="posted_jobs.php?invitations&received" class="btn btn-secondary-outline">Invitations Received</a></li>
+                        <li><a class="dropdown-item" href="resume_profile.php?applied-jobs&sent" class="btn btn-secondary-outline">Applications Sent</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="text-danger dropdown-item" href="/php_basics/jobsite_project/php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </nav>
@@ -78,55 +94,44 @@ if (isset($_SESSION['phnNumber'])) {
                     <ul class="list-unstyled ps-0">
                         <li class="mb-1">
                             <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
-                                <i class="fa-solid fa-chevron-down pe-2"></i>Dashboard
+                                <i class="fa-solid fa-chevron-down pe-2"></i>Account
                             </button>
                             <div class="collapse" id="dashboard-collapse">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
                                     <li><a href="dashboard.php" class="btn btn-secondary-outline">Home</a></li>
                                     <li><a href="org_profile.php" class="btn btn-secondary-outline">Org Profile</a></li>
                                     <li><a href="resume_profile.php" class="btn btn-secondary-outline">Resume List</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="mb-1">
-                            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
-                                <i class="fa-solid fa-chevron-down pe-2"></i>Jobs
-                            </button>
-                            <div class="collapse" id="orders-collapse">
-                                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
-                                    <li><a href="job.php?new-post" class="btn btn-secondary-outline">New</a></li>
-                                    <li><a href="posted_jobs.php" class="btn btn-secondary-outline">Posted Jobs</a></li>
-                                    <li><a href="resume_profile.php?applied-jobs" class="btn btn-secondary-outline">Applied Jobs</a></li>
-                                    <li><a href="posted_jobs.php?invitations" class="btn btn-secondary-outline">Job Invitations</a></li>
-                                </ul>
-                            </div>
-                        </li>
-
-                        <li class="mb-1">
-                            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
-                                <i class="fa-solid fa-chevron-down pe-2"></i>Account
-                            </button>
-                            <div class="collapse" id="account-collapse">
-                                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
-                                    <li><a href="dashboard.php" class="btn btn-secondary-outline">Overview</a></li>
-                                    <li>
-                                        <div class="dropdown">
-                                            <a class="btn dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                Edit
-                                            </a>
-
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="?edit">Edit Account Info</a></li>
-                                                <li><a class="dropdown-item" href="org_profile.php?edit">Edit Org Profile</a></li>
-                                                <li><a class="dropdown-item" href="resume_profile.php?edit">Edit Resume Profile</a></li>
-                                            </ul>
-                                        </div>
-                                    </li>
                                     <li>
                                         <form action="php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" method="post" class="btn btn-secondary-outline">
-                                            <input class="btn p-0" type="submit" value="Log Out" id="#logout-button">
+                                            <input class="btn p-0 text-danger" type="submit" value="Log Out" id="#logout-button">
                                         </form>
                                     </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="mb-1">
+                            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#employer-collapse" aria-expanded="false">
+                                <i class="fa-solid fa-chevron-down pe-2"></i>Employer Menu
+                            </button>
+                            <div class="collapse" id="employer-collapse">
+                                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
+                                    <li><a href="job.php?new-post" class="btn btn-secondary-outline">Post New Job Offer</a></li>
+                                    <li><a href="posted_jobs.php" class="btn btn-secondary-outline">Posted Jobs</a></li>
+                                    <li><a href="posted_jobs.php?invitations&sent" class="btn btn-secondary-outline">Job Invitations Sent</a></li>
+                                    <li><a href="resume_profile.php?applied-jobs&received" class="btn btn-secondary-outline">Received Applications</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="mb-1">
+                            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#seeker-collapse" aria-expanded="false">
+                                <i class="fa-solid fa-chevron-down pe-2"></i>Job Seeker Menu
+                            </button>
+                            <div class="collapse" id="seeker-collapse">
+                                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 ps-3 small">
+                                    <li><a href="resume.php?new-resume" class="btn btn-secondary-outline">Post a Resume</a></li>
+                                    <li><a href="resume_profile.php" class="btn btn-secondary-outline">All Posted Resumes</a></li>
+                                    <li><a href="resume_profile.php?applied-jobs&sent" class="btn btn-secondary-outline">Sent Applications</a></li>
+                                    <li><a href="posted_jobs.php?invitations&received" class="btn btn-secondary-outline">Received Invitations</a></li>
                                 </ul>
                             </div>
                         </li>
