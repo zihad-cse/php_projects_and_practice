@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 include 'utility.php';
 include 'db_connection.php';
 
-$fname = $email = $phn = $pass1 = $pass2 = $hashedpass = $errmsg = $phnerrmsg = $captchaErr = '';
+$fname = $email = $phn = $oauthkey = $oauthemail = $pass1 = $pass2 = $hashedpass = $errmsg = $phnerrmsg = $captchaErr = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
@@ -13,6 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $phn = $_POST['phn'];
     $fname = $_POST['fname'];
     $user_captcha = $_POST['captcha'];
+    if(isset($_GET['oauthkey']) && isset($_GET['regisemail'])){
+        $oauthkey = $_GET['oauthkey'];
+        $oauthemail = $_GET['regisemail'];
+    }
     $membersince = date('Y-m-d');
     if ($user_captcha === $_SESSION['captcha']) {
         if ($pass1 !== $pass2) {
@@ -38,13 +42,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             } elseif ($phn_row['phn_count'] > 0) {
                 $phnerrmsg = '<p class="text-danger">Phone number already exists. Please choose a different phone number.</p>';
             } else {
-                $sql = 'INSERT INTO org (premail, orguser, prphone, pass, created) VALUES (:email, :fname, :phn, :hashedpass, :membersince)';
+                $sql = 'INSERT INTO org (premail, orguser, prphone, pass, created, oauthkey, oauthemail) VALUES (:email, :fname, :phn, :hashedpass, :membersince, :oauthkey, :oauthemail)';
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindParam(':email', $email, PDO::PARAM_STR);
                 $stmt->bindParam(':fname', $fname, PDO::PARAM_STR);
                 $stmt->bindParam(':hashedpass', $hashedpass, PDO::PARAM_STR);
                 $stmt->bindParam(':phn', $phn, PDO::PARAM_INT);
                 $stmt->bindParam(':membersince', $membersince, PDO::PARAM_STR);
+                $stmt->bindParam(':oauthkey', $oauthkey, PDO::PARAM_STR);
+                $stmt->bindParam(':oauthemail', $oauthemail, PDO::PARAM_STR);
 
                 try {
                     $pdo->beginTransaction();

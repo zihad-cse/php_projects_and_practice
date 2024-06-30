@@ -3,10 +3,14 @@
 <?php
 session_start();
 include 'php/registration.php';
+include 'php/oauthlogin.php';
 
 if (isset($_SESSION['token'])) {
     header("Location: ");
     exit();
+}
+if($_SERVER['REQUEST_URI'] == "/php_basics/jobsite_project/registration_page.php"){
+    $_SESSION['regoauthredirect'] = true;
 }
 ?>
 
@@ -47,7 +51,7 @@ if (isset($_SESSION['token'])) {
                                     </div>
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Email Address</label>
-                                        <input name="email" type="email" class="form-control" id="email" placeholder="example@example.com" required>
+                                        <input name="email" type="email" class="form-control" id="email" placeholder="example@example.com" required <?php if(isset($_GET['regisemail'])){ ?> value="<?php echo $_GET['regisemail'];}?>">
                                         <p id="emailError" class="text-danger"> <?php echo $errmsg; ?></p>
                                     </div>
                                     <div class="mb-3">
@@ -66,6 +70,9 @@ if (isset($_SESSION['token'])) {
                                         <label for="signInPass" class="form-label">Repeat Password</label>
                                         <input name="pass2" type="password" class="form-control" id="pass2" required>
                                         <p id="passError" class="text-danger"></p>
+                                    </div>
+                                    <div>
+                                        <input name="oauthkey" type="text" hidden value="<?php if(isset($_GET['oauthkey'])){echo $_GET['oauthkey'];} ?>">
                                     </div>
                                     <div class="d-flex justify-content-between mb-5">
                                         <div class="form-check mt-3">
@@ -96,6 +103,10 @@ if (isset($_SESSION['token'])) {
                                         </button>
                                     </div>
                                 </form>
+                                <div class="mt-4">
+                                    <p>Or, Sign up with:</p>
+                                    <a class="btn btn-outline-dark" href="<?php echo $client->createAuthUrl();?>"><img style="max-height: 25px;" src="img/icons8-google-48.png" alt=""></a>
+                                </div>
                                 <div class="d-flex justify-content-between mt-4">
                                     <div>
                                         <p>Already Have An Account? <i class="fa-solid fa-arrow-right"></i></p>

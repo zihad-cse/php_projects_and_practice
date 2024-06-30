@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<?php session_start();
+
+if (!isset($_SESSION['login_token'])) {
+    header("Location: http://localhost/php_basics/jobsite_project/googlelogintestpage.php");
+}
+
+if (isset($_GET['logout'])) {
+    $_SESSION = array();
+    session_destroy();
+    header("Location: http://localhost/php_basics/jobsite_project/googlelogintestpage.php");
+}
+
+?>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +30,8 @@
             <div class="col-4"></div>
             <div class="col-4">
                 <b>Google ID:</b><br>
-                <p><?= $_SESSION['token'] ?></p>
+                <p><?php var_dump($_SESSION) ?></p>
+                <a class="btn btn-danger" href="?logout">Logout</a>
             </div>
             <div class="col-4"></div>
         </div>

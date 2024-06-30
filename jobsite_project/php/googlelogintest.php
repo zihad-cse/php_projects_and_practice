@@ -4,12 +4,14 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include "googlelogintestdb.php";
 
+session_start();
 if(isset($_SESSION['token'])){
     echo "Already Logged in";
     exit;
 }
 
 include "google-api/google-api-php-client-2.4.0/vendor/autoload.php";
+
 
 $client = new Google_Client();
 $client->setClientId("580518976492-dqfihoi0bp1ek8es6t5347k4s3u7n3n4.apps.googleusercontent.com");
@@ -30,7 +32,7 @@ if (isset($_GET['code'])){
 
         $email = $google_account_info->email;
         if(isset($id)){
-            $stmt = $pdo->prepare("SELECT * FROM users WHERE id = :id");
+            $stmt = $pdo->prepare("SELECT * FROM users WHERE auth_key = :id");
             $stmt->bindParam(":id", $id, PDO::PARAM_STR);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);

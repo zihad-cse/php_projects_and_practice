@@ -8,6 +8,7 @@ ini_set('display_errors', 1);
 include 'php/user_data.php';
 include 'php/auth.php';
 include 'php/db_connection.php';
+include 'php/oauthlogin.php';
 
 session_start();
 
@@ -185,8 +186,20 @@ if (isset($_SESSION['phnNumber'])) {
                         </div>
                     <?php } ?>
                     <?php if (isset($_GET['edit'])) { ?>
-                        <b>Password and Account details change here.</b><br>
-                        <a href="dashboard.php" class="btn btn-primary">Go back here</a>
+                        <div class="my-2">
+                            <b>Password and Account details change here.</b><br>
+                        </div>
+                        <div class="my-2">
+                            <?php if(!isset($userData['oauthkey']) && empty($userData['oauthkey'])){ ?>
+                                <strong>Connect your google account here: </strong> <a class="btn btn-primary" href="<?php echo $client->createAuthUrl();  ?>"><i class="fa-brands fa-google"></i></a>
+                            <?php } if (isset($userData['oauthkey']) && !empty($userData['oauthkey'])){ ?>
+                                <strong><i class="fa-brands fa-google"></i> : <?= $userData['oauthemail'] ?></strong>
+                            <?php } ?>
+                        </div>
+                        <div>
+                            <a href="dashboard.php" class="btn btn-primary">Back</a>
+                        </div>
+
                     <?php } else { ?>
                         <hr>
                         <a href="?edit" class="btn btn-primary">Edit</a>

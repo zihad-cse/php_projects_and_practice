@@ -4,11 +4,12 @@
 session_start();
 
 include 'php/login.php';
-
+include 'php/oauthlogin.php';
 if (isset($_SESSION['token'])) {
     header("Location: /");
     exit();
 }
+
 
 ?>
 
@@ -71,6 +72,10 @@ if (isset($_SESSION['token'])) {
                                             <a href="#" class="link-dark">Forgot Password</a>
                                         </div>
                                     </div>
+                                    <div class="mb-5 d-flex justify-content-between">
+                                        <span>Or, Login with: </span>
+                                        <a class="btn btn-outline-dark" href="<?php echo $client->createAuthUrl();?>"><img style="max-height: 25px;" src="img/icons8-google-48.png" alt=""></a>
+                                    </div>
                                     <div class="card">
                                         <div class="card-header">
                                             <strong>Captcha Verification</strong>
@@ -93,7 +98,7 @@ if (isset($_SESSION['token'])) {
 
                                 <div class="d-flex justify-content-between mt-4">
                                     <div>
-                                        <p>Don' t have an account? <i class="fa-solid fa-arrow-right"></i></p>
+                                        <p>Don't have an account? <i class="fa-solid fa-arrow-right"></i></p>
                                     </div>
                                     <div>
                                         <a class="link-dark" href="registration_page.php">Sign Up</a>
