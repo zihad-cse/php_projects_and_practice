@@ -10,7 +10,7 @@ if(isset($_SESSION['token'])){
     exit;
 }
 
-include "google-api/google-api-php-client-2.4.0/vendor/autoload.php";
+include "google-api/google-api-php-client--PHP8.2/vendor/autoload.php";
 
 
 $client = new Google_Client();
@@ -25,7 +25,7 @@ if (isset($_GET['code'])){
 
     if (!isset($token['error'])){
         $client->setAccessToken($token['access_token']);
-        $google_oauth = new Google_Service_Oauth2($client);
+        $google_oauth = new Google\Service\Oauth2($client);
         $google_account_info = $google_oauth->userinfo->get();
         
         $id = $google_account_info->id;

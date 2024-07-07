@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include "db_connection.php";
-include "google-api/google-api-php-client--PHP8.2/vendor/autoload.php";
+include "/home/zihad/vendor/autoload.php";
 
 $client = new Google_Client();
 $client->setClientId("580518976492-dqfihoi0bp1ek8es6t5347k4s3u7n3n4.apps.googleusercontent.com");
@@ -22,7 +22,7 @@ if (isset($_GET['code'])) {
     $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
     if (!isset($token['error'])) {
         $client->setAccessToken($token['access_token']);
-        $google_oauth = new Google_Service_Oauth2($client);
+        $google_oauth = new Google\Service\Oauth2($client);
         $google_account_info = $google_oauth->userinfo->get();
         $oauthkey = $google_account_info->id;
         $oauthemail = $google_account_info->email;
@@ -33,7 +33,7 @@ if (isset($_GET['code'])) {
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             $rowCount = $stmt->rowCount();
         } else {
-            echo "Something went Wrong";
+            echo "Account info couldn't be fetched.";
             exit;
         }
         if ($rowCount > 0) {
