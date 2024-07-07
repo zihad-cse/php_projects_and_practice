@@ -2,9 +2,9 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include "db_connection.php";
-include "/home/zihad/vendor/autoload.php";
+require_once "/var/www/html/php_basics/jobsite_project/vendor/autoload.php";
 
-$client = new Google_Client();
+$client = new Google\Client();
 $client->setClientId("580518976492-dqfihoi0bp1ek8es6t5347k4s3u7n3n4.apps.googleusercontent.com");
 $client->setClientSecret("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");
 if (isset($_SESSION['token']) && isset($_SESSION['orgIndex'])) {
@@ -16,8 +16,7 @@ if (isset($_SESSION['regoauthredirect'])) {
 if (isset($_SESSION['logoauthredirect'])) {
     $client->setRedirectUri("http://localhost/php_basics/jobsite_project/login_page.php");
 }
-$client->addScope("email");
-$client->addScope("profile");
+$client->addScope(Google\Service\Oauth2::USERINFO_PROFILE);
 if (isset($_GET['code'])) {
     $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
     if (!isset($token['error'])) {

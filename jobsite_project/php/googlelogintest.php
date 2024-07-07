@@ -10,7 +10,7 @@ if(isset($_SESSION['token'])){
     exit;
 }
 
-include "google-api/google-api-php-client--PHP8.2/vendor/autoload.php";
+include "/var/www/html/php_basics/jobsite_project/vendor/autoload.php";
 
 
 $client = new Google_Client();
