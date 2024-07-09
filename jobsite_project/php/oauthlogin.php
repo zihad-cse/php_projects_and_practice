@@ -16,7 +16,10 @@ if (isset($_SESSION['regoauthredirect'])) {
 if (isset($_SESSION['logoauthredirect'])) {
     $client->setRedirectUri("http://localhost/php_basics/jobsite_project/login_page.php");
 }
-$client->addScope(Google\Service\Oauth2::USERINFO_PROFILE);
+
+$client->addScope("email");
+$client->addScope("profile");
+
 if (isset($_GET['code'])) {
     $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
     if (!isset($token['error'])) {
