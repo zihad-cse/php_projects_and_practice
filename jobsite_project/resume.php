@@ -136,6 +136,7 @@ if ((isset($_POST['update'])) || (isset($_POST['first-resume'])) || (isset($_POS
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="css/account_dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/landing_page.css">
 
     <style>
         #logout-button:hover {
@@ -176,10 +177,10 @@ if ((isset($_POST['update'])) || (isset($_POST['first-resume'])) || (isset($_POS
 </head>
 
 <body class="bg-light">
-    <nav id="nav-bar" class="navbar p-3 bg-light sticky-top">
+    <nav id="nav-bar" class="navbar p-3 sticky-top">
         <div class="container">
             <a class="navbar-brand" href="index.php">
-                <img src="img/logoipsum-248.svg" alt="">
+                <img src="img/logo.png" alt="">
             </a>
             <div class="d-lg-block d-md-block d-sm-none d-none">
                 <?php
@@ -196,7 +197,7 @@ if ((isset($_POST['update'])) || (isset($_POST['first-resume'])) || (isset($_POS
             <?php if (!isset($_SESSION['token']) && !isset($_SESSION['phnNumber'])) { ?>
                 <div>
                     <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn dropdown-toggle login-signup-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Log in or Sign up
                         </button>
                         <ul class="dropdown-menu">
@@ -253,7 +254,7 @@ if ((isset($_POST['update'])) || (isset($_POST['first-resume'])) || (isset($_POS
             </div>
         </div>
     </nav>
-    <section style="min-height: 100vh; " id="dashboard-main-content">
+    <section style="min-height: 100vh;" id="dashboard-main-content">
         <div class="modal fade" id="image-expansion" tabindex="-1" aria-labelledby="image-expansion-label" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -307,7 +308,8 @@ if ((isset($_POST['update'])) || (isset($_POST['first-resume'])) || (isset($_POS
             </div>
         </div>
         <?php if (!isset($_GET['edit']) && !isset($_GET['new-resume']) && !isset($_GET['first-resume'])) { ?>
-            <div class="bg-light px-lg-0 px-md-0 px-sm-0 px-0 p-lg-5 p-md-4 p-sm-3 p-3 container">
+            <div class=" p-lg-5 p-md-4 p-sm-3 p-3 container bg-light">
+            <h3 class="text-center">Resume</h3>
                 <div class="row p-3">
                     <div class="mb-3">
                         <button id="goBackButton" class=" btn btn-danger"><i class="fa-solid fa-arrow-left-long"></i></button>
@@ -617,9 +619,9 @@ if ((isset($_POST['update'])) || (isset($_POST['first-resume'])) || (isset($_POS
     </section>
     <div id="footer" class="bg-dark text-light">
         <div class="container">
-            <footer class="row py-5">
+            <footer class="row py-5 footer-icon">
                 <div class="col-6">
-                    <img src="img/logoipsum-248.svg" alt="">
+                    <img src="img/icon.png" alt="">
                 </div>
                 <div class="col-6">
                     <ul class="list-unstyled d-flex justify-content-end">

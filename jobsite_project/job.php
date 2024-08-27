@@ -111,6 +111,7 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="css/account_dashboard.css">
+    <link rel="stylesheet" href="css/landing_page.css">
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 
     <style>
@@ -149,11 +150,11 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
             } ?></title>
 </head>
 
-<body class="bg-light">
-    <nav id="nav-bar" class="navbar p-3 bg-light sticky-top">
+<body>
+    <nav id="nav-bar" class="navbar p-3 sticky-top">
         <div class="container">
             <a class="navbar-brand" href="index.php">
-                <img src="img/logoipsum-248.svg" alt="">
+                <img src="img/logo.png" alt="">
             </a>
             <div class="d-lg-block d-md-block d-sm-none d-none">
                 <?php
@@ -170,7 +171,7 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
             <?php if (!isset($_SESSION['token']) && !isset($_SESSION['phnNumber'])) { ?>
                 <div>
                     <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn dropdown-toggle login-signup-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Log in or Sign up
                         </button>
                         <ul class="dropdown-menu">
@@ -533,8 +534,8 @@ if (!isset($_SESSION['orgIndex']) || empty($_SESSION['orgIndex'])) {
     <div id="footer" class="bg-dark text-light">
         <div class="container">
             <footer class="row py-5">
-                <div class="col-6">
-                    <img src="img/logoipsum-248.svg" alt="">
+                <div class="col-6 footer-icon">
+                    <img src="img/icon.png" alt="">
                 </div>
                 <div class="col-6">
                     <ul class="list-unstyled d-flex justify-content-end">

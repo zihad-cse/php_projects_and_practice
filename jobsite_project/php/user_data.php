@@ -243,9 +243,9 @@ function pageination_alljobdetails($pdo, $initial_page, $limit, $search = "")
             $searchKeywordList = explode(' ', trim($search));
 
             foreach ($searchKeywordList as $searchKey) {
-                $textSearchQuery = $textSearchQuery . "job.jobtitle LIKE '%" . $searchKey . "%' OR ";
+                $textSearchQuery = $textSearchQuery . "(job.jobtitle LIKE '%" . $searchKey . "%' OR job.dutyskilleduexp LIKE '%" . $searchKey . "%' OR job.salary LIKE '%" . $searchKey . "%' OR job.workarea LIKE '%" . $searchKey . "%') AND ";
             }
-            $textSearchQuery = rtrim($textSearchQuery, 'OR ');
+            $textSearchQuery = rtrim($textSearchQuery, "AND ");
             $query = "SELECT job.*, jobcat.jcategory AS categoryName FROM job LEFT JOIN jobcat ON job.jobcategory = jobcat.jcatindex WHERE visibility = 1 $subQuery AND $textSearchQuery LIMIT :limitnumber OFFSET :initialpage";
         }
         $stmt = $pdo->prepare($query);
@@ -282,9 +282,9 @@ function pageination_allresumedetails($pdo, $initial_page, $limit, $search = "")
             $searchKeywordList = explode(' ', trim($search));
 
             foreach ($searchKeywordList as $searchKey) {
-                $textSearchQuery = $textSearchQuery . "resumes.skilleduexp LIKE '%" . $searchKey . "%' OR ";
+                $textSearchQuery = $textSearchQuery . "(resumes.skilleduexp LIKE '%" . $searchKey . "%' OR resumes.birtharea LIKE '%" . $searchKey . "%' OR resumes.religion LIKE '%" . $searchKey . "%') AND ";
             }
-            $textSearchQuery = rtrim($textSearchQuery, 'OR ');
+            $textSearchQuery = rtrim($textSearchQuery, 'AND ');
             $query = "SELECT * FROM resumes WHERE visible = 1 AND $textSearchQuery LIMIT :limitnumber OFFSET :initialpage";
         }
 

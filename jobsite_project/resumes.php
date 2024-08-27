@@ -34,6 +34,7 @@ if ($resumeNumber <= 10) {
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="css/account_dashboard.css">
+    <link rel="stylesheet" href="css/landing_page.css">
     <style>
         #logout-button:hover {
             color: #dc3545;
@@ -80,7 +81,7 @@ if ($resumeNumber <= 10) {
     <nav id="primary-nav" class="navbar nav-bar-shadow p-3 bg-light sticky-top">
         <div class="container">
             <a class="navbar-brand" href="index.php">
-                <img src="img/logoipsum-248.svg" alt="">
+                <img src="img/logo.png" alt="">
             </a>
             <div class="d-lg-block d-md-block d-sm-none d-none">
                 <div>
@@ -101,7 +102,7 @@ if ($resumeNumber <= 10) {
             <?php if (!isset($_SESSION['token']) && !isset($_SESSION['phnNumber'])) { ?>
                 <div>
                     <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn dropdown-toggle login-signup-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Log in or Sign up
                         </button>
                         <ul class="dropdown-menu">
@@ -346,9 +347,9 @@ if ($resumeNumber <= 10) {
     </section>
     <div id="footer" class="bg-dark text-light">
         <div class="container">
-            <footer class="row py-5">
+            <footer class="row py-5 footer-icon">
                 <div class="col-6">
-                    <img src="img/logoipsum-248.svg" alt="">
+                    <img src="img/icon.png" alt="">
                 </div>
                 <div class="col-6">
                     <ul class="list-unstyled d-flex justify-content-end">

@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 include "db_connection.php";
-require_once "/var/www/html/php_basics/jobsite_project/vendor/autoload.php";
+require_once "vendor/autoload.php";
 
 $client = new Google\Client();
 $client->setClientId("580518976492-dqfihoi0bp1ek8es6t5347k4s3u7n3n4.apps.googleusercontent.com");

@@ -79,16 +79,16 @@ if (isset($_SESSION['phnNumber']) && !empty($_SESSION['phnNumber'])) {
     </style>
 </head>
 
-<body class="bg-light">
-    <nav id="nav-bar" class="p-3 navbar bg-light sticky-top">
+<body>
+    <nav id="nav-bar" class="p-3 navbar sticky-top">
         <div class="container">
             <a class="navbar-brand" href="index.php">
-                <img src="img/logoipsum-248.svg" alt="">
+                <img src="img/logo.png" alt="">
             </a>
             <?php if (!isset($_SESSION['token']) && !isset($_SESSION['phnNumber'])) { ?>
                 <div>
                     <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn dropdown-toggle login-signup-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Log in or Sign up
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
@@ -123,7 +123,7 @@ if (isset($_SESSION['phnNumber']) && !empty($_SESSION['phnNumber'])) {
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="text-danger dropdown-item" href="/php_basics/jobsite_project/php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
+                            <li><a class="text-danger dropdown-item" href="php/logout.php?return_url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>">Logout</a></li>
                         </ul>
                     </div>
                 </div>
@@ -132,10 +132,10 @@ if (isset($_SESSION['phnNumber']) && !empty($_SESSION['phnNumber'])) {
     </nav>
     <section style="height: max-content;" id="header">
         <div style="background-image: url('img/vagaro-g6i6NlucLYc-unsplash.jpg'); background-size: cover; background-position: top;" class="row">
-            <div style="background-color: rgba(0, 0, 0, 0.75);" class="col-1"></div>
-            <div style="background-color: rgba(0, 0, 0, 0.5);" class="col-10">
+            <div style="background-color: rgba(0, 0, 0, 0.75);" class="col-lg-1 col-md-1 col-sm-0 col-0"></div>
+            <div style="background-color: rgba(0, 0, 0, 0.75);" class="col-lg-10 col-md-10 col-sm-0 col-0 p-0">
                 <div class="container">
-                    <div style="background-color: rgba(0, 0, 0, 0.7);" class="border border-0 rounded my-4 p-4">
+                    <div style="background-color: rgba(0, 0, 0, 0.7);" class="border border-0 rounded my-4 p-4 py-lg-4 py-md-4 py-sm-4 py-4 px-lg-4 px-md-4 px-sm-1 px-1">
                         <div class="row">
                             <div class="col-lg-12 col-12 col-md-12 col-sm-12 d-flex justify-content-center align-items-center text-light">
                                 <div class="p-md-3 p-sm-2 p-2 p-lg-5">
@@ -193,11 +193,11 @@ if (isset($_SESSION['phnNumber']) && !empty($_SESSION['phnNumber'])) {
                     </div>
                 </div>
             </div>
-            <div style="background-color: rgba(0, 0, 0, 0.75);" class="col-1"></div>
+            <div style="background-color: rgba(0, 0, 0, 0.75);" class="col-lg-1 col-md-1 col-sm-0 col-0"></div>
         </div>
     </section>
-    <section class="my-5 bg-light" id="jobs-and-resumes">
-        <button type="button" class="d-sm-none d-none d-md-none d-lg-block btn btn-primary btn-floating btn-lg" id="btn-back-to-top">
+    <section class="my-5" id="jobs-and-resumes">
+        <button type="button" class="d-sm-none d-none d-md-none d-lg-block btn btn-floating btn-lg" id="btn-back-to-top">
             <i class="fas fa-arrow-up"></i>
         </button>
         <div class="container">
@@ -206,7 +206,7 @@ if (isset($_SESSION['phnNumber']) && !empty($_SESSION['phnNumber'])) {
                     <div class="container">
                         <div class="">
                             <div class="">
-                                <h2 class="text-center mb-5"><a class="text-decoration-none text-dark" href="jobs.php">Available Jobs</a></h2>
+                                <h2 class="text-center mb-5"><a class="text-decoration-none text-dark" href="jobs.php">Jobs</a></h2>
                             </div>
                             <div class="row">
                                 <?php foreach ($landingpage_allJobDetails as $row) {
@@ -268,7 +268,7 @@ if (isset($_SESSION['phnNumber']) && !empty($_SESSION['phnNumber'])) {
                     <div class="container">
                         <div class="">
                             <div class="">
-                                <h2 class="text-center mb-5"><a class="text-decoration-none text-dark" href="resumes.php">Available Resumes</a></h2>
+                                <h2 class="text-center mb-5"><a class="text-decoration-none text-dark" href="resumes.php">Resumes</a></h2>
                             </div>
                             <div class="row">
                                 <?php foreach ($allresumedetails as $row) {
@@ -320,8 +320,8 @@ if (isset($_SESSION['phnNumber']) && !empty($_SESSION['phnNumber'])) {
     <div id="footer" class="bg-dark text-light">
         <div class="container">
             <footer class="row py-5">
-                <div class="col-6">
-                    <img src="img/logoipsum-248.svg" alt="">
+                <div class="col-6 footer-icon">
+                    <img src="img/icon.png" alt="">
                 </div>
                 <div class="col-6">
                     <ul class="list-unstyled d-flex justify-content-end">

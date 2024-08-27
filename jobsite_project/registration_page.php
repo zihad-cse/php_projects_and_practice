@@ -19,6 +19,7 @@ if($_SERVER['REQUEST_URI'] == "/php_basics/jobsite_project/registration_page.php
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="css/landing_page.css">
     <title>Register</title>
 </head>
 
@@ -26,7 +27,7 @@ if($_SERVER['REQUEST_URI'] == "/php_basics/jobsite_project/registration_page.php
     <nav class="navbar bg-light sticky-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="index.php">
-                <img src="img/logoipsum-248.svg" alt="">
+                <img src="img/logo.png" alt="">
             </a>
         </div>
     </nav>
